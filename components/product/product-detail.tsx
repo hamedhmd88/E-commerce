@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Star, ShoppingCart, Heart, ArrowLeft } from "lucide-react"
-import { useCart } from "@/components/cart-provider"
+import { useCart } from "@/components/cart/cart-provider"
 import Link from "next/link"
 
 interface Product {

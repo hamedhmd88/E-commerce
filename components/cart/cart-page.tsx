@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { ShoppingBag, Plus, Minus, X, ArrowLeft, ArrowRight } from "lucide-react"
-import { useCart } from "@/components/cart-provider"
+import { useCart } from "@/components/cart/cart-provider"
 
 export function CartPage() {
   const { items, updateQuantity, removeItem, totalPrice, totalItems, clearCart } = useCart()

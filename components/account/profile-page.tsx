@@ -1,13 +1,13 @@
 "use client"
 
-import { useAuth } from "@/components/auth-provider"
+import { useAuth } from "@/components/auth/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { User, Mail, Phone, MapPin } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import { EditProfileModal } from "@/components/edit-profile-modal"
+import { EditProfileModal } from "@/components/account/edit-profile-modal"
 
 export function ProfilePage() {
   const { user, isLoading } = useAuth()

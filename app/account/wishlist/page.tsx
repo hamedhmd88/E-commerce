@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { WishlistPage } from "@/components/wishlist-page"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { WishlistPage } from "@/components/account/wishlist-page"
+import { Footer } from "@/components/layout/footer"
 
 export default function Wishlist() {
   return (

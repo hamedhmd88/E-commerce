@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { AccountDashboard } from "@/components/account-dashboard"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { AccountDashboard } from "@/components/account/account-dashboard"
+import { Footer } from "@/components/layout/footer"
 
 export default function AccountPage() {
   return (

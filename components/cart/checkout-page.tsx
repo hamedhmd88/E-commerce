@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft, CreditCard, Truck, Shield } from "lucide-react"
-import { useCart } from "@/components/cart-provider"
+import { useCart } from "@/components/cart/cart-provider"
 import Link from "next/link"
 
 export function CheckoutPage() {

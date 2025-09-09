@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { ProductCard } from "@/components/product-card"
-import { ProductFilters, type FilterState } from "@/components/product-filters"
+import { ProductCard } from "@/components/product/product-card"
+import { ProductFilters, type FilterState } from "@/components/product/product-filters"
 
 interface Product {
   id: number

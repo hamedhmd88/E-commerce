@@ -6,10 +6,10 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { useAuth } from "@/components/auth-provider"
-import { useWishlist } from "@/components/wishlist-provider"
+import { useAuth } from "@/components/auth/auth-provider"
+import { useWishlist } from "@/components/account/wishlist-provider"
 import { User, ShoppingBag, Heart, Settings, LogOut } from "lucide-react"
-import { EditProfileModal } from "@/components/edit-profile-modal"
+import { EditProfileModal } from "@/components/account/edit-profile-modal"
 
 export function AccountDashboard() {
   const { user, logout, isLoading } = useAuth()

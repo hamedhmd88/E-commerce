@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { CartPage } from "@/components/cart-page"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { CartPage } from "@/components/cart/cart-page"
+import { Footer } from "@/components/layout/footer"
 
 export default function Cart() {
   return (

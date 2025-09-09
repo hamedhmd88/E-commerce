@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { OrdersPage } from "@/components/orders-page"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { OrdersPage } from "@/components/account/orders-page"
+import { Footer } from "@/components/layout/footer"
 
 export default function Orders() {
   return (

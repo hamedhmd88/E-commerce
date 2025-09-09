@@ -3,7 +3,7 @@
 import { X, Plus, Minus, ShoppingBag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { useCart } from "@/components/cart-provider"
+import { useCart } from "@/components/cart/cart-provider"
 import Image from "next/image"
 import Link from "next/link"
 

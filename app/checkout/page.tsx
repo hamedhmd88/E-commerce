@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { CheckoutPage } from "@/components/checkout-page"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { CheckoutPage } from "@/components/cart/checkout-page"
+import { Footer } from "@/components/layout/footer"
 
 export default function Checkout() {
   return (

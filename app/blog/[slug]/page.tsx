@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { BlogPost } from "@/components/blog-post"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { BlogPost } from "@/components/blog/blog-post"
+import { Footer } from "@/components/layout/footer"
 
 interface BlogPostPageProps {
   params: {

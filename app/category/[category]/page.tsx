@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
+import { Navigation } from "@/components/layout/navigation"
 import { CategoryProducts } from "@/components/category-products"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/layout/footer"
 
 interface CategoryPageProps {
   params: {

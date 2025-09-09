@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { Footer } from "@/components/layout/footer"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"

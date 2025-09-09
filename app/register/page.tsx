@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { RegisterForm } from "@/components/register-form"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { RegisterForm } from "@/components/auth/register-form"
+import { Footer } from "@/components/layout/footer"
 
 export default function RegisterPage() {
   return (

@@ -1,8 +1,8 @@
 "use client"
 
-import { useWishlist } from "@/components/wishlist-provider"
-import { useAuth } from "@/components/auth-provider"
-import { ProductCard } from "@/components/product-card"
+import { useWishlist } from "@/components/account/wishlist-provider"
+import { useAuth } from "@/components/auth/auth-provider"
+import { ProductCard } from "@/components/product/product-card"
 import { Button } from "@/components/ui/button"
 import { Heart, ShoppingBag } from "lucide-react"
 import Link from "next/link"

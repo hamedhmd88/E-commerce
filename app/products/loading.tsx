@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { Footer } from "@/components/layout/footer"
 
 export default function Loading() {
   return (

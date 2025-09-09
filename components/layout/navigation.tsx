@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { CartSidebar } from "@/components/cart-sidebar";
-import { useCart } from "@/components/cart-provider";
-import { useAuth } from "@/components/auth-provider";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { CartSidebar } from "@/components/cart/cart-sidebar";
+import { useCart } from "@/components/cart/cart-provider";
+import { useAuth } from "@/components/auth/auth-provider";
 
 const menuItems = [
   { name: "Home", href: "/" },

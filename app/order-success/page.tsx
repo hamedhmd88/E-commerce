@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { OrderSuccess } from "@/components/order-success"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { OrderSuccess } from "@/components/cart/order-success"
+import { Footer } from "@/components/layout/footer"
 
 export default function OrderSuccessPage() {
   return (

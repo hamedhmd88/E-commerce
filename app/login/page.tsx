@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { LoginForm } from "@/components/login-form"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { LoginForm } from "@/components/auth/login-form"
+import { Footer } from "@/components/layout/footer"
 
 export default function LoginPage() {
   return (

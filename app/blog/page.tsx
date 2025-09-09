@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { BlogGrid } from "@/components/blog-grid"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { BlogGrid } from "@/components/blog/blog-grid"
+import { Footer } from "@/components/layout/footer"
 
 export default function BlogPage() {
   return (

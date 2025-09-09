@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation"
-import { ContactForm } from "@/components/contact-form"
-import { Footer } from "@/components/footer"
+import { Navigation } from "@/components/layout/navigation"
+import { ContactForm } from "@/components/forms/contact-form"
+import { Footer } from "@/components/layout/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
 
