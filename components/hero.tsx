@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, ShoppingBag, Sparkles } from "lucide-react"
+import * as motion from "motion/react-client"
 
 export function Hero() {
   return (
@@ -13,24 +14,44 @@ export function Hero() {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6 animate-in fade-in-0 slide-in-from-top-4 duration-700">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6"
+          >
             <Sparkles className="h-4 w-4" />
             New Collection Available
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl lg:text-6xl font-bold text-balance mb-6 animate-in fade-in-0 slide-in-from-bottom-6 duration-700 delay-200">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-4xl lg:text-6xl font-bold text-balance mb-6"
+          >
             Discover Premium Products for{" "}
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Modern Living
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-xl text-muted-foreground text-pretty mb-8 max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-400">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-xl text-muted-foreground text-pretty mb-8 max-w-2xl mx-auto"
+          >
             Shop our curated collection of electronics, fashion, and jewelry. Experience quality, style, and innovation
             in every purchase.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-600">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
             <Button asChild size="lg" className="text-lg px-8 hover:scale-105 transition-all duration-300 group">
               <Link href="/products">
                 <ShoppingBag className="mr-2 h-5 w-5 group-hover:animate-bounce" />
@@ -48,7 +69,7 @@ export function Hero() {
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </Button>
-          </div>
+          </motion.div>
 
           <div className="mt-16 relative">
             <div className="absolute top-0 left-1/4 w-2 h-2 bg-primary rounded-full animate-ping delay-1000" />
