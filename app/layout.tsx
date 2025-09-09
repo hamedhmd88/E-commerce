@@ -9,6 +9,7 @@ import { AuthProvider } from "@/components/auth-provider"
 import { WishlistProvider } from "@/components/wishlist-provider"
 import { Suspense } from "react"
 import "./globals.css"
+import { ReactQueryProvider } from "@/lib/react-query"
 
 export const metadata: Metadata = {
   title: "ModernStore - Premium E-commerce",
@@ -25,13 +26,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`} suppressHydrationWarning>
         <Suspense>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <AuthProvider>
-              <WishlistProvider>
-                <CartProvider>{children}</CartProvider>
-              </WishlistProvider>
-            </AuthProvider>
-          </ThemeProvider>
+          <ReactQueryProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <AuthProvider>
+                <WishlistProvider>
+                  <CartProvider>{children}</CartProvider>
+                </WishlistProvider>
+              </AuthProvider>
+            </ThemeProvider>
+          </ReactQueryProvider>
         </Suspense>
         <Analytics />
       </body>
