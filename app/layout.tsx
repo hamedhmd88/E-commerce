@@ -10,6 +10,7 @@ import { WishlistProvider } from "@/components/wishlist-provider"
 import { Suspense } from "react"
 import "./globals.css"
 import { ReactQueryProvider } from "@/lib/react-query"
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "ModernStore - Premium E-commerce",
@@ -33,6 +34,7 @@ export default function RootLayout({
                   <CartProvider>{children}</CartProvider>
                 </WishlistProvider>
               </AuthProvider>
+              <Toaster />
             </ThemeProvider>
           </ReactQueryProvider>
         </Suspense>

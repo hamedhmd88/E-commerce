@@ -1,78 +1,103 @@
-"use client"
+"use client";
 
-import type React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Star, ShoppingCart, Heart } from "lucide-react"
-import { useCart } from "@/components/cart-provider"
-import { useWishlist } from "@/components/wishlist-provider"
-import { useAuth } from "@/components/auth-provider"
-import { useState } from "react"
-import { toast } from "sonner"
+import type React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Star, ShoppingCart, Heart } from "lucide-react";
+import { useCart } from "@/components/cart-provider";
+import { useWishlist } from "@/components/wishlist-provider";
+import { useAuth } from "@/components/auth-provider";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Trash2 } from "lucide-react";
 
 interface Product {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
   rating: {
-    rate: number
-    count: number
-  }
+    rate: number;
+    count: number;
+  };
 }
 
 interface ProductCardProps {
-  product: Product
+  product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addItem } = useCart()
-  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()
-  const { user } = useAuth()
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const { addItem, updateQuantity, removeItem, items } = useCart();
+  const { user } = useAuth();
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const { toast } = useToast();
+
+  const cartItem = items.find((item) => item.id === product.id);
+  const quantity = cartItem ? cartItem.quantity : 0;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsAddingToCart(true)
-
-    // Add a small delay for animation effect
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast({
+        title: "To add product to cart, please log in first.",
+        className: " bg-muted dark:text-white text-black border-4 border-b-destructive"
+      });
+      return;
+    }
+    setIsAddingToCart(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
     addItem({
       id: product.id,
       title: product.title,
       price: product.price,
       image: product.image,
-    })
+    });
+    setIsAddingToCart(false);
+  };
 
-    setIsAddingToCart(false)
-  }
+  const handleUpdateQuantity = (newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeItem(product.id);
+    } else {
+      updateQuantity(product.id, newQuantity);
+    }
+  };
 
   const handleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
     if (!user) {
-      toast.error("Please log in to add items to your wishlist")
-      return
+      toast({
+        title: "To add to wishlist, please log in first.",
+        className: " bg-muted dark:text-white text-black border-4 border-b-destructive"
+      });
+      return;
     }
 
-    const isCurrentlyWishlisted = isInWishlist(product.id)
+    const isCurrentlyWishlisted = isInWishlist(product.id);
 
     if (isCurrentlyWishlisted) {
-      removeFromWishlist(product.id)
-      toast.success("Removed from wishlist")
+      removeFromWishlist(product.id);
+      toast({
+        title: "Removed from wishlist",
+        className: " bg-muted dark:text-white text-black border-4 border-b-accent"
+      });
     } else {
-      addToWishlist(product)
-      toast.success("Added to wishlist")
+      addToWishlist(product);
+      toast({
+        title: "Added to wishlist",
+        className: " bg-muted dark:text-white text-black border-4 border-b-accent"
+      });
     }
-  }
+  };
 
   return (
     <Link href={`/products/${product.id}`}>
@@ -126,22 +151,56 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardContent>
 
         <CardFooter className="p-4 pt-0 relative z-10">
-          <Button
-            onClick={handleAddToCart}
-            className="w-full hover:scale-105 transition-all duration-200 relative overflow-hidden"
-            size="sm"
-            disabled={isAddingToCart}
-          >
-            <div
-              className={`absolute inset-0 bg-white/20 transform transition-transform duration-300 ${isAddingToCart ? "translate-x-0" : "-translate-x-full"}`}
-            />
-            <ShoppingCart
-              className={`mr-2 h-4 w-4 transition-transform duration-200 ${isAddingToCart ? "animate-bounce" : ""}`}
-            />
-            {isAddingToCart ? "Adding..." : "Add to Cart"}
-          </Button>
+          {quantity > 0 ? (
+            <div className="flex items-center justify-between w-full border border-border rounded-md overflow-hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleUpdateQuantity(quantity - 1);
+                }}
+              >
+                {quantity === 1 ? <Trash2 className="h-4 w-4" /> : "-"}
+              </Button>
+              <span className="flex-1 text-center font-medium">{quantity}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-primary text-primary-foreground hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleUpdateQuantity(quantity + 1);
+                }}
+              >
+                +
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleAddToCart}
+              className="w-full hover:scale-105 transition-all duration-200 relative overflow-hidden"
+              size="sm"
+              disabled={isAddingToCart}
+            >
+              <div
+                className={`absolute inset-0 bg-white/20 transform transition-transform duration-300 ${
+                  isAddingToCart ? "translate-x-0" : "-translate-x-full"
+                }`}
+              />
+              <ShoppingCart
+                className={`mr-2 h-4 w-4 transition-transform duration-200 ${
+                  isAddingToCart ? "animate-bounce" : ""
+                }`}
+              />
+              {isAddingToCart ? "Adding..." : "Add to Cart"}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     </Link>
-  )
+  );
 }
