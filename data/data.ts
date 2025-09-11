@@ -85,3 +85,71 @@ export const dataSlider : Slide[] = [
     link: "/category/jewelery",
   },
 ]
+
+///////////////////////////////////////////////////////
+
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+  avatar: string;
+}
+
+export const testimonials: Testimonial[] = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    role: "Fashion Enthusiast",
+    content:
+      "Amazing quality products and fast shipping. I've been shopping here for over a year and never disappointed!",
+    rating: 5,
+    avatar: "SJ",
+  },
+  {
+    id: 2,
+    name: "Mike Chen",
+    role: "Tech Professional",
+    content: "The electronics section has everything I need. Great prices and authentic products. Highly recommended!",
+    rating: 5,
+    avatar: "MC",
+  },
+  {
+    id: 3,
+    name: "Emma Davis",
+    role: "Jewelry Collector",
+    content: "Beautiful jewelry collection with unique pieces. The customer service is exceptional and very helpful.",
+    rating: 5,
+    avatar: "ED",
+  },
+  // New testimonials added below
+  {
+    id: 4,
+    name: "John Smith",
+    role: "Home Decor Expert",
+    content: "Great variety in home decor items. Transformed my living space with affordable and stylish pieces!",
+    rating: 4,
+    avatar: "JS",
+  },
+  {
+    id: 5,
+    name: "Lisa Wong",
+    role: "Fitness Trainer",
+    content: "Excellent sports wear collection. Comfortable, durable, and perfect for my daily workouts.",
+    rating: 5,
+    avatar: "LW",
+  },
+  {
+    id: 6,
+    name: "David Kim",
+    role: "Gadget Lover",
+    content: "Top-notch gadgets with quick delivery. The quality exceeds expectations every time!",
+    rating: 5,
+    avatar: "DK",
+  },
+];
+
+
+/////////////////////////////////////////////////////////
+

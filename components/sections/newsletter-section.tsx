@@ -28,7 +28,7 @@ export function NewsletterSection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
+    <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-accent/10">
       <div className="container mx-auto px-4">
         <Card className="max-w-4xl mx-auto hover:shadow-xl transition-shadow duration-300 animate-in fade-in-0 zoom-in-95">
           <CardContent className="p-8 md:p-12">

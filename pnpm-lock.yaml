@@ -176,6 +176,9 @@ importers:
       svelte:
         specifier: latest
         version: 5.38.7
+      swiper:
+        specifier: ^11.2.10
+        version: 11.2.10
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.6.0
@@ -2386,6 +2389,10 @@ packages:
     resolution: {integrity: sha512-1ld9TPZSdUS3EtYGQzisU2nhwXoIzNQcZ71IOU9fEmltaUofQnVfW5CQuhgM/zFsZ43arZXS1BRKi0MYgUV91w==}
     engines: {node: '>=18'}
 
+  swiper@11.2.10:
+    resolution: {integrity: sha512-RMeVUUjTQH+6N3ckimK93oxz6Sn5la4aDlgPzB+rBrG/smPdCTicXyhxa+woIpopz+jewEloiEE3lKo1h9w2YQ==}
+    engines: {node: '>= 4.7.0'}
+
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
@@ -4548,6 +4555,8 @@ snapshots:
       locate-character: 3.0.0
       magic-string: 0.30.19
       zimmerframe: 1.1.2
+
+  swiper@11.2.10: {}
 
   tailwind-merge@2.6.0: {}
 
