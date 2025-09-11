@@ -17,8 +17,12 @@ export function AccountDashboard() {
   const router = useRouter()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
+  console.log('AccountDashboard render:', { user: !!user, isLoading })
+
   useEffect(() => {
+    console.log('AccountDashboard useEffect:', { user: !!user, isLoading })
     if (!isLoading && !user) {
+      console.log('Redirecting to login')
       router.push("/login")
     }
   }, [user, isLoading, router])

@@ -94,7 +94,7 @@ export function ProfilePage() {
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Phone</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">{user.phone}</p>
+              <p className="text-sm bg-muted p-2 rounded">{user.phone || "Not provided"}</p>
             </div>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
@@ -102,7 +102,7 @@ export function ProfilePage() {
                 <label className="text-sm font-medium">Address</label>
               </div>
               <p className="text-sm bg-muted p-2 rounded">
-                {user.address.street}, {user.address.city}
+                {user.address ? `${user.address.street}, ${user.address.city}` : "Not provided"}
               </p>
             </div>
           </div>
