@@ -5,9 +5,12 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Star, ShoppingCart, Heart, ArrowLeft } from "lucide-react"
+import { Star, ShoppingCart, Heart, ArrowLeft, Trash } from "lucide-react"  // اضافه کردن Trash برای delete
 import { useCart } from "@/components/cart/cart-provider"
 import Link from "next/link"
+import { useAuth } from "@/components/auth/auth-provider"  // import برای useAuth
+import { useToast } from "@/hooks/use-toast"  // import برای useToast
+import { useWishlist } from "@/components/account/wishlist-provider"  // import برای useWishlist
 
 interface Product {
   id: number
@@ -29,8 +32,10 @@ interface ProductDetailProps {
 export function ProductDetail({ productId }: ProductDetailProps) {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
-  const [quantity, setQuantity] = useState(1)
-  const { addItem } = useCart()
+  const { items, addItem, updateQuantity, removeItem } = useCart()  // گرفتن متدهای لازم از useCart
+  const { user } = useAuth()  // گرفتن وضعیت کاربر از useAuth
+  const { toast } = useToast()  // برای نمایش toast
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist()  // گرفتن متدهای wishlist
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -47,6 +52,58 @@ export function ProductDetail({ productId }: ProductDetailProps) {
 
     fetchProduct()
   }, [productId])
+
+  // محاسبه quantity فعلی محصول در کارت
+  const currentQuantity = product ? (items.find((item) => item.id === product.id)?.quantity || 0) : 0
+
+  const handleAddToCart = () => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please log in first to add items to your cart.",
+        variant: "destructive",
+      })
+      return
+    }
+    if (product) {
+      addItem({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+      })
+    }
+  }
+
+  const handleUpdateQuantity = (delta: number) => {
+    if (product) {
+      updateQuantity(product.id, currentQuantity + delta)
+    }
+  }
+
+  const handleRemoveFromCart = () => {
+    if (product) {
+      removeItem(product.id)
+    }
+  }
+
+  const handleToggleWishlist = () => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please log in first to manage your wishlist.",
+        variant: "destructive",
+      })
+      return
+    }
+    if (product) {
+      if (isInWishlist(product.id)) {
+        removeFromWishlist(product.id)
+      } else {
+        addToWishlist(product)
+      }
+    }
+  }
 
   if (loading) {
     return (
@@ -76,17 +133,6 @@ export function ProductDetail({ productId }: ProductDetailProps) {
         </Link>
       </div>
     )
-  }
-
-  const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addItem({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-      })
-    }
   }
 
   return (
@@ -132,8 +178,8 @@ export function ProductDetail({ productId }: ProductDetailProps) {
             <p className="text-muted-foreground leading-relaxed">{product.description}</p>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
+          <div className="space-y-4 w-full">
+            {/* <div className="flex items-center gap-4">
               <label htmlFor="quantity" className="font-medium">
                 Quantity:
               </label>
@@ -146,15 +192,38 @@ export function ProductDetail({ productId }: ProductDetailProps) {
                   +
                 </Button>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex gap-4">
-              <Button onClick={handleAddToCart} className="flex-1" size="lg">
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
-              </Button>
-              <Button variant="outline" size="lg">
-                <Heart className="h-5 w-5" />
+            <div className="flex gap-4 items-center justify-center">
+              {currentQuantity > 0 ? (
+                <div className="flex items-center gap-2">
+                  {currentQuantity === 1 ? (
+                    <Button variant="outline" size="icon" onClick={handleRemoveFromCart}>
+                      <Trash className="h-5 w-5" />
+                    </Button>
+                  ) : (
+                    <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(-1)}>
+                      -
+                    </Button>
+                  )}
+                  <span className="w-12 text-center">{currentQuantity}</span>
+                  <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(1)}>
+                    +
+                  </Button>
+                  {currentQuantity > 1 && (
+                    <Button variant="outline" size="icon" onClick={handleRemoveFromCart}>
+                      <Trash className="h-5 w-5" />
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <Button onClick={handleAddToCart} className="flex-1" size="lg">
+                  <ShoppingCart className="mr-2 h-5 w-5" />
+                  Add to Cart
+                </Button>
+              )}
+              <Button variant="outline" size="lg" onClick={handleToggleWishlist}>
+                <Heart className={`h-5 w-5 ${isInWishlist(product?.id ?? 0) ? "fill-red-500 text-red-500" : ""}`} />
               </Button>
             </div>
           </div>

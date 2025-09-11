@@ -9,13 +9,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/components/auth/auth-provider"
 import { useWishlist } from "@/components/account/wishlist-provider"
 import { User, ShoppingBag, Heart, Settings, LogOut } from "lucide-react"
-import { EditProfileModal } from "@/components/account/edit-profile-modal"
+// حذف import EditProfileModal
 
 export function AccountDashboard() {
   const { user, logout, isLoading } = useAuth()
   const { wishlistCount } = useWishlist()
   const router = useRouter()
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  // حذف state isEditModalOpen
 
   console.log('AccountDashboard render:', { user: !!user, isLoading })
 
@@ -44,7 +44,7 @@ export function AccountDashboard() {
 
   const handleLogout = () => {
     logout()
-    router.push("/")
+    router.push("/login")
   }
 
   return (
@@ -139,17 +139,18 @@ export function AccountDashboard() {
               <label className="text-sm font-medium text-muted-foreground">Username</label>
               <p className="text-sm">{user.username}</p>
             </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Phone</label>
+              <p className="text-sm">{user.phone || "Not provided"}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Address</label>
+              <p className="text-sm">
+                {user.address ? `${user.address.city}, ${user.address.street}` : "Not provided"}
+              </p>
+            </div>
           </div>
-          <div className="pt-4">
-            <Button
-              variant="outline"
-              onClick={() => setIsEditModalOpen(true)}
-              className="hover:scale-105 transition-transform"
-            >
-              <User className="mr-2 h-4 w-4" />
-              Edit Profile
-            </Button>
-          </div>
+          {/* حذف بخش pt-4 و دکمه Edit Profile */}
         </CardContent>
       </Card>
 
@@ -168,7 +169,6 @@ export function AccountDashboard() {
         </CardContent>
       </Card>
 
-      <EditProfileModal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} />
     </div>
   )
 }

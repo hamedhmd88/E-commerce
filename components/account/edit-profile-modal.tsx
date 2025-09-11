@@ -18,8 +18,12 @@ interface EditProfileModalProps {
 export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
   const { user, updateUser } = useAuth()
   const [formData, setFormData] = useState({
-    email: user?.email || "",
+    firstName: user?.name?.firstname || "",
     lastName: user?.name?.lastname || "",
+    email: user?.email || "",
+    username: user?.username || "",
+    phone: user?.phone || "",
+    address: user?.address ? `${user.address.street}, ${user.address.city}` : "",
   })
   const [loading, setLoading] = useState(false)
 
@@ -33,13 +37,29 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
 
       // Update user data
       if (user) {
+        // Split address into street and city if it contains a comma
+        let street = formData.address
+        let city = ""
+        
+        if (formData.address.includes(",")) {
+          const addressParts = formData.address.split(",", 2)
+          street = addressParts[0].trim()
+          city = addressParts[1].trim()
+        }
+
         const updatedUser = {
           ...user,
-          email: formData.email,
           name: {
-            ...user.name,
+            firstname: formData.firstName,
             lastname: formData.lastName,
           },
+          email: formData.email,
+          username: formData.username,
+          phone: formData.phone,
+          address: {
+            street: street,
+            city: city
+          }
         }
         updateUser(updatedUser)
       }
@@ -53,6 +73,11 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
     }
   }
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData((prev) => ({ ...prev, [id]: value }))
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md animate-in fade-in-0 zoom-in-95 duration-300">
@@ -61,28 +86,31 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
-              className="transition-all duration-200 focus:scale-[1.02]"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              type="text"
-              value={formData.lastName}
-              onChange={(e) => setFormData((prev) => ({ ...prev, lastName: e.target.value }))}
-              className="transition-all duration-200 focus:scale-[1.02]"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name</Label>
+              <Input id="firstName" type="text" value={formData.firstName} onChange={handleChange} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input id="lastName" type="text" value={formData.lastName} onChange={handleChange} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" value={formData.email} onChange={handleChange} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input id="username" type="text" value={formData.username} onChange={handleChange} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input id="phone" type="tel" value={formData.phone} onChange={handleChange} />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="address">Address</Label>
+              <Input id="address" type="text" value={formData.address} onChange={handleChange} placeholder="Street, City" />
+            </div>
           </div>
 
           <div className="flex space-x-3 pt-4">

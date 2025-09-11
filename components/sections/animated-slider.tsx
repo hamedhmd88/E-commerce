@@ -140,7 +140,7 @@ export function AnimatedSlider() {
     if (!isHovered) {
       timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % dataSlider.length);
-      }, 5000);
+      }, 4000);
     }
     return () => {
       if (timer) clearInterval(timer);
@@ -292,7 +292,7 @@ export function AnimatedSlider() {
       </AnimatePresence>
 
       {/* Navigation Buttons */}
-      <motion.div
+      {/* <motion.div
         variants={navButtonVariants}
         initial="hidden"
         animate={isHovered ? "visible" : "hidden"}
@@ -307,9 +307,9 @@ export function AnimatedSlider() {
         >
           <ChevronLeft className="h-6 w-6" />
         </Button>
-      </motion.div>
+      </motion.div> */}
 
-      <motion.div
+      {/* <motion.div
         variants={navButtonVariants}
         initial="hidden"
         animate={isHovered ? "visible" : "hidden"}
@@ -324,7 +324,7 @@ export function AnimatedSlider() {
         >
           <ChevronRight className="h-6 w-6" />
         </Button>
-      </motion.div>
+      </motion.div> */}
 
       {/* Slide Indicators */}
       <div className="absolute bottom-[-20px] left-1/2 -translate-x-1/2 flex space-x-2 m-7">

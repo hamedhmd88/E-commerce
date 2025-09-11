@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"  // اضافه کردن useEffect
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -19,6 +19,18 @@ export function LoginForm() {
   const [error, setError] = useState("")
   const { login, isLoading } = useAuth()
   const router = useRouter()
+
+  // state جدید برای credentials ثبت‌شده
+  const [registeredUsername, setRegisteredUsername] = useState<string | null>(null)
+  const [hasRegisteredPassword, setHasRegisteredPassword] = useState(false)
+
+  // لود credentials از localStorage فقط سمت کلاینت
+  useEffect(() => {
+    const username = localStorage.getItem("registered_username")
+    const storedPassword = localStorage.getItem("registered_password")
+    setRegisteredUsername(username)
+    setHasRegisteredPassword(!!storedPassword)  // چک وجود password بدون نمایش مستقیم
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -79,6 +91,13 @@ export function LoginForm() {
             <p>Demo credentials:</p>
             <p>Username: mor_2314</p>
             <p>Password: 83r5^_</p>
+            {registeredUsername && (
+              <>
+                <p className="mt-2">یا با اطلاعات ثبت‌نام شده خود وارد شوید:</p>
+                <p>Username: {registeredUsername}</p>
+                <p>Password: {hasRegisteredPassword ? "********" : ""}</p>
+              </>
+            )}
           </div>
         </CardContent>
 

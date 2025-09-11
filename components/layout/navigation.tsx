@@ -15,6 +15,7 @@ import { useAuth } from "@/components/auth/auth-provider";
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
+  { name: "Cart", href: "/cart" },
   { name: "Blog", href: "/blog" },
   { name: "About Us", href: "/about" },
   { name: "Contact Us", href: "/contact" },
@@ -56,7 +57,7 @@ export function Navigation() {
               ModernStore
             </Link>
 
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-6">
               {menuItems.map((item) => (
                 <Button key={item.name} variant="ghost" asChild>
                   <Link
@@ -70,7 +71,7 @@ export function Navigation() {
               ))}
             </div>
 
-            <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+            <div className="hidden md:flex items-center flex-1 max-w-sm mx-8">
               <form onSubmit={handleSearch} className="relative w-full group">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
                 <Input

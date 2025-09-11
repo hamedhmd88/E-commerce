@@ -105,16 +105,15 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <CardContent className="p-4 relative z-10">
-          <div className="relative aspect-square mb-4 overflow-hidden rounded-lg bg-transparent">
+          <div className="relative w-full max-w-[200px] mx-auto h-[180px] sm:h-[200px] mb-4 overflow-hidden rounded-lg bg-transparent">
             <Image
               src={product.image || "/placeholder.svg"}
               alt={product.title}
-              fill
               className="object-contain group-hover:scale-110 transition-transform duration-500"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              style={{ objectFit: "contain" }}
+              fill
             />
-            <Badge className="absolute top-0 right-2 capitalize animate-in fade-in-0 slide-in-from-top-2 duration-300 delay-200">
-              {product.category}
-            </Badge>
 
             <Button
               variant="ghost"
@@ -131,6 +130,10 @@ export function ProductCard({ product }: ProductCardProps) {
               />
             </Button>
           </div>
+
+          <Badge className="absolute top-4 right-6 capitalize animate-in fade-in-0 slide-in-from-top-2 duration-300 delay-200">
+            {product.category}
+          </Badge>
 
           <div className="space-y-2">
             <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors duration-300">

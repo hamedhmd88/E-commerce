@@ -6,6 +6,7 @@ import { useAuth } from "@/components/auth/auth-provider"  // اضافه کرد�
 import { Navigation } from "@/components/layout/navigation"
 import { LoginForm } from "@/components/auth/login-form"
 import { Footer } from "@/components/layout/footer"
+import { Skeleton } from "@/components/ui/skeleton"  // import برای Skeleton (فرض بر وجودش)
 
 export default function LoginPage() {
   const { user, isLoading } = useAuth()  // گرفتن وضعیت کاربر و لودینگ از useAuth
@@ -16,6 +17,26 @@ export default function LoginPage() {
       router.push("/account")  // ریدایرکت به صفحه حساب کاربری
     }
   }, [isLoading, user, router])  // وابستگی‌ها
+
+  if (isLoading) {  // نمایش skeleton موقع لودینگ (مثل بعد از logout)
+    return (
+      <div className="min-h-screen">
+        <Navigation />
+        <main className="container mx-auto px-4 py-16">
+          <div className="max-w-md mx-auto space-y-4">
+            <Skeleton className="h-8 w-3/4 mx-auto bg-muted rounded" /> 
+            <Skeleton className="h-4 w-1/2 mx-auto bg-muted rounded" /> 
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-full bg-muted rounded" /> 
+              <Skeleton className="h-10 w-full bg-muted rounded" /> 
+              <Skeleton className="h-10 w-full bg-muted rounded" /> 
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   if (!isLoading && user) {  // نمایش لودینگ یا چیزی در حین چک
     return <div>Redirecting...</div>
