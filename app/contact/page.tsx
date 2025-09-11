@@ -1,14 +1,12 @@
-import { Navigation } from "@/components/layout/navigation"
 import { ContactForm } from "@/components/forms/contact-form"
-import { Footer } from "@/components/layout/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { PageLayout } from "@/components/layout/page-layout"
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-16">
+
+        <PageLayout customLastLabel="Contact">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
@@ -107,8 +105,6 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
+        </PageLayout>
   )
 }

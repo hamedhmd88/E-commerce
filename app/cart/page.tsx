@@ -1,15 +1,10 @@
-import { Navigation } from "@/components/layout/navigation"
-import { CartPage } from "@/components/cart/cart-page"
-import { Footer } from "@/components/layout/footer"
+import { CartPage } from "@/components/cart/cart-page";
+import { PageLayout } from "@/components/layout/page-layout";
 
 export default function Cart() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8">
-        <CartPage />
-      </main>
-      <Footer />
-    </div>
-  )
+    <PageLayout customLastLabel="Cart">
+      <CartPage />
+    </PageLayout>
+  );
 }

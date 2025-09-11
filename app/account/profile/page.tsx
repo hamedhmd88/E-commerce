@@ -1,15 +1,10 @@
-import { Navigation } from "@/components/layout/navigation"
-import { ProfilePage } from "@/components/account/profile-page"
-import { Footer } from "@/components/layout/footer"
+import { ProfilePage } from "@/components/account/profile-page";
+import { PageLayout } from "@/components/layout/page-layout";
 
 export default function Profile() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8">
-        <ProfilePage />
-      </main>
-      <Footer />
-    </div>
-  )
+    <PageLayout customLastLabel="Profile">
+      <ProfilePage />
+    </PageLayout>
+  );
 }

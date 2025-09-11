@@ -7,6 +7,7 @@ import { Navigation } from "@/components/layout/navigation"
 import { LoginForm } from "@/components/auth/login-form"
 import { Footer } from "@/components/layout/footer"
 import { Skeleton } from "@/components/ui/skeleton"  // import برای Skeleton (فرض بر وجودش)
+import { PageLayout } from "@/components/layout/page-layout"
 
 export default function LoginPage() {
   const { user, isLoading } = useAuth()  // گرفتن وضعیت کاربر و لودینگ از useAuth
@@ -43,9 +44,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-16">
+
+        <PageLayout customLastLabel="Login">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-balance">Welcome Back</h1>
@@ -53,8 +53,7 @@ export default function LoginPage() {
           </div>
           <LoginForm />
         </div>
-      </main>
-      <Footer />
-    </div>
+        </PageLayout>
+
   )
 }

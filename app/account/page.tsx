@@ -1,15 +1,10 @@
-import { Navigation } from "@/components/layout/navigation"
 import { AccountDashboard } from "@/components/account/account-dashboard"
-import { Footer } from "@/components/layout/footer"
+import { PageLayout } from "@/components/layout/page-layout"
 
 export default function AccountPage() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8">
-        <AccountDashboard />
-      </main>
-      <Footer />
-    </div>
+    <PageLayout customLastLabel="Account">
+      <AccountDashboard />
+    </PageLayout>
   )
 }
