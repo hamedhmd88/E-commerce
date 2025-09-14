@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -15,7 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Filter } from "lucide-react";
+import { X, Filter, Plus, Minus } from "lucide-react";
+import { CustomSlider } from "../ui/custom-slider";
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
@@ -56,10 +56,47 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
     searchQuery: "",
   });
 
-  // Initialize filters from URL params
+  const [tempPriceRange, setTempPriceRange] = useState(filters.priceRange);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const isUpdating = useRef(false);
+
+  // استفاده از useCallback برای onFiltersChange
+  const memoizedOnFiltersChange = useCallback(onFiltersChange, [onFiltersChange]);
+
+  // اصلاح useEffect برای جلوگیری از infinite loop
   useEffect(() => {
-    const urlCategories =
-      searchParams.get("categories")?.split(",").filter(Boolean) || [];
+    memoizedOnFiltersChange(filters);
+  }, [filters, memoizedOnFiltersChange]);
+
+  // تابع برای تغییرات موقت (با debounce)
+  const handleTempChange = useCallback((value: number[]) => {
+    setTempPriceRange(value as [number, number]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      handleFilterChange("priceRange", value as [number, number]);
+    }, 300);
+  }, []);
+
+  // تابع adjustPrice
+  const adjustPrice = useCallback((index: 0 | 1, delta: number) => {
+    setTempPriceRange((prev) => {
+      const newRange = [...prev];
+      newRange[index] = Math.max(0, Math.min(1000, newRange[index] + delta));
+      if (index === 0 && newRange[0] > newRange[1]) newRange[0] = newRange[1];
+      if (index === 1 && newRange[1] < newRange[0]) newRange[1] = newRange[0];
+      return newRange as [number, number];
+    });
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setFilters(prev => ({ ...prev, priceRange: tempPriceRange }));
+    }, 300);
+  }, [tempPriceRange]);
+
+  // Initialization from URL (با ref برای جلوگیری از لوپ)
+  useEffect(() => {
+    if (isUpdating.current) return;
+
+    const urlCategories = searchParams.get("categories")?.split(",").filter(Boolean) || [];
     const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
     const urlMaxPrice = Number(searchParams.get("maxPrice")) || 1000;
     const urlMinRating = Number(searchParams.get("minRating")) || 0;
@@ -74,59 +111,66 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
       searchQuery: urlSearchQuery,
     };
 
-    if (JSON.stringify(filters) !== JSON.stringify(initialFilters)) {
+    const isDifferent = JSON.stringify(filters) !== JSON.stringify(initialFilters);
+    if (isDifferent) {
+      isUpdating.current = true;
       setFilters(initialFilters);
-      onFiltersChange(initialFilters);
+      setTempPriceRange(initialFilters.priceRange);
+      setTimeout(() => {
+        isUpdating.current = false;
+      }, 0);
     }
-  }, [searchParams, onFiltersChange]);
+  }, [searchParams]);
 
-  const updateURL = (newFilters: FilterState) => {
+  // updateURL با چک برای جلوگیری از push غیرضروری
+  const updateURL = useCallback((newFilters: FilterState) => {
     const params = new URLSearchParams();
-
     if (newFilters.searchQuery) params.set("q", newFilters.searchQuery);
-    if (newFilters.categories.length > 0)
-      params.set("categories", newFilters.categories.join(","));
-    if (newFilters.priceRange[0] > 0)
-      params.set("minPrice", newFilters.priceRange[0].toString());
-    if (newFilters.priceRange[1] < 1000)
-      params.set("maxPrice", newFilters.priceRange[1].toString());
-    if (newFilters.minRating > 0)
-      params.set("minRating", newFilters.minRating.toString());
-    if (newFilters.sortBy !== "default")
-      params.set("sortBy", newFilters.sortBy);
+    if (newFilters.categories.length > 0) params.set("categories", newFilters.categories.join(","));
+    if (newFilters.priceRange[0] > 0) params.set("minPrice", newFilters.priceRange[0].toString());
+    if (newFilters.priceRange[1] < 1000) params.set("maxPrice", newFilters.priceRange[1].toString());
+    if (newFilters.minRating > 0) params.set("minRating", newFilters.minRating.toString());
+    if (newFilters.sortBy !== "default") params.set("sortBy", newFilters.sortBy);
 
-    const url = params.toString()
-      ? `/products?${params.toString()}`
-      : "/products";
-    router.push(url, { scroll: false });
-  };
+    const newUrl = params.toString() ? `/products?${params.toString()}` : "/products";
+    
+    if (window.location.pathname + window.location.search !== newUrl) {
+      isUpdating.current = true;
+      router.push(newUrl, { scroll: false });
+      setTimeout(() => {
+        isUpdating.current = false;
+      }, 0);
+    }
+  }, [router]);
 
-  const handleFilterChange = (key: keyof FilterState, value: any) => {
+  // handleFilterChange با چک اضافی
+  const handleFilterChange = useCallback((key: keyof FilterState, value: any) => {
     const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFiltersChange(newFilters);
-    updateURL(newFilters);
-  };
+    if (JSON.stringify(newFilters) !== JSON.stringify(filters)) {
+      setFilters(newFilters);
+      updateURL(newFilters);
+    }
+  }, [filters, updateURL]);
 
-  const handleCategoryChange = (categoryId: string, checked: boolean) => {
+  const handleCategoryChange = useCallback((categoryId: string, checked: boolean) => {
     const newCategories = checked
       ? [...filters.categories, categoryId]
       : filters.categories.filter((c) => c !== categoryId);
     handleFilterChange("categories", newCategories);
-  };
+  }, [filters.categories, handleFilterChange]);
 
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     const clearedFilters = {
       categories: [],
       priceRange: [0, 1000] as [number, number],
       minRating: 0,
       sortBy: "default",
-      searchQuery: filters.searchQuery, // Keep search query
+      searchQuery: filters.searchQuery,
     };
     setFilters(clearedFilters);
-    onFiltersChange(clearedFilters);
+    setTempPriceRange(clearedFilters.priceRange);
     updateURL(clearedFilters);
-  };
+  }, [filters.searchQuery, updateURL]);
 
   const hasActiveFilters =
     filters.categories.length > 0 ||
@@ -175,54 +219,45 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
       </Card>
 
       {/* Active Filters */}
-{hasActiveFilters && (
-  <Card>
-    <CardContent className="pt-6">
-      <div className="flex flex-wrap gap-2">
-        {filters.categories.map((category) => (
-          <Badge 
-            key={category} 
-            variant="secondary" 
-            className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-            onClick={() => {
-              console.log('Removing category:', category); // Debug log (می‌تونی بعد از تست حذف کنی)
-              handleCategoryChange(category, false);
-            }}
-          >
-            {categories.find((c) => c.id === category)?.label}
-            <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-          </Badge>
-        ))}
-        {(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) && (
-          <Badge 
-            variant="secondary" 
-            className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-            onClick={() => {
-              console.log('Removing price range'); // Debug log
-              handleFilterChange("priceRange", [0, 1000]);
-            }}
-          >
-            ${filters.priceRange[0]} - ${filters.priceRange[1]}
-            <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-          </Badge>
-        )}
-        {filters.minRating > 0 && (
-          <Badge 
-            variant="secondary" 
-            className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-            onClick={() => {
-              console.log('Removing min rating:', filters.minRating); // Debug log
-              handleFilterChange("minRating", 0);
-            }}
-          >
-            {filters.minRating}+ Stars
-            <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-          </Badge>
-        )}
-      </div>
-    </CardContent>
-  </Card>
-)}
+      {hasActiveFilters && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex flex-wrap gap-2">
+              {filters.categories.map((category) => (
+                <Badge
+                  key={category}
+                  variant="secondary"
+                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
+                  onClick={() => handleCategoryChange(category, false)}
+                >
+                  {categories.find((c) => c.id === category)?.label}
+                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
+                </Badge>
+              ))}
+              {(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) && (
+                <Badge
+                  variant="secondary"
+                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
+                  onClick={() => handleFilterChange("priceRange", [0, 1000])}
+                >
+                  ${filters.priceRange[0]} - ${filters.priceRange[1]}
+                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
+                </Badge>
+              )}
+              {filters.minRating > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
+                  onClick={() => handleFilterChange("minRating", 0)}
+                >
+                  {filters.minRating}+ Stars
+                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
+                </Badge>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Categories */}
       <Card>
@@ -231,7 +266,10 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           {categories.map((category) => (
-            <div key={category.id} className="flex items-center space-x-2 cursor-pointer">
+            <div
+              key={category.id}
+              className="flex items-center space-x-2 cursor-pointer"
+            >
               <Checkbox
                 id={category.id}
                 checked={filters.categories.includes(category.id)}
@@ -239,10 +277,7 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
                   handleCategoryChange(category.id, checked as boolean)
                 }
               />
-              <Label
-                htmlFor={category.id}
-                className="text-sm font-normal "
-              >
+              <Label htmlFor={category.id} className="text-sm font-normal">
                 {category.label}
               </Label>
             </div>
@@ -255,20 +290,62 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
         <CardHeader>
           <CardTitle className="text-base">Price Range</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 cursor-pointer">
-          <Slider
-            value={filters.priceRange}
-            onValueChange={(value) =>
-              handleFilterChange("priceRange", value as [number, number])
-            }
+        <CardContent className="space-y-4">
+          <CustomSlider
+            value={tempPriceRange}
+            onValueChange={handleTempChange}
             max={1000}
             min={0}
             step={10}
             className="w-full"
           />
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>${filters.priceRange[0]}</span>
-            <span>${filters.priceRange[1]}</span>
+          <div className="flex items-start justify-between text-sm text-muted-foreground">
+            <div className="flex flex-col items-center">
+              <span>${tempPriceRange[0]}</span>
+              <div className="flex space-x-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => adjustPrice(0, -10)}
+                  disabled={tempPriceRange[0] <= 0}
+                  className="h-6 w-6 p-0"
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => adjustPrice(0, 10)}
+                  disabled={tempPriceRange[0] >= tempPriceRange[1]}
+                  className="h-6 w-6 p-0"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <span>${tempPriceRange[1]}</span>
+              <div className="flex space-x-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => adjustPrice(1, -10)}
+                  disabled={tempPriceRange[1] <= tempPriceRange[0]}
+                  className="h-6 w-6 p-0"
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => adjustPrice(1, 10)}
+                  disabled={tempPriceRange[1] >= 1000}
+                  className="h-6 w-6 p-0"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

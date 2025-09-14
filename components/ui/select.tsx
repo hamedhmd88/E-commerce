@@ -24,7 +24,8 @@ function SelectValue({
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
-function SelectTrigger({
+// تغییر SelectTrigger به memoized version
+const SelectTrigger = React.memo(function SelectTrigger({
   className,
   size = "default",
   children,
@@ -47,8 +48,8 @@ function SelectTrigger({
         <ChevronDownIcon className="size-4 opacity-50" />
       </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
-  )
-}
+  );
+});
 
 function SelectContent({
   className,

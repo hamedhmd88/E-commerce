@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { useSearchParams } from "next/navigation"
 import { ProductCard } from "@/components/product/product-card"
 import { ProductFilters, type FilterState } from "@/components/product/product-filters"
@@ -28,7 +28,8 @@ export function ProductsGrid({ initialProducts }: { initialProducts: Product[] }
 
 
 
-  const applyFilters = (filters: FilterState) => {
+  // اصلاح applyFilters با useCallback
+  const applyFilters = useCallback((filters: FilterState) => {
     let filtered = [...initialProducts]
 
     // Search filter
@@ -77,17 +78,17 @@ export function ProductsGrid({ initialProducts }: { initialProducts: Product[] }
 
     setFilteredProducts(filtered)
     setCurrentPage(1)
-  }
+  }, [initialProducts])
 
   const indexOfLastProduct = currentPage * productsPerPage
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
 
-  const paginate = (pageNumber: number) => {
+  const paginate = useCallback((pageNumber: number) => {
     setCurrentPage(pageNumber)
     window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+  }, [])
 
 
 
