@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { ProductCard } from "@/components/product/product-card"
 import { ProductFilters, type FilterState } from "@/components/product/product-filters"
@@ -20,33 +20,16 @@ interface Product {
   }
 }
 
-export function ProductsGrid() {
-  const [allProducts, setAllProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+export function ProductsGrid({ initialProducts }: { initialProducts: Product[] }) {
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts)
   const [currentPage, setCurrentPage] = useState(1)
   const [productsPerPage] = useState(12)
   const searchParams = useSearchParams()
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://fakestoreapi.com/products")
-        const data = await response.json()
-        setAllProducts(data)
-        setFilteredProducts(data)
-      } catch (error) {
-        console.error("Error fetching products:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
 
-    fetchProducts()
-  }, [])
 
   const applyFilters = (filters: FilterState) => {
-    let filtered = [...allProducts]
+    let filtered = [...initialProducts]
 
     // Search filter
     if (filters.searchQuery) {
@@ -106,29 +89,7 @@ export function ProductsGrid() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="bg-muted rounded-lg h-32 animate-pulse"></div>
-          ))}
-        </div>
-        <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-muted rounded-lg h-64 mb-4"></div>
-                <div className="bg-muted rounded h-4 mb-2"></div>
-                <div className="bg-muted rounded h-4 w-2/3 mb-2"></div>
-                <div className="bg-muted rounded h-6 w-1/3"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
