@@ -129,3 +129,9 @@
     @apply bg-background text-foreground;
   }
 }
+/* globals.css یا هر فایل css ای که به پروژه وصله */
+.bg-double-gradient {
+  background-image: 
+    linear-gradient(to bottom right, hsl(oklch(0.627 0.265 303.9)/0.1), hsl(var(--background)), hsl(oklch(0.696 0.17 162.48)/0.1)),
+    linear-gradient(to bottom left, hsl(oklch(0.696 0.17 162.48)/0.1), hsl(var(--background)), hsl(oklch(0.627 0.265 303.9)/0.1));
+}

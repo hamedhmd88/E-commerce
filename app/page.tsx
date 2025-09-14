@@ -9,6 +9,7 @@ import { StatsSection } from "@/components/sections/stats-section";
 import { Footer } from "@/components/layout/footer";
 import { Suspense } from "react";
 import { FeaturedProductsSkeleton } from "@/components/product/featured-products-skeleton";
+import { FAQSection } from "@/components/sections/faq-section";
 
 export default function HomePage() {
   return (
@@ -24,6 +25,7 @@ export default function HomePage() {
         </Suspense>
         <TestimonialsSection />
         <NewsletterSection />
+        <FAQSection/>
       </main>
       <Footer />
     </div>

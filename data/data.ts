@@ -153,3 +153,39 @@ export const testimonials: Testimonial[] = [
 
 /////////////////////////////////////////////////////////
 
+// Define TypeScript interface for FAQ items
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export const faqItems: FAQItem[] = [
+  {
+    question: "How can I track my order?",
+    answer: "After placing an order, you'll receive a confirmation email. You can track the status in your account dashboard."
+  },
+  {
+    question: "What are the available payment methods?",
+    answer: "We support online payments via bank gateways, credit cards, and cash on delivery."
+  },
+  {
+    question: "How long does shipping take?",
+    answer: "Orders are typically shipped within 1-3 business days. Exact time depends on your location."
+  },
+  {
+    question: "Is there a return policy?",
+    answer: "Yes, you can return items within 7 days of receipt, provided they are unused and in original packaging."
+  },
+  {
+    question: "How do I create an account?",
+    answer: "Click on the register button and enter your details. The process is quick and simple."
+  },
+  {
+    question: "Are there any special discounts?",
+    answer: "Yes, check the featured products section or subscribe to our newsletter for exclusive deals."
+  },
+  {
+    question: "How can I contact support?",
+    answer: "Reach us via the contact page or email us at support@example.com."
+  }
+];
