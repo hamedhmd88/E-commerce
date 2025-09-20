@@ -11,8 +11,8 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // دریافت توکن احراز هویت از کوکی‌ها یا هدرهای درخواست
-  // ابتدا از کوکی authToken بررسی می‌کند، در صورت عدم وجود از هدر Authorization استفاده می‌کند
-  const token = request.cookies.get("authToken")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
+  // ابتدا از کوکی auth_token بررسی می‌کند، در صورت عدم وجود از هدر Authorization استفاده می‌کند
+  const token = request.cookies.get("auth_token")?.value || request.headers.get("authorization")?.replace("Bearer ", "")
 
   // تعریف مسیرهای محافظت شده که نیاز به احراز هویت دارند
   // این مسیرها شامل حساب کاربری، پرداخت و سفارشات هستند

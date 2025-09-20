@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Authentication</title>
+</head>
+<body>
+    <h1>Test Authentication</h1>
+    <button onclick="clearStorage()">Clear Storage</button>
+    <button onclick="checkStorage()">Check Storage</button>
+    <button onclick="testLogin()">Test Login</button>
+    <div id="output"></div>
+
+    <script>
+        function clearStorage() {
+            localStorage.clear();
+            document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+            document.getElementById('output').innerHTML = 'Storage cleared!';
+        }
+
+        function checkStorage() {
+            const token = localStorage.getItem('auth_token');
+            const userData = localStorage.getItem('user_data');
+            const cookies = document.cookie;
+            document.getElementById('output').innerHTML = `
+                <p>Token: ${token}</p>
+                <p>User Data: ${userData}</p>
+                <p>Cookies: ${cookies}</p>
+            `;
+        }
+
+        function testLogin() {
+            // Simulate login data
+            const token = 'simulated-jwt-token';
+            const userData = {
+                id: 1,
+                email: 'test@example.com',
+                username: 'testuser',
+                name: { firstname: 'Test', lastname: 'User' },
+                phone: '+1-555-0123',
+                address: {
+                    street: '123 Test Street',
+                    city: 'Test City'
+                }
+            };
+
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('user_data', JSON.stringify(userData));
+            document.cookie = `auth_token=${token}; path=/; max-age=604800; samesite=strict`;
+            
+            document.getElementById('output').innerHTML = 'Test login data set! Now go to /account';
+        }
+    </script>
+</body>
+</html>

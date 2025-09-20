@@ -21,9 +21,13 @@ export function AccountDashboard() {
 
   useEffect(() => {
     console.log('AccountDashboard useEffect:', { user: !!user, isLoading })
+    // Only redirect if not loading AND no user AND no token in localStorage
     if (!isLoading && !user) {
-      console.log('Redirecting to login')
-      router.push("/login")
+      const token = localStorage.getItem('auth_token')
+      if (!token) {
+        console.log('No token found, redirecting to login')
+        router.push("/login")
+      }
     }
   }, [user, isLoading, router])
 
