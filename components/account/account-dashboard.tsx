@@ -9,13 +9,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/components/auth/auth-provider"
 import { useWishlist } from "@/components/account/wishlist-provider"
 import { User, ShoppingBag, Heart, Settings, LogOut } from "lucide-react"
-// حذف import EditProfileModal
 
 export function AccountDashboard() {
   const { user, logout, isLoading } = useAuth()
   const { wishlistCount } = useWishlist()
   const router = useRouter()
-  // حذف state isEditModalOpen
 
   console.log('AccountDashboard render:', { user: !!user, isLoading })
 
@@ -46,9 +44,21 @@ export function AccountDashboard() {
     return null
   }
 
-  const handleLogout = () => {
-    logout()
-    router.push("/login")
+  const handleLogout = async () => {
+    try {
+      // Call logout to clear all data
+      logout()
+      
+      // Use replace instead of push to prevent going back to account page
+      await router.replace("/login")
+      
+      // Force a complete page refresh to ensure clean state
+      window.location.href = "/login"
+    } catch (error) {
+      console.error('Logout error:', error)
+      // Fallback: force navigation to login
+      window.location.href = "/login"
+    }
   }
 
   return (
