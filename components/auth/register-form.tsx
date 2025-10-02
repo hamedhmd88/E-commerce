@@ -13,7 +13,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Loader2, Eye, EyeOff } from "lucide-react"
 import type { RegisterUserData } from "@/lib/auth-constants"
-import { toast } from "sonner"
 
 // Form validation types
 interface FormErrors {
