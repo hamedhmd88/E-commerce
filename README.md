@@ -6,6 +6,9 @@ A modern e-commerce website built with Next.js and TypeScript.
 
 A full-featured online shopping platform with user authentication, product management, and shopping cart functionality.
 
+## Live Demo
+You can check out the live demo of the project at the following link : [E-commerce](https://e-commerce-g2za.vercel.app/)
+
 ## Key Features
 
 - 🔐 User Authentication (Login/Register)
