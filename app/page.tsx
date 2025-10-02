@@ -11,7 +11,7 @@ import { Suspense } from "react";
 import { FeaturedProductsSkeleton } from "@/components/product/featured-products-skeleton";
 import { FAQSection } from "@/components/sections/faq-section";
 
-export const dynamic = 'force-dynamic';\n\nexport default function HomePage() {
+export default function HomePage() {
   return (
     <div className="min-h-screen relative">
       <Navigation />

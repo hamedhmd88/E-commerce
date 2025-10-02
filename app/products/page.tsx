@@ -16,7 +16,7 @@ interface Product {
   }
 }
 
-export const dynamic = 'force-dynamic';\n\nexport default async function ProductsPage() {
+export default async function ProductsPage() {
   const products: Product[] = await productService.getAllProducts();
   return (
     <PageLayout>
