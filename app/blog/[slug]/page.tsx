@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { blogPosts } from "@/components/blog/blog-grid";
+import { RelatedBlogs } from "@/components/blog/related-blogs";
 import { BreadcrumbNav } from "@/components/layout/breadcrumb-nav";
 import { Calendar, Clock, User, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -13,8 +14,6 @@ interface BlogPostPageProps {
     slug: string;
   }>;
 }
-
-
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
@@ -81,16 +80,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
 
             {/* Call to action */}
-            <div className="mt-12 p-6 bg-gray-50 rounded-lg text-center">
-              <h3 className="text-xl font-semibold mb-2">
-                Ready to start your e-commerce journey?
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Explore our products and find everything you need to succeed.
-              </p>
-              <Button asChild>
-                <Link href="/">Shop Now</Link>
-              </Button>
+            <div className="mt-12 rounded-lg text-center">
+              {/* Related blogs section */}
+              <RelatedBlogs currentSlug={slug} />
             </div>
           </div>
         </main>
