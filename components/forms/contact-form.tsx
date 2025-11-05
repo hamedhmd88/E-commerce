@@ -66,7 +66,7 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name">Full Name *</Label>
+              <Label htmlFor="name" className="mb-2">Full Name *</Label>
               <Input
                 id="name"
                 required
@@ -76,7 +76,7 @@ export function ContactForm() {
               />
             </div>
             <div>
-              <Label htmlFor="email">Email Address *</Label>
+              <Label htmlFor="email" className="mb-2">Email Address *</Label>
               <Input
                 id="email"
                 type="email"
@@ -89,7 +89,7 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="category">Category</Label>
+            <Label htmlFor="category" className="mb-2">Category</Label>
             <Select
               value={formData.category}
               onValueChange={(value) => handleChange("category", value)}
@@ -109,7 +109,7 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="subject">Subject *</Label>
+            <Label htmlFor="subject" className="mb-2">Subject *</Label>
             <Input
               id="subject"
               required
@@ -120,7 +120,7 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="message">Message *</Label>
+            <Label htmlFor="message" className="mb-2">Message *</Label>
             <Textarea
               id="message"
               required

@@ -3,7 +3,7 @@
 import type React from "react";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +27,7 @@ export function Navigation() {
   const { totalItems, setIsOpen } = useCart();
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +60,11 @@ export function Navigation() {
 
             <div className="hidden md:flex items-center space-x-6">
               {menuItems.map((item) => (
-                <Button key={item.name} variant="ghost" asChild>
+                <Button
+                  key={item.name}
+                  variant={pathname === item.href ? "default" : "ghost"}
+                  asChild
+                >
                   <Link
                     href={item.href}
                     scroll={true}
@@ -97,7 +102,7 @@ export function Navigation() {
 
               {/* Cart Button */}
               <Button
-                variant="ghost"
+                variant={pathname === "/cart" ? "default" : "ghost"}
                 size="icon"
                 className="relative hover:scale-110 transition-transform"
                 onClick={() => setIsOpen(true)}
@@ -113,7 +118,7 @@ export function Navigation() {
               {/* User Account */}
               <Link href={user ? "/account" : "/login"} scroll={true}>
                 <Button
-                  variant="ghost"
+                  variant={pathname === "/account" || pathname === "/login" ? "default" : "ghost"}
                   size="icon"
                   className="hover:scale-110 transition-transform"
                 >
@@ -153,7 +158,7 @@ export function Navigation() {
                 {menuItems.map((item) => (
                   <Button
                     key={item.name}
-                    variant="ghost"
+                    variant={pathname === item.href ? "default" : "ghost"}
                     asChild
                     className="w-full justify-center"
                   >
