@@ -68,3 +68,11 @@ src/
 ```
 
 That's it! The project should be running locally on your machine.
+
+## 📸 Sample Screenshot
+
+Below is a sample screenshot of the project:
+
+![Project Screenshot](public/project/project1.jpg)
+
+![Project Screenshot](public/project/project2.jpg)
