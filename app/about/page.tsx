@@ -7,6 +7,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { PageLayout } from "@/components/layout/page-layout";
+import { ExperienceShowcase } from "@/components/about/experience-showcase";
 
 export const metadata: Metadata = {
   title: "About",
@@ -15,20 +16,21 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <PageLayout customLastLabel="About">
-      <section className="mx-auto max-w-5xl py-10 lg:py-20">
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[.28em] text-primary">
+    <PageLayout customLastLabel="About" variant="catalog">
+      <section className="mx-auto max-w-6xl py-4 lg:py-8">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[.28em] text-primary">
           About the project
         </p>
-        <h1 className="max-w-4xl font-serif text-5xl leading-tight tracking-tight sm:text-7xl">
+        <h1 className="max-w-4xl font-serif text-4xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
           A more considered way to <em className="text-primary">explore.</em>
         </h1>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
           Morrow is a portfolio demonstration of a modern storefront. It brings
           a varied product catalog into a calm, useful shopping interface
           designed to make discovery feel effortless.
         </p>
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
+        <ExperienceShowcase />
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
           {[
             {
               icon: Layers3,
@@ -48,22 +50,22 @@ export default function AboutPage() {
           ].map(({ icon: Icon, title, copy }) => (
             <div
               key={title}
-              className="rounded-2xl border border-border bg-card p-7"
+              className="glass-panel rounded-[1.5rem] p-6 transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none"
             >
-              <Icon className="mb-6 size-7 text-primary" aria-hidden />
-              <h2 className="font-serif text-2xl">{title}</h2>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
+              <Icon className="mb-4 size-6 text-primary" aria-hidden />
+              <h2 className="font-serif text-xl sm:text-2xl">{title}</h2>
+              <p className="mt-2 leading-relaxed text-muted-foreground">
                 {copy}
               </p>
             </div>
           ))}
         </div>
-        <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-3xl bg-muted p-8 sm:p-12">
+        <div className="glass-panel mt-6 flex flex-wrap items-center justify-between gap-5 rounded-[1.75rem] p-7 sm:p-9">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[.25em] text-primary">
               Explore the collection
             </p>
-            <h2 className="mt-3 font-serif text-3xl">
+            <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
               Find something that fits your day.
             </h2>
           </div>

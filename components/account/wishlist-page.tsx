@@ -36,9 +36,9 @@ export function WishlistPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div className="animate-in fade-in-0 slide-in-from-top-4 duration-700">
-        <h1 className="text-3xl font-bold text-balance mb-4">My Wishlist</h1>
+    <div className="mx-auto max-w-6xl space-y-6 py-4 lg:py-7">
+      <div className="glass-panel rounded-[1.75rem] p-6 sm:p-8">
+        <p className="mb-2 text-xs font-semibold tracking-[.16em] text-primary">YOUR SPACE / SAVED FINDS</p><h1 className="mb-2 font-serif text-3xl">My Wishlist</h1>
         <p className="text-muted-foreground">
           {wishlistCount > 0
             ? `You have ${wishlistCount} item${wishlistCount === 1 ? "" : "s"} in your wishlist`
@@ -47,12 +47,12 @@ export function WishlistPage() {
       </div>
 
       {wishlistItems.length === 0 ? (
-        <div className="text-center py-16 animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
-          <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground/50" />
-          <h2 className="text-2xl font-semibold mb-4">
+        <div className="glass-panel rounded-[1.75rem] px-6 py-14 text-center">
+          <span className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Heart className="size-8" /></span>
+          <h2 className="mb-3 font-serif text-2xl">
             Your wishlist is empty
           </h2>
-          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+          <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             Start adding products to your wishlist by clicking the heart icon on
             any product
           </p>

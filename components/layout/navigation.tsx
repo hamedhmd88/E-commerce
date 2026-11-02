@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ShoppingCart, User, Menu, X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { CartSidebar } from "@/components/cart/cart-sidebar";
 import { useCart } from "@/components/cart/cart-provider";
 import { useAuth } from "@/components/auth/auth-provider";
 
@@ -19,11 +19,31 @@ const menuItems = [
   { name: "Contact", href: "/contact" },
 ];
 
+const CartSidebar = dynamic(
+  () => import("@/components/cart/cart-sidebar").then((module) => module.CartSidebar),
+  { ssr: false },
+);
+
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { totalItems, setIsOpen } = useCart();
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const [cartLoaded, setCartLoaded] = useState(false);
+  const { totalItems, isOpen, setIsOpen } = useCart();
   const { user } = useAuth();
   const pathname = usePathname();
+
+  useEffect(() => {
+    setPendingHref(null);
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isOpen) setCartLoaded(true);
+  }, [isOpen]);
+
+  const beginNavigation = (href: string) => {
+    if (href !== pathname) setPendingHref(href);
+  };
 
   return (
     <>
@@ -43,6 +63,7 @@ export function Navigation() {
             <Link
               href="/"
               scroll={true}
+              onClick={() => beginNavigation("/")}
               className="flex items-center gap-2.5 font-semibold tracking-[-.055em] text-foreground sm:text-xl"
             >
               <Image
@@ -64,6 +85,7 @@ export function Navigation() {
                   <Link
                     href={item.href}
                     scroll={true}
+                    onClick={() => beginNavigation(item.href)}
                     className={`hover:!bg-primary/10 hover:!text-foreground dark:hover:!text-foreground ${
                       pathname === item.href
                         ? "text-primary"
@@ -86,7 +108,7 @@ export function Navigation() {
                 variant={pathname === "/cart" ? "default" : "ghost"}
                 size="icon"
                 className="relative hover:scale-110 transition-transform"
-                onClick={() => setIsOpen(true)}
+                onClick={() => { setCartLoaded(true); setIsOpen(true); }}
                 aria-label={`Open cart, ${totalItems} items`}
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -101,6 +123,7 @@ export function Navigation() {
               <Link
                 href={user ? "/account" : "/login"}
                 scroll={true}
+                onClick={() => beginNavigation(user ? "/account" : "/login")}
                 aria-label={user ? "Account" : "Sign in"}
               >
                 <Button
@@ -151,7 +174,7 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       scroll={true}
-                      onClick={() => setIsMenuOpen(false)}
+                      onClick={() => { setIsMenuOpen(false); beginNavigation(item.href); }}
                       className="text-foreground transition-colors py-2 hover:!text-foreground"
                     >
                       {item.name}
@@ -162,8 +185,9 @@ export function Navigation() {
             </div>
           )}
         </div>
+        {pendingHref && <div className="nav-route-progress" role="status" aria-label="Loading page" />}
       </nav>
-      <CartSidebar />
+      {cartLoaded && <CartSidebar />}
     </>
   );
 }

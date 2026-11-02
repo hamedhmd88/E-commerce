@@ -42,9 +42,9 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
-      <div className="animate-in fade-in-0 slide-in-from-top-4 duration-700">
-        <h1 className="text-3xl font-bold text-balance mb-4">
+    <div className="mx-auto max-w-4xl space-y-6 py-4 lg:py-7">
+      <div className="glass-panel rounded-[1.75rem] p-6 sm:p-8">
+        <p className="mb-2 text-xs font-semibold tracking-[.16em] text-primary">YOUR SPACE / PROFILE</p><h1 className="mb-2 font-serif text-3xl">
           Profile Settings
         </h1>
         <p className="text-muted-foreground">
@@ -52,11 +52,11 @@ export function ProfilePage() {
         </p>
       </div>
 
-      <Card className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
+      <Card className="glass-panel rounded-[1.75rem] bg-transparent">
         <CardHeader>
           <div className="flex items-center space-x-4">
             <Avatar className="h-20 w-20">
-              <AvatarFallback className="text-2xl">
+              <AvatarFallback className="bg-primary/15 text-2xl text-primary">
                 {user.name.firstname[0]}
                 {user.name.lastname[0]}
               </AvatarFallback>
@@ -70,13 +70,13 @@ export function ProfilePage() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 [&>div]:rounded-xl [&>div]:border [&>div]:border-border/50 [&>div]:bg-background/40 [&>div]:p-4">
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">First Name</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">
+              <p className="mt-1 text-sm">
                 {user.name.firstname}
               </p>
             </div>
@@ -85,7 +85,7 @@ export function ProfilePage() {
                 <User className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Last Name</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">
+              <p className="mt-1 text-sm">
                 {user.name.lastname}
               </p>
             </div>
@@ -94,21 +94,21 @@ export function ProfilePage() {
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Email</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">{user.email}</p>
+              <p className="mt-1 text-sm">{user.email}</p>
             </div>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <User className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Username</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">{user.username}</p>
+              <p className="mt-1 text-sm">{user.username}</p>
             </div>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Phone</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">
+              <p className="mt-1 text-sm">
                 {user.phone || "Not provided"}
               </p>
             </div>
@@ -117,7 +117,7 @@ export function ProfilePage() {
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <label className="text-sm font-medium">Address</label>
               </div>
-              <p className="text-sm bg-muted p-2 rounded">
+              <p className="mt-1 text-sm">
                 {user.address
                   ? `${user.address.street}, ${user.address.city}`
                   : "Not provided"}

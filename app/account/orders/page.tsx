@@ -3,7 +3,7 @@ import { PageLayout } from "@/components/layout/page-layout";
 
 export default function Orders() {
   return (
-    <PageLayout customLastLabel="Orders">
+    <PageLayout customLastLabel="Orders" variant="catalog">
       <OrdersPage />
     </PageLayout>
   );

@@ -88,16 +88,13 @@ export function LoginForm() {
   };
 
   return (
-    <Card>
+    <Card className="glass-panel auth-card relative overflow-hidden rounded-[2rem] border-border/60 bg-transparent p-2 shadow-xl sm:p-4">
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Demo account: username demo, email demo@example.com, password
-          demo12345.
-        </CardDescription>
+        <CardTitle className="font-serif text-3xl">Sign in</CardTitle>
+        <CardDescription>Use your demo credentials or try the shortcut below.</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="auth-fields space-y-4">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -109,6 +106,8 @@ export function LoginForm() {
             <Input
               id="username"
               type="text"
+              autoComplete="username"
+              required
               placeholder="Enter your username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -121,6 +120,8 @@ export function LoginForm() {
             <Input
               id="email"
               type="email"
+              autoComplete="email"
+              required
               placeholder="Enter your email"
               value={email}
               onChange={(e) => {
@@ -138,6 +139,8 @@ export function LoginForm() {
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              required
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -148,7 +151,7 @@ export function LoginForm() {
               aria-label={showPassword ? "Hide password" : "Show password"}
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-8 text-muted-foreground hover:text-foreground"
+              className="absolute right-3 top-9 text-muted-foreground hover:text-foreground"
               disabled={isLoading}
             >
               {showPassword ? (
@@ -160,9 +163,10 @@ export function LoginForm() {
           </div>
 
           {/* Demo credentials section - secure display */}
-          <div className="text-sm text-muted-foreground space-y-2">
-            <div className="p-3 bg-muted rounded-md">
-              <p className="font-medium mb-2">Demo Account Available:</p>
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+              <p className="mb-1 font-semibold text-foreground">Try the demo account</p>
+              <p className="mb-3 text-xs">Explore the account without creating a profile.</p>
               <Button
                 type="button"
                 variant="outline"
@@ -173,7 +177,7 @@ export function LoginForm() {
                   setPassword("demo12345");
                 }}
                 disabled={isLoading}
-                className="w-full"
+                className="w-full rounded-xl border-primary/30 bg-background/60 text-primary hover:bg-primary/10"
               >
                 Use Demo Credentials
               </Button>
@@ -186,8 +190,8 @@ export function LoginForm() {
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col space-y-4 mt-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
+        <CardFooter className="mt-2 flex flex-col space-y-4">
+          <Button type="submit" className="min-h-12 w-full rounded-xl" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>

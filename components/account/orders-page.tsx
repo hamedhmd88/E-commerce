@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag, Package } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/components/auth/auth-provider";
 import {
   clearDemoOrders,
   getDemoOrders,
@@ -11,15 +13,20 @@ import {
 } from "@/lib/demo-orders";
 
 export function OrdersPage() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
   const [orders, setOrders] = useState<DemoOrder[]>([]);
   useEffect(() => {
     setOrders(getDemoOrders());
   }, []);
+  useEffect(() => { if (!isLoading && !user) router.replace("/login?redirect=/account/orders"); }, [isLoading, user, router]);
+
+  if (isLoading || !user) return <div className="py-20 text-center text-muted-foreground">Loading your demo orders…</div>;
 
   return (
-    <div className="space-y-8">
-      <div className="animate-in fade-in-0 slide-in-from-top-4 duration-700">
-        <h1 className="text-3xl font-bold text-balance mb-4">My Orders</h1>
+    <div className="mx-auto max-w-6xl space-y-6 py-4 lg:py-7">
+      <div className="glass-panel rounded-[1.75rem] p-6 sm:p-8">
+        <p className="mb-2 text-xs font-semibold tracking-[.16em] text-primary">YOUR SPACE / ORDERS</p><h1 className="mb-2 font-serif text-3xl">My Orders</h1>
         <p className="text-muted-foreground">
           Demo orders saved in this browser. No shipping or payment takes place.
         </p>
@@ -47,7 +54,7 @@ export function OrdersPage() {
             <Link
               key={order.id}
               href={`/order-success?id=${encodeURIComponent(order.id)}`}
-              className="block rounded-xl border p-5 hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-primary"
+              className="glass-panel block rounded-2xl p-5 transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-primary motion-reduce:transform-none"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <strong>{order.id}</strong>
@@ -61,12 +68,11 @@ export function OrdersPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
-          <Package className="h-16 w-16 mx-auto mb-6 text-muted-foreground/50" />
-          <h2 className="text-2xl font-semibold mb-4">No orders yet</h2>
-          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            You haven&apos;t placed any orders yet. Start shopping to see your
-            order history here.
+        <div className="glass-panel rounded-[1.75rem] px-6 py-14 text-center">
+          <span className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Package className="size-8" /></span>
+          <h2 className="mb-3 font-serif text-2xl">No demo orders yet</h2>
+          <p className="mx-auto mb-6 max-w-md text-muted-foreground">
+            Try the simulated checkout flow to see an order appear here. No real payment or delivery takes place.
           </p>
           <Link href="/products">
             <Button className="hover:scale-105 transition-transform">

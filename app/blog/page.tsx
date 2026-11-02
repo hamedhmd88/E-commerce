@@ -10,24 +10,33 @@ export const metadata: Metadata = {
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string }>;
+  searchParams: Promise<{
+    category?: string;
+    q?: string;
+    page?: string;
+    size?: string;
+  }>;
 }) {
-  const { category, q } = await searchParams;
+  const { category, q, page, size } = await searchParams;
   return (
-    <PageLayout customLastLabel="Blog">
-      <div className="mb-14 max-w-3xl py-8 lg:py-14">
-        <p className="mb-5 text-xs font-semibold uppercase tracking-[.28em] text-primary">
-          The journal
+    <PageLayout customLastLabel="Blog" variant="catalog">
+      <header className="mb-8 max-w-3xl pt-6 lg:mb-10 lg:pt-9">
+        <p className="mb-2 text-sm font-medium text-primary">
+          The Morrow journal
         </p>
-        <h1 className="font-serif text-5xl tracking-tight sm:text-7xl">
-          Stories for <em className="text-primary">everyday living.</em>
+        <h1 className="text-4xl font-medium tracking-[-.055em] text-balance sm:text-5xl lg:text-6xl">
+          Ideas for the everyday.
         </h1>
-        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-          Explore ideas and practical guides across style, accessories, and
-          technology. Editorial content is part of this portfolio demonstration.
+        <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
+          Considered notes on style, useful technology, and shopping well.
         </p>
-      </div>
-      <BlogGrid category={category} query={q} />
+      </header>
+      <BlogGrid
+        category={category}
+        query={q}
+        page={Number(page) || 1}
+        size={Number(size) || 10}
+      />
     </PageLayout>
   );
 }

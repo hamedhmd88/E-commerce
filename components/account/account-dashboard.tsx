@@ -65,17 +65,17 @@ export function AccountDashboard() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-4 duration-700">
+    <div className="mx-auto max-w-6xl space-y-6 py-4 lg:py-7">
+      <div className="glass-panel flex flex-wrap items-center justify-between gap-4 rounded-[1.75rem] p-5 sm:p-7">
         <div className="flex items-center space-x-4">
-          <Avatar className="h-16 w-16 hover:scale-110 transition-transform duration-200">
-            <AvatarFallback className="text-lg">
+          <Avatar className="h-16 w-16 ring-4 ring-primary/15">
+            <AvatarFallback className="bg-primary/15 text-lg text-primary">
               {user.name.firstname[0]}
               {user.name.lastname[0]}
             </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-2xl font-bold">
+            <p className="text-xs font-semibold tracking-[.15em] text-primary">YOUR SPACE</p><h1 className="font-serif text-2xl sm:text-3xl">
               {user.name.firstname} {user.name.lastname}
             </h1>
             <p className="text-muted-foreground">{user.email}</p>
@@ -91,9 +91,9 @@ export function AccountDashboard() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Link href="/account/orders">
-          <Card className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200 animate-in fade-in-0 slide-in-from-bottom-4">
+          <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Orders</CardTitle>
               <ShoppingBag className="h-4 w-4 ml-auto text-muted-foreground" />
@@ -108,7 +108,7 @@ export function AccountDashboard() {
         </Link>
 
         <Link href="/account/wishlist">
-          <Card className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200 animate-in fade-in-0 slide-in-from-bottom-4 delay-100">
+          <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Wishlist</CardTitle>
               <Heart className="h-4 w-4 ml-auto text-muted-foreground" />
@@ -121,7 +121,7 @@ export function AccountDashboard() {
         </Link>
 
         <Link href="/account/profile">
-          <Card className="cursor-pointer hover:shadow-md hover:scale-105 transition-all duration-200 animate-in fade-in-0 slide-in-from-bottom-4 delay-200">
+          <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Profile</CardTitle>
               <Settings className="h-4 w-4 ml-auto text-muted-foreground" />
@@ -135,7 +135,7 @@ export function AccountDashboard() {
       </div>
 
       {/* Account Information */}
-      <Card className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300">
+      <Card className="glass-panel rounded-[1.75rem] bg-transparent">
         <CardHeader>
           <CardTitle>Account Information</CardTitle>
           <CardDescription>
@@ -143,7 +143,7 @@ export function AccountDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 [&>div]:rounded-xl [&>div]:border [&>div]:border-border/50 [&>div]:bg-background/40 [&>div]:p-4">
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 First Name
@@ -190,7 +190,7 @@ export function AccountDashboard() {
       </Card>
 
       {/* Recent Activity */}
-      <Card className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-500">
+      <Card className="glass-panel rounded-[1.75rem] bg-transparent">
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
           <CardDescription>
@@ -212,9 +212,9 @@ export function AccountDashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <ShoppingBag className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No demo orders yet</p>
+            <div className="rounded-2xl border border-dashed border-primary/25 bg-background/35 py-9 text-center text-muted-foreground">
+              <ShoppingBag className="mx-auto mb-3 size-10 text-primary/60" />
+              <p>No demo orders yet</p><Link href="/products" className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4">Explore products</Link>
             </div>
           )}
         </CardContent>
