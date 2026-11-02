@@ -32,6 +32,7 @@ export interface AuthContextType {
     email: string,
     password: string,
   ) => Promise<boolean>;
+  loginPublicSample: (username: string, password: string) => Promise<boolean>;
   register: (userData: RegisterUserData) => Promise<boolean>;
   logout: () => void;
   updateUser: (userData: User) => void;

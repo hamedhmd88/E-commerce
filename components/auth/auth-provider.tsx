@@ -12,6 +12,7 @@ import {
   type RegisterUserData,
   type User,
 } from "@/lib/auth-constants";
+import { demoApiService } from "@/services/demoApiService";
 
 const SESSION_KEY = "portfolio-demo-user";
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -90,6 +91,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const loginPublicSample = async (username: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const authenticated = await demoApiService.sampleLogin(
+        username,
+        password,
+      );
+      if (!authenticated) return false;
+      const sampleUsers = await demoApiService.users();
+      const sample = sampleUsers.find((item) => item.username === username);
+      if (!sample) return false;
+      establish({
+        id: sample.id,
+        username: sample.username,
+        email: sample.email,
+        name: {
+          firstname: sample.name?.firstname || "Sample",
+          lastname: sample.name?.lastname || "Shopper",
+        },
+        phone: sample.phone,
+        address: sample.address
+          ? {
+              city: sample.address.city || "",
+              street: sample.address.street || "",
+            }
+          : undefined,
+      });
+      return true;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const updateUser = (nextUser: User) => establish(nextUser);
   const logout = () => {
     sessionStorage.removeItem(SESSION_KEY);
@@ -98,7 +132,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout, updateUser, isLoading }}
+      value={{
+        user,
+        login,
+        loginPublicSample,
+        register,
+        logout,
+        updateUser,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

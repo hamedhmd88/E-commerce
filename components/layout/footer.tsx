@@ -7,6 +7,9 @@ const groups = [
     title: "Shop",
     links: [
       ["All products", "/products"],
+      ["Product API tools", "/products/manage"],
+      ["Explore sample carts", "/carts/explore"],
+      ["Cart API tools", "/carts"],
       ["Electronics", "/category/electronics"],
       ["Jewelry", "/category/jewelery"],
       ["Clothing", "/products"],
@@ -16,6 +19,7 @@ const groups = [
     title: "Explore",
     links: [
       ["Journal", "/blog"],
+      ["API Studio", "/api-studio"],
       ["Our story", "/about"],
       ["Questions", "/faq"],
       ["Contact", "/contact"],
@@ -27,6 +31,8 @@ const groups = [
       ["Sign in", "/login"],
       ["Create account", "/register"],
       ["My account", "/account"],
+      ["Sample users", "/account/users"],
+      ["User API tools", "/account/users/manage"],
       ["Order history", "/account/orders"],
     ],
   },

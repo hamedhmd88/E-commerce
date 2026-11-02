@@ -14,7 +14,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useWishlist } from "@/components/account/wishlist-provider";
-import { ShoppingBag, Heart, Settings, LogOut } from "lucide-react";
+import { ShoppingBag, Heart, Settings, LogOut, Users } from "lucide-react";
 import { getDemoOrders, type DemoOrder } from "@/lib/demo-orders";
 
 export function AccountDashboard() {
@@ -75,7 +75,10 @@ export function AccountDashboard() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-xs font-semibold tracking-[.15em] text-primary">YOUR SPACE</p><h1 className="font-serif text-2xl sm:text-3xl">
+            <p className="text-xs font-semibold tracking-[.15em] text-primary">
+              YOUR SPACE
+            </p>
+            <h1 className="font-serif text-2xl sm:text-3xl">
               {user.name.firstname} {user.name.lastname}
             </h1>
             <p className="text-muted-foreground">{user.email}</p>
@@ -91,7 +94,7 @@ export function AccountDashboard() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Link href="/account/orders">
           <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
@@ -129,6 +132,20 @@ export function AccountDashboard() {
             <CardContent>
               <div className="text-2xl font-bold">✓</div>
               <p className="text-xs text-muted-foreground">Account settings</p>
+            </CardContent>
+          </Card>
+        </Link>
+        <Link href="/account/users">
+          <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
+            <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">API users</CardTitle>
+              <Users className="ml-auto size-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-primary">↗</div>
+              <p className="text-xs text-muted-foreground">
+                Public sample profiles
+              </p>
             </CardContent>
           </Card>
         </Link>
@@ -214,7 +231,13 @@ export function AccountDashboard() {
           ) : (
             <div className="rounded-2xl border border-dashed border-primary/25 bg-background/35 py-9 text-center text-muted-foreground">
               <ShoppingBag className="mx-auto mb-3 size-10 text-primary/60" />
-              <p>No demo orders yet</p><Link href="/products" className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4">Explore products</Link>
+              <p>No demo orders yet</p>
+              <Link
+                href="/products"
+                className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4"
+              >
+                Explore products
+              </Link>
             </div>
           )}
         </CardContent>

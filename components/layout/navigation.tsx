@@ -14,13 +14,18 @@ import { useAuth } from "@/components/auth/auth-provider";
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
+  { name: "Carts", href: "/carts/explore" },
   { name: "Blog", href: "/blog" },
+  { name: "API Studio", href: "/api-studio" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
 const CartSidebar = dynamic(
-  () => import("@/components/cart/cart-sidebar").then((module) => module.CartSidebar),
+  () =>
+    import("@/components/cart/cart-sidebar").then(
+      (module) => module.CartSidebar,
+    ),
   { ssr: false },
 );
 
@@ -108,7 +113,10 @@ export function Navigation() {
                 variant={pathname === "/cart" ? "default" : "ghost"}
                 size="icon"
                 className="relative hover:scale-110 transition-transform"
-                onClick={() => { setCartLoaded(true); setIsOpen(true); }}
+                onClick={() => {
+                  setCartLoaded(true);
+                  setIsOpen(true);
+                }}
                 aria-label={`Open cart, ${totalItems} items`}
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -174,7 +182,10 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       scroll={true}
-                      onClick={() => { setIsMenuOpen(false); beginNavigation(item.href); }}
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        beginNavigation(item.href);
+                      }}
                       className="text-foreground transition-colors py-2 hover:!text-foreground"
                     >
                       {item.name}
@@ -185,7 +196,13 @@ export function Navigation() {
             </div>
           )}
         </div>
-        {pendingHref && <div className="nav-route-progress" role="status" aria-label="Loading page" />}
+        {pendingHref && (
+          <div
+            className="nav-route-progress"
+            role="status"
+            aria-label="Loading page"
+          />
+        )}
       </nav>
       {cartLoaded && <CartSidebar />}
     </>

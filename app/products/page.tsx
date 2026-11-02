@@ -1,6 +1,8 @@
 import { ProductsCatalog } from "@/components/product/products-catalog";
 import { PageLayout } from "@/components/layout/page-layout";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "All products",
@@ -23,6 +25,12 @@ export default function ProductsPage() {
           Explore clothing, jewelry, and useful objects. Refine the live demo
           catalog to find what fits your day.
         </p>
+        <Link
+          href="/products/manage"
+          className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/35 bg-card/60 px-5 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+        >
+          Explore product API methods <ArrowUpRight className="size-4" />
+        </Link>
       </div>
       <ProductsCatalog />
     </PageLayout>

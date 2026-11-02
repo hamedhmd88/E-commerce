@@ -3,6 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +21,15 @@ import { Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export function LoginForm() {
+  const router = useRouter();
+  const [mode, setMode] = useState<"demo" | "api">("demo");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const { login, isLoading } = useAuth();
+  const { login, loginPublicSample, isLoading } = useAuth();
 
   // Email validation function
   const validateEmail = (email: string): boolean => {
@@ -45,7 +48,7 @@ export function LoginForm() {
       return;
     }
 
-    if (!email.trim()) {
+    if (mode === "demo" && !email.trim()) {
       setError("Email is required");
       return;
     }
@@ -56,34 +59,39 @@ export function LoginForm() {
     }
 
     // Validate email format
-    if (!validateEmail(email)) {
+    if (mode === "demo" && !validateEmail(email)) {
       setEmailError("Please enter a valid email address");
       return;
     }
 
     try {
-      const success = await login(username.trim(), email.trim(), password);
+      const success =
+        mode === "api"
+          ? await loginPublicSample(username.trim(), password)
+          : await login(username.trim(), email.trim(), password);
+      setPassword("");
       if (success) {
-        // Show success message
-        toast.success("Login successful! Redirecting...");
-
-        // Give the demo session state a moment to update before navigation.
-        setTimeout(() => {
-          const requested = new URLSearchParams(window.location.search).get(
-            "redirect",
-          );
-          window.location.href =
-            requested?.startsWith("/") && !requested.startsWith("//")
-              ? requested
-              : "/account";
-        }, 100);
+        toast.success("Sample session ready");
+        const requested = new URLSearchParams(window.location.search).get(
+          "redirect",
+        );
+        router.replace(
+          requested?.startsWith("/") && !requested.startsWith("//")
+            ? requested
+            : mode === "api"
+              ? "/account/users"
+              : "/account",
+        );
       } else {
         setError(
-          "Invalid credentials. Please check your username, email, and password.",
+          mode === "api"
+            ? "The public API did not accept these sample credentials."
+            : "Invalid demo credentials. Please check your username, email, and password.",
         );
       }
     } catch {
-      setError("An error occurred during login. Please try again.");
+      setPassword("");
+      setError("The public sample service is unavailable. Please try again.");
     }
   };
 
@@ -91,10 +99,33 @@ export function LoginForm() {
     <Card className="glass-panel auth-card relative overflow-hidden rounded-[2rem] border-border/60 bg-transparent p-2 shadow-xl sm:p-4">
       <CardHeader>
         <CardTitle className="font-serif text-3xl">Sign in</CardTitle>
-        <CardDescription>Use your demo credentials or try the shortcut below.</CardDescription>
+        <CardDescription>
+          Choose a local demo session or the public Fake Store sample account.
+        </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="auth-fields space-y-4">
+          <div
+            className="grid grid-cols-2 gap-2 rounded-2xl border border-border/60 bg-background/40 p-1"
+            role="group"
+            aria-label="Sign in method"
+          >
+            {(["demo", "api"] as const).map((choice) => (
+              <button
+                key={choice}
+                type="button"
+                aria-pressed={mode === choice}
+                onClick={() => {
+                  setMode(choice);
+                  setError("");
+                  setPassword("");
+                }}
+                className={`min-h-11 rounded-xl px-3 text-sm font-medium transition-colors ${mode === choice ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-primary/10 hover:text-foreground"}`}
+              >
+                {choice === "demo" ? "Morrow demo" : "API sample"}
+              </button>
+            ))}
+          </div>
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -115,24 +146,28 @@ export function LoginForm() {
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (emailError) setEmailError("");
-              }}
-              disabled={isLoading}
-              className={emailError ? "border-red-500" : ""}
-            />
-            {emailError && <p className="text-sm text-red-500">{emailError}</p>}
-          </div>
+          {mode === "demo" && (
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError("");
+                }}
+                disabled={isLoading}
+                className={emailError ? "border-red-500" : ""}
+              />
+              {emailError && (
+                <p className="text-sm text-red-500">{emailError}</p>
+              )}
+            </div>
+          )}
 
           <div className="space-y-2 relative">
             <Label htmlFor="password">Password</Label>
@@ -165,33 +200,45 @@ export function LoginForm() {
           {/* Demo credentials section - secure display */}
           <div className="space-y-3 text-sm text-muted-foreground">
             <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
-              <p className="mb-1 font-semibold text-foreground">Try the demo account</p>
-              <p className="mb-3 text-xs">Explore the account without creating a profile.</p>
+              <p className="mb-1 font-semibold text-foreground">
+                {mode === "api"
+                  ? "Public API sample account"
+                  : "Try the demo account"}
+              </p>
+              <p className="mb-3 text-xs">
+                {mode === "api"
+                  ? "Uses Fake Store API login, then opens the sample users page. The API token is discarded."
+                  : "Explore the account without creating a profile."}
+              </p>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setUsername("demo");
-                  setEmail("demo@example.com");
-                  setPassword("demo12345");
+                  setUsername(mode === "api" ? "mor_2314" : "demo");
+                  setEmail(mode === "api" ? "" : "demo@example.com");
+                  setPassword(mode === "api" ? "83r5^_" : "demo12345");
                 }}
                 disabled={isLoading}
                 className="w-full rounded-xl border-primary/30 bg-background/60 text-primary hover:bg-primary/10"
               >
-                Use Demo Credentials
+                Fill {mode === "api" ? "API sample" : "demo"} credentials
               </Button>
             </div>
 
             <p>
-              Registration creates a session-only demo profile. No password is
+              Accounts here are demonstrations. Passwords and API tokens are not
               stored.
             </p>
           </div>
         </CardContent>
 
         <CardFooter className="mt-2 flex flex-col space-y-4">
-          <Button type="submit" className="min-h-12 w-full rounded-xl" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="min-h-12 w-full rounded-xl"
+            disabled={isLoading}
+          >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Sign In
           </Button>
