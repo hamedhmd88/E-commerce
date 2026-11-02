@@ -1,78 +1,47 @@
-# E-commerce Site
+# Morrow
 
-A modern e-commerce website built with Next.js and TypeScript.
+A portfolio storefront built with Next.js App Router, React, TypeScript, and Tailwind CSS. It showcases a responsive catalog, product detail pages, cart and wishlist interactions, editorial pages, and a complete **demo** account and checkout flow.
 
-## What is this project?
+![About page, light theme on desktop](docs/screenshots/about-light-desktop-chromium.png)
 
-A full-featured online shopping platform with user authentication, product management, and shopping cart functionality.
+Mobile and dark theme captures are in [docs/screenshots](docs/screenshots).
 
-## Live Demo
-You can check out the live demo of the project at the following link : [E-commerce](https://e-commerce-g2za.vercel.app/)
+## What is real and what is simulated
 
-## Key Features
+Products are requested from [Fake Store API](https://fakestoreapi.com/). Account sessions, checkout, and orders are browser-only demonstrations. No payment is collected, no goods ship, and no message is sent. Catalog availability depends on the external API.
 
-- 🔐 User Authentication (Login/Register)
-- 🛒 Shopping Cart
-- 👤 User Dashboard
-- 📱 Responsive Design
-- 🔒 Secure Authentication with JWT
-- 📋 Form Validation
-- 🎨 Modern UI with Tailwind CSS
+## Run locally
 
-## Technologies Used
+Requirements: Node.js 20.9 or newer and pnpm.
 
-- **Frontend:** Next.js 14, React, TypeScript
-- **Styling:** Tailwind CSS
-- **Forms:** React Hook Form + Zod validation
-- **Authentication:** JWT tokens, cookies
-- **Icons:** Lucide React
-
-## APIs Used
-
-- Custom authentication API endpoints
-- Local storage for user data persistence
-- Cookie-based session management
-
-## How to Run
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ecommerce-site_2
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Run the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
-
-## Project Structure
-
-```
-src/
-├── components/     # Reusable UI components
-├── pages/         # Next.js pages
-├── hooks/         # Custom React hooks
-├── utils/         # Utility functions
-└── types/         # TypeScript type definitions
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
-That's it! The project should be running locally on your machine.
+Open [http://localhost:3000](http://localhost:3000). To create a demo session, use the registration page or log in with username `demo`, email `demo@example.com`, and password `demo12345`. Use only demonstration information.
 
-## 📸 Sample Screenshot
+## Checks
 
-Below is a sample screenshot of the project:
+```bash
+pnpm typecheck
+pnpm lint
+pnpm test:unit
+pnpm api:check
+pnpm test:e2e
+pnpm format:check
+pnpm build
+```
 
-![Project Screenshot](public/project/project1.jpg)
+## Project map
 
-![Project Screenshot](public/project/project2.jpg)
+- `app/`: routes, metadata, and global styling
+- `components/`: storefront, account, cart, and UI components
+- `services/productService.ts`: Fake Store API access and response validation
+- `lib/demo-orders.ts`: local demonstration order persistence
+- `lib/catalog.ts` and `lib/cart-pricing.ts`: tested catalog and pricing rules
+- `docs/`: architecture, demo behavior, development, and agent guidance
+
+## Limitations
+
+Fake Store API is a small demonstration catalog and may be unavailable. Catalog requests run in the browser using the API's documented browser request pattern. `pnpm api:check` diagnoses server-side reachability, which can differ from browser access if Cloudflare challenges server requests. See [API diagnostics](docs/API.md). Browser state is local to this device; it is not a secure commerce backend. The project has no live inventory, payment processing, shipping integration, or transactional email. See [architecture](docs/ARCHITECTURE.md), [demo authentication](docs/DEMO-AUTHENTICATION.md), and [demo checkout](docs/DEMO-CHECKOUT.md).

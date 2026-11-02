@@ -1,121 +1,52 @@
-// import api from "./api"
+import { z } from "zod";
+import api from "./api";
+import { CatalogRequestError, normalizeCatalogError } from "./catalog-error";
+import { productSchema, type Product } from "@/lib/product-schema";
+export { productSchema };
+export type { Product };
 
-// export interface Product {
-//   id: number
-//   title: string
-//   price: number
-//   description: string
-//   category: string
-//   image: string
-//   rating: {
-//     rate: number
-//     count: number
-//   }
-// }
-
-// export const productService = {
-//   // Get all products
-//   getAllProducts: async (): Promise<Product[]> => {
-//     const response = await api.get("/products")
-//     return response.data
-//   },
-
-//   // Get products with limit
-//   getProducts: async (limit?: number): Promise<Product[]> => {
-//     const url = limit ? `/products?limit=${limit}` : "/products"
-//     const response = await api.get(url)
-//     return response.data
-//   },
-
-//   // Get single product
-//   getProduct: async (id: number): Promise<Product> => {
-//     const response = await api.get(`/products/${id}`)
-//     return response.data
-//   },
-
-//   // Get products by category
-//   getProductsByCategory: async (category: string): Promise<Product[]> => {
-//     const response = await api.get(`/products/category/${category}`)
-//     return response.data
-//   },
-
-//   // Get all categories
-//   getCategories: async (): Promise<string[]> => {
-//     const response = await api.get("/products/categories")
-//     return response.data
-//   },
-// }
-
-
-import api from "./api"
-
-export interface Product {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
-  rating: {
-    rate: number
-    count: number
+async function getData(
+  path: string,
+  params?: { limit: number },
+): Promise<unknown> {
+  try {
+    const response = await api.get(path, { params });
+    return response.data;
+  } catch (error) {
+    normalizeCatalogError(error);
   }
 }
 
 export const productService = {
-  // Get all products
-  getAllProducts: async (): Promise<Product[]> => {
+  async getAllProducts(): Promise<Product[]> {
+    return z.array(productSchema).parse(await getData("/products"));
+  },
+  async getProducts(limit?: number): Promise<Product[]> {
+    return z
+      .array(productSchema)
+      .parse(await getData("/products", limit ? { limit } : undefined));
+  },
+  async getProduct(id: number): Promise<Product | null> {
+    if (!Number.isInteger(id) || id <= 0) return null;
     try {
-      const response = await api.get("/products")
-      return response.data
+      const data = await getData(`/products/${id}`);
+      return data ? productSchema.parse(data) : null;
     } catch (error) {
-      console.error('Error fetching all products:', error)
-      return []
+      if (error instanceof CatalogRequestError && error.status === 404)
+        return null;
+      throw error;
     }
   },
-
-  // Get products with limit
-  getProducts: async (limit?: number): Promise<Product[]> => {
-    try {
-      const url = limit ? `/products?limit=${limit}` : "/products"
-      const response = await api.get(url)
-      return response.data
-    } catch (error) {
-      console.error('Error fetching products:', error)
-      return []
-    }
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    return z
+      .array(productSchema)
+      .parse(
+        await getData(`/products/category/${encodeURIComponent(category)}`),
+      );
   },
-
-  // Get single product
-  getProduct: async (id: number): Promise<Product> => {
-    try {
-      const response = await api.get(`/products/${id}`)
-      return response.data
-    } catch (error) {
-      console.error(`Error fetching product ${id}:`, error)
-      throw error
-    }
+  async getCategories(): Promise<string[]> {
+    return z
+      .array(z.string().min(1))
+      .parse(await getData("/products/categories"));
   },
-
-  // Get products by category
-  getProductsByCategory: async (category: string): Promise<Product[]> => {
-    try {
-      const response = await api.get(`/products/category/${category}`)
-      return response.data
-    } catch (error) {
-      console.error(`Error fetching products by category ${category}:`, error)
-      return []
-    }
-  },
-
-  // Get all categories
-  getCategories: async (): Promise<string[]> => {
-    try {
-      const response = await api.get("/products/categories")
-      return response.data
-    } catch (error) {
-      console.error('Error fetching categories:', error)
-      return []
-    }
-  },
-}
+};

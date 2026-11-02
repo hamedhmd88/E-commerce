@@ -1,110 +1,99 @@
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+
+const groups = [
+  {
+    title: "Shop",
+    links: [
+      ["All products", "/products"],
+      ["Electronics", "/category/electronics"],
+      ["Jewelry", "/category/jewelery"],
+      ["Clothing", "/products"],
+    ],
+  },
+  {
+    title: "Explore",
+    links: [
+      ["Journal", "/blog"],
+      ["Our story", "/about"],
+      ["Questions", "/faq"],
+      ["Contact", "/contact"],
+    ],
+  },
+  {
+    title: "Your space",
+    links: [
+      ["Sign in", "/login"],
+      ["Create account", "/register"],
+      ["My account", "/account"],
+      ["Order history", "/account/orders"],
+    ],
+  },
+];
 
 export function Footer() {
   return (
-    <footer className="bg-background/75 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t ">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="footer-scene relative isolate overflow-hidden border-t border-border/50">
+      <div className="footer-art" aria-hidden="true">
+        <Image
+          src="/modern-home-office.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-[.12]"
+        />
+      </div>
+      <div className="footer-orb" aria-hidden="true" />
+      <div className="relative mx-auto max-w-[1440px] px-5 pb-8 pt-16 sm:px-8 lg:px-14 lg:pt-24">
+        <div className="grid gap-12 border-b border-border/70 pb-16 lg:grid-cols-[1.5fr_1fr]">
           <div>
-            <h3 className="text-lg font-semibold mb-4">ModernStore</h3>
-            <p className="text-sm text-muted-foreground">
-              Your premium destination for quality products and exceptional shopping experience.
+            <Link
+              href="/"
+              className="inline-flex items-center gap-3 text-3xl font-semibold tracking-[-.06em]"
+            >
+              <Image src="/morrow-mark.svg" alt="" width={42} height={42} />
+              Morrow<span className="text-primary">.</span>
+            </Link>
+            <p className="mt-6 max-w-sm leading-7 text-muted-foreground">
+              Considered finds for the days ahead. Explore clothing, jewelry,
+              and useful objects in one calm place.
             </p>
+            <Link
+              href="/products"
+              className="mt-7 inline-flex items-center gap-2 rounded-full border border-primary/35 px-5 py-3 font-medium text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+            >
+              Explore the collection <ArrowUpRight className="size-4" />
+            </Link>
           </div>
-
-          <div>
-            <h4 className="font-medium mb-4">Shop</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/products" className="text-muted-foreground hover:text-foreground">
-                  All Products
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/electronics" className="text-muted-foreground hover:text-foreground">
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/jewelery" className="text-muted-foreground hover:text-foreground">
-                  Jewelry
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/men's clothing" className="text-muted-foreground hover:text-foreground">
-                  Men's Clothing
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/women's clothing" className="text-muted-foreground hover:text-foreground">
-                  Women's Clothing
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-4">Support</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/contact" className="text-muted-foreground hover:text-foreground">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-muted-foreground hover:text-foreground">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-muted-foreground hover:text-foreground">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
-                  Shipping & Returns
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-medium mb-4">Account</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link href="/login" className="text-muted-foreground hover:text-foreground">
-                  Sign In
-                </Link>
-              </li>
-              <li>
-                <Link href="/register" className="text-muted-foreground hover:text-foreground">
-                  Create Account
-                </Link>
-              </li>
-              <li>
-                <Link href="/account" className="text-muted-foreground hover:text-foreground">
-                  My Account
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
-                  Order History
-                </Link>
-              </li>
-            </ul>
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            {groups.map((group) => (
+              <div key={group.title}>
+                <h3 className="font-semibold">{group.title}</h3>
+                <ul className="mt-5 space-y-3">
+                  {group.links.map(([label, href]) => (
+                    <li key={label}>
+                      <Link
+                        href={href}
+                        className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
-
-        <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 ModernStore. All rights reserved.</p>
+        <div className="flex flex-col justify-between gap-3 pt-7 text-xs text-muted-foreground sm:flex-row">
+          <p>© {new Date().getFullYear()} Morrow. Portfolio demonstration.</p>
+          <p>
+            Products: Fake Store API · Account and checkout interactions are
+            simulated.
+          </p>
         </div>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,24 +1,24 @@
-"use client"
+"use client";
 
-import { useWishlist } from "@/components/account/wishlist-provider"
-import { useAuth } from "@/components/auth/auth-provider"
-import { ProductCard } from "@/components/product/product-card"
-import { Button } from "@/components/ui/button"
-import { Heart, ShoppingBag } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useWishlist } from "@/components/account/wishlist-provider";
+import { useAuth } from "@/components/auth/auth-provider";
+import { ProductCard } from "@/components/product/product-card";
+import { Button } from "@/components/ui/button";
+import { Heart, ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function WishlistPage() {
-  const { wishlistItems, wishlistCount } = useWishlist()
-  const { user, isLoading } = useAuth()
-  const router = useRouter()
+  const { wishlistItems, wishlistCount } = useWishlist();
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/login")
+      router.push("/login");
     }
-  }, [user, isLoading, router])
+  }, [user, isLoading, router]);
 
   if (isLoading) {
     return (
@@ -28,11 +28,11 @@ export function WishlistPage() {
           <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!user) {
-    return null
+    return null;
   }
 
   return (
@@ -49,9 +49,12 @@ export function WishlistPage() {
       {wishlistItems.length === 0 ? (
         <div className="text-center py-16 animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
           <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground/50" />
-          <h2 className="text-2xl font-semibold mb-4">Your wishlist is empty</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Your wishlist is empty
+          </h2>
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Start adding products to your wishlist by clicking the heart icon on any product
+            Start adding products to your wishlist by clicking the heart icon on
+            any product
           </p>
           <Link href="/products">
             <Button className="hover:scale-105 transition-transform">
@@ -74,5 +77,5 @@ export function WishlistPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

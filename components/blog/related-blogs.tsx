@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, User, ArrowRight } from "lucide-react";
@@ -9,10 +10,15 @@ interface RelatedBlogsProps {
 }
 
 export function RelatedBlogs({ currentSlug }: RelatedBlogsProps) {
-  // فیلتر کردن بلاگ فعلی و انتخاب 3 بلاگ تصادفی
-  const otherPosts = blogPosts.filter(post => post.slug !== currentSlug);
-  const shuffled = [...otherPosts].sort(() => 0.5 - Math.random());
-  const relatedPosts = shuffled.slice(0, 3);
+  const otherPosts = blogPosts.filter((post) => post.slug !== currentSlug);
+  const currentPost = blogPosts.find((post) => post.slug === currentSlug);
+  const relatedPosts = [...otherPosts]
+    .sort(
+      (a, b) =>
+        Number(b.category === currentPost?.category) -
+        Number(a.category === currentPost?.category),
+    )
+    .slice(0, 3);
 
   if (relatedPosts.length === 0) {
     return null;
@@ -20,19 +26,23 @@ export function RelatedBlogs({ currentSlug }: RelatedBlogsProps) {
 
   return (
     <section className="mt-16 pt-8 border-t">
-      <h2 className="text-2xl font-bold mb-8 text-left"> Related Blogs</h2>
+      <h2 className="mb-8 text-left font-serif text-3xl">Continue reading</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {relatedPosts.map((post) => (
           <Link key={post.id} href={`/blog/${post.slug}`}>
             <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full">
               <CardHeader className="p-0">
                 <div className="relative aspect-video overflow-hidden rounded-t-lg bg-muted">
-                  <img
-                    src={post.image || "/placeholder.svg"}
-                    alt={post.title}
-                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                  <Image
+                    src={post.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <Badge className="absolute top-4 left-4">{post.category}</Badge>
+                  <Badge className="absolute top-4 left-4">
+                    {post.category}
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent className="p-4">

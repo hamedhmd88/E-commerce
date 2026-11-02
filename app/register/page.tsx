@@ -44,7 +44,7 @@ export default function RegisterPage() {
 
   if (!isLoading && user) {
     // نمایش لودینگ یا چیزی در حین چک
- return (
+    return (
       <div className="min-h-screen">
         <Navigation />
         <main className="container mx-auto px-4 py-16">
@@ -61,7 +61,8 @@ export default function RegisterPage() {
         </main>
         <Footer />
       </div>
-    );  }
+    );
+  }
 
   return (
     <PageLayout customLastLabel="Register">

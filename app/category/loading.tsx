@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/layout/navigation"
-import { Footer } from "@/components/layout/footer"
+import { Navigation } from "@/components/layout/navigation";
+import { Footer } from "@/components/layout/footer";
 
 export default function Loading() {
   return (
@@ -32,5 +32,5 @@ export default function Loading() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }

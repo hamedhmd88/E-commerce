@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react"; 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,12 +48,13 @@ export function ContactForm() {
       <Card>
         <CardContent className="p-8 text-center">
           <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold mb-2">Message Sent!</h3>
+          <h3 className="text-xl font-semibold mb-2">Demo message recorded</h3>
           <p className="text-muted-foreground mb-4">
-            Thank you for contacting us. We'll get back to you within 24 hours.
+            Your form was validated locally. No message was sent to a support
+            team.
           </p>
           <Button onClick={() => setIsSubmitted(false)} variant="outline">
-            Send Another Message
+            Try Another Message
           </Button>
         </CardContent>
       </Card>
@@ -66,7 +67,9 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name" className="mb-2">Full Name *</Label>
+              <Label htmlFor="name" className="mb-2">
+                Full Name *
+              </Label>
               <Input
                 id="name"
                 required
@@ -76,7 +79,9 @@ export function ContactForm() {
               />
             </div>
             <div>
-              <Label htmlFor="email" className="mb-2">Email Address *</Label>
+              <Label htmlFor="email" className="mb-2">
+                Email Address *
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -89,7 +94,9 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="category" className="mb-2">Category</Label>
+            <Label htmlFor="category" className="mb-2">
+              Category
+            </Label>
             <Select
               value={formData.category}
               onValueChange={(value) => handleChange("category", value)}
@@ -109,7 +116,9 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="subject" className="mb-2">Subject *</Label>
+            <Label htmlFor="subject" className="mb-2">
+              Subject *
+            </Label>
             <Input
               id="subject"
               required
@@ -120,7 +129,9 @@ export function ContactForm() {
           </div>
 
           <div>
-            <Label htmlFor="message" className="mb-2">Message *</Label>
+            <Label htmlFor="message" className="mb-2">
+              Message *
+            </Label>
             <Textarea
               id="message"
               required
@@ -138,11 +149,11 @@ export function ContactForm() {
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              "Sending..."
+              "Processing..."
             ) : (
               <>
                 <Send className="mr-2 h-4 w-4" />
-                Send Message
+                Submit Demo Message
               </>
             )}
           </Button>

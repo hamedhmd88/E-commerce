@@ -1,255 +1,272 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, User, ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export const blogPosts = [
   {
-    id: "1",
-    slug: "2024-tech-trends",
-    title: "Top Technology Trends to Watch in 2024",
+    id: "7",
+    slug: "buying-jewelry-that-fits-your-routine",
+    title: "Choosing Jewelry You Will Reach for Every Day",
     excerpt:
-      "Discover the latest innovations shaping the tech industry and how they impact your daily life.",
+      "A practical guide to proportion, materials, fastening, and care before choosing a new piece.",
+    category: "Jewelry",
+    author: "Morrow",
+    date: "2026-10-28",
+    readTime: "6 min read",
+    image: "/luxury-jewelry-care.jpg",
+    content: `<p>Jewelry is easiest to enjoy when it works with the way you already dress and move. Before choosing a piece, think about where you will wear it, how long you will keep it on, and what kind of care you can realistically give it.</p>
+      <h2>Start with proportion and comfort</h2><p>Compare measurements with a piece you already own. Chain length, earring drop, ring width, and overall weight can change how a design feels throughout the day. If you are sensitive to weight or pressure, prioritize those practical details over a product photograph.</p>
+      <h2>Read material descriptions carefully</h2><p>Terms such as plated, filled, sterling, and solid describe different constructions. Check the listing for the base metal, finish, stone details, and any care guidance. If a detail matters to your skin or routine and the description does not answer it, ask the seller before deciding.</p>
+      <h2>Match the fastening to your routine</h2><p>A clasp that is easy to use can make the difference between a piece you wear often and one that stays in a drawer. Consider whether you will put it on by yourself, whether it needs to sit securely during movement, and whether its closure is easy to inspect.</p>
+      <h2>Keep care simple</h2><p>Follow the maker's instructions for cleaning and storage. Keep pieces separate when they may scratch or tangle, and avoid exposing them to products or conditions that the care guide warns against. A short routine that suits the material is more useful than a complicated one you cannot maintain.</p>
+      <h2>Choose for the life you have</h2><p>A versatile piece does not need to be plain. It needs to feel comfortable, suit clothes you already wear, and fit the occasions you actually have. Use those criteria to decide whether a new item will earn a regular place in your rotation.</p>`,
+  },
+  {
+    id: "8",
+    slug: "a-better-electronics-buying-checklist",
+    title: "A Better Checklist for Your Next Tech Purchase",
+    excerpt:
+      "Turn long specification sheets into a short, useful comparison based on compatibility and ownership.",
     category: "Technology",
-    author: "Sarah Johnson",
-    date: "2024-01-15",
+    author: "Morrow",
+    date: "2026-10-21",
     readTime: "7 min read",
-    image: "/modern-technology-trends.jpg",
-    content: `
-      <p>Technology in 2024 continues to evolve at a rapid pace, blurring the lines between the physical and digital worlds. From artificial intelligence that writes code to quantum computing that breaks today’s encryption standards, this year is set to redefine how we live and work.</p>
-
-      <h2>1. Artificial Intelligence Everywhere</h2>
-      <p>AI is no longer confined to tech giants. Small businesses, educational institutions, and even individuals are leveraging AI tools for creative work, automation, and data-driven decision-making. Tools like ChatGPT, Midjourney, and AI coding assistants are making advanced technology accessible to everyone.</p>
-      <p>In 2024, we’ll see more emphasis on ethical AI — systems that are transparent, fair, and accountable. Governments are beginning to regulate AI behavior to prevent bias and misuse. Expect to see a balance between innovation and responsibility.</p>
-
-      <h2>2. Quantum Computing</h2>
-      <p>Quantum computing is transitioning from experimental to practical use. Tech leaders such as IBM, Google, and Intel are building quantum systems capable of solving complex optimization problems that classical computers cannot handle.</p>
-      <p>Industries like finance, cybersecurity, and medicine are exploring how quantum computing can revolutionize their fields — from faster drug discovery to unbreakable encryption.</p>
-
-      <h2>3. Sustainable and Green Tech</h2>
-      <p>As climate change becomes a global priority, companies are integrating sustainability into every level of technology production. From recyclable hardware to energy-efficient data centers, eco-friendly innovation is the new norm.</p>
-      <p>Data centers now use AI to optimize power consumption, and chip manufacturers are exploring low-carbon materials to minimize environmental impact.</p>
-
-      <h2>4. Web3 and Digital Ownership</h2>
-      <p>Despite fluctuations in cryptocurrency markets, the underlying blockchain technology continues to grow. In 2024, the focus shifts from speculation to utility — real-world applications like decentralized identity, digital certificates, and transparent supply chains.</p>
-
-      <h2>5. Human-Centric Design and Accessibility</h2>
-      <p>Tech design is becoming more inclusive. Devices and apps are built with accessibility in mind, ensuring that everyone — regardless of age or ability — can benefit from innovation. Features like voice navigation, adaptive contrast, and emotion-aware interfaces will become mainstream.</p>
-
-      <p>Overall, 2024 is not about technology for technology’s sake. It’s about using innovation to create a more sustainable, ethical, and human-centered digital world.</p>
-    `,
+    image: "/modern-electronics-technology-gadgets.jpg",
+    content: `<p>Technology listings often lead with impressive numbers, but the best choice is the one that fits your tasks and setup. A short checklist can help you compare products on the details that matter after the first week of use.</p>
+      <h2>Write down the job first</h2><p>List the software, accessories, and environments the device needs to support. Separate requirements from preferences. That gives you a reliable filter when several products advertise similar headline features.</p>
+      <h2>Confirm the connections</h2><p>Check connector types, supported standards, operating system requirements, and what comes in the box. Verify compatibility against the documentation for your existing equipment. Do not assume a port, cable, or accessory is included because it appears in a promotional image.</p>
+      <h2>Compare complete ownership costs</h2><p>Include necessary accessories, consumables, energy use, warranty coverage, repair options, and replacement parts. A lower purchase price can still lead to more expense or inconvenience if the product is difficult to maintain.</p>
+      <h2>Read reviews for their method</h2><p>Look for reviews that explain how the device was tested and where it performs well or poorly. Battery life, speed, and image quality can vary with settings and workload. A review that resembles your use is more useful than a rating without context.</p>
+      <h2>Check the information that is missing</h2><p>Before buying, make a note of any unanswered question about compatibility, support, or returns. If that detail could change your choice, pause until you can verify it with the manufacturer or seller.</p>`,
+  },
+  {
+    id: "9",
+    slug: "build-a-wardrobe-around-your-week",
+    title: "Build a Wardrobe Around Your Actual Week",
+    excerpt:
+      "Use the places you go, the clothes you already wear, and care you can manage to make better choices.",
+    category: "Fashion",
+    author: "Morrow",
+    date: "2026-10-14",
+    readTime: "6 min read",
+    image: "/sustainable-fashion.png",
+    content: `<p>A useful wardrobe supports the week you have, including its ordinary and repetitive parts. Start with what you wore recently instead of a prescribed list of essentials. That keeps new choices grounded in your real schedule.</p>
+      <h2>Map the settings you dress for</h2><p>Think through work, travel, home, exercise, and social plans. Notice which settings take the most time and which clothes you reach for repeatedly. Those patterns show where a practical gap may exist.</p>
+      <h2>Use your current clothes as a guide</h2><p>Choose a few garments you like wearing and note their fit, fabric, and colors. When considering something new, picture two or three combinations with items you already own. If it only works in one imagined outfit, check whether it fills a specific need.</p>
+      <h2>Prioritize fit and maintenance</h2><p>Compare measurements rather than relying only on a size label. Read fabric composition and care instructions, especially if the garment needs a routine you do not usually follow. Comfort and manageable care often matter more than a trend cycle.</p>
+      <h2>Look for the smallest useful change</h2><p>A missing layer, a repair, or an alteration may solve the problem without replacing several pieces. Consider what would make the clothes you own easier to wear before adding more options.</p>
+      <h2>Review how it works over time</h2><p>After adding a piece, notice whether you actually wear it and what you pair it with. That feedback makes the next decision easier. The goal is not a perfect capsule; it is a wardrobe that asks less of you each morning.</p>`,
+  },
+  {
+    id: "1",
+    slug: "choosing-everyday-jewelry",
+    title: "Choosing Jewelry for Every Day",
+    excerpt:
+      "A practical way to choose pieces that suit your routine, wardrobe, and care habits.",
+    category: "Jewelry",
+    author: "Morrow",
+    date: "2026-10-01",
+    readTime: "4 min read",
+    image: "/luxury-jewelry-elegant-accessories.jpg",
+    content: `<p>Everyday jewelry has a different job from an occasion piece. It needs to feel comfortable, work with the clothes you reach for most, and fit the amount of care you can realistically give it. Start with your habits before you think about a trend.</p>
+      <h2>Begin with your routine</h2><p>Think about where you spend your day and what your hands do. A low-profile ring may suit someone who types often; a simple pendant may be easier to wear under layers than a dramatic necklace. If you work with equipment or exercise, check whether jewelry needs to be removed for safety.</p>
+      <h2>Choose materials with care in mind</h2><p>Materials wear differently. Read the seller's description for the metal, plating, stone, and recommended cleaning method. If you have known sensitivities, look for clear material details rather than assuming a finish will be comfortable. Keep jewelry away from products that its care instructions advise against.</p>
+      <h2>Build around a few useful pieces</h2><p>Try one pair of versatile earrings, one necklace that sits well with your usual neckline, and a ring or bracelet that does not interrupt your routine. You can add expressive pieces later. A small collection you actually wear is more useful than a large one you have to manage.</p>
+      <h2>Check the details</h2><p>Look closely at clasp style, chain length, weight, and fastening. Those details often decide whether a piece becomes a favorite. When shopping online, compare listed measurements with jewelry you already own before making a choice.</p>`,
   },
   {
     id: "2",
-    slug: "sustainable-fashion-guide",
-    title: "The Complete Guide to Sustainable Fashion",
+    slug: "versatile-wardrobe",
+    title: "Building a Versatile Wardrobe",
     excerpt:
-      "Learn how to build a sustainable wardrobe without compromising on style or quality.",
+      "Make more combinations from fewer pieces by starting with fit, color, and your actual week.",
     category: "Fashion",
-    author: "Emily Rodriguez",
-    date: "2024-01-12",
-    readTime: "9 min read",
+    author: "Morrow",
+    date: "2026-09-24",
+    readTime: "5 min read",
     image: "/sustainable-fashion.png",
-    content: `
-      <p>Sustainable fashion has moved from a niche concept to a mainstream movement. It’s about creating clothing that respects both people and the planet. The idea is simple: reduce waste, support fair labor, and prioritize longevity over short-term trends.</p>
-
-      <h2>1. Understanding Sustainable Fashion</h2>
-      <p>At its core, sustainable fashion means producing and consuming clothes responsibly. This includes ethical sourcing of materials, reducing carbon emissions, minimizing water waste, and promoting circular fashion — where garments are reused, recycled, or upcycled.</p>
-      <p>Brands like Patagonia, Stella McCartney, and Everlane are setting new standards in transparency, showing customers exactly where and how their products are made.</p>
-
-      <h2>2. Choosing the Right Fabrics</h2>
-      <p>Opt for natural, renewable fabrics such as organic cotton, hemp, linen, and bamboo. These materials are biodegradable and often require fewer pesticides and less water to produce. Recycled polyester and regenerated fibers like Tencel are also excellent sustainable alternatives.</p>
-      <p>Additionally, new fabric innovations like mushroom leather (Mylo) and pineapple fiber (Piñatex) are revolutionizing the industry, offering cruelty-free and eco-friendly options.</p>
-
-      <h2>3. Slow Fashion Mindset</h2>
-      <p>Fast fashion encourages mass consumption and frequent disposal, while slow fashion promotes thoughtful purchasing and timeless design. The goal is to buy less, choose well, and make it last. Investing in durable, high-quality items reduces environmental impact over time.</p>
-
-      <h2>4. Building a Capsule Wardrobe</h2>
-      <p>A capsule wardrobe is a small, versatile collection of clothes that can be mixed and matched for different occasions. Focus on neutral colors, classic cuts, and items that truly represent your personal style. This approach saves money and reduces clutter.</p>
-
-      <h2>5. Conscious Consumer Habits</h2>
-      <p>Repair your clothes instead of discarding them. Donate or sell unused items. Support local artisans and second-hand stores. Remember: every purchase is a reflection of your values and a contribution to a better future.</p>
-
-      <p>Embracing sustainable fashion doesn’t mean sacrificing style — it means redefining it. By making small, consistent choices, you can help transform the fashion industry into a more responsible and compassionate one.</p>
-    `,
+    content: `<p>A versatile wardrobe is built around what you really wear, not an idealized list of essentials. The best starting point is a look at the last few weeks: which clothes felt comfortable, which pieces worked together, and what stayed untouched?</p>
+      <h2>Map your ordinary week</h2><p>List the settings you dress for: work, home, travel, exercise, and occasions. Give the most space to the settings that take the most time. A wardrobe that suits your schedule is easier to use than one built around an abstract aesthetic.</p>
+      <h2>Choose a practical color story</h2><p>Pick a few colors you enjoy wearing together. They do not have to be neutral, but repeating them across tops, bottoms, and layers makes combining pieces simpler. Bring an existing garment to mind when considering a new one: can you name at least two outfits it would join?</p>
+      <h2>Prioritize fit and care</h2><p>Check garment measurements, fabric composition, and care labels. A beautiful piece that needs a care routine you cannot maintain is unlikely to earn its space. Fit matters more than a size label; compare measurements with a garment that already fits well.</p>
+      <h2>Review before adding</h2><p>Before buying, identify the gap it fills. Repairing or altering something you already own may solve that gap. The aim is a wardrobe that supports your life with less friction, not a fixed number of items.</p>`,
   },
   {
     id: "3",
-    slug: "jewelry-care-tips",
-    title: "How to Care for Your Precious Jewelry",
+    slug: "home-office-essentials",
+    title: "Choosing Technology for a Home Office",
     excerpt:
-      "Expert tips on maintaining and preserving your jewelry collection for years to come.",
-    category: "Jewelry",
-    author: "Michael Chen",
-    date: "2024-01-10",
-    readTime: "6 min read",
-    image: "/luxury-jewelry-care.jpg",
-    content: `
-      <p>Jewelry is more than just decoration — it’s a reflection of memories, milestones, and personal expression. Proper care ensures that your pieces remain beautiful and valuable for generations to come.</p>
-
-      <h2>1. Regular Cleaning</h2>
-      <p>Clean your jewelry regularly using a mild soap and warm water solution. Use a soft toothbrush to reach small crevices, especially for pieces with gemstones or engravings. Avoid ultrasonic cleaners for delicate stones like emeralds or opals, as vibrations may cause damage.</p>
-      <p>After cleaning, pat dry with a soft, lint-free cloth and store immediately to prevent tarnish or oxidation.</p>
-
-      <h2>2. Safe Storage</h2>
-      <p>Jewelry should always be stored separately to avoid scratches and tangling. Use individual pouches, soft-lined boxes, or anti-tarnish strips for silver. Keep pearls and other organic gems in breathable fabric rather than airtight plastic bags.</p>
-
-      <h2>3. Avoid Exposure to Chemicals</h2>
-      <p>Perfumes, hairsprays, lotions, and household cleaners can damage metals and stones. Always remove jewelry before applying cosmetics, swimming, or cleaning. Even exposure to sweat can dull the shine of certain metals over time.</p>
-
-      <h2>4. Professional Inspection and Maintenance</h2>
-      <p>Have your jewelry inspected annually by a professional jeweler. They can check for loose prongs, worn clasps, and other signs of wear that might lead to stone loss or breakage. Professional polishing can also restore brilliance safely.</p>
-
-      <h2>5. Long-Term Preservation Tips</h2>
-      <p>Keep your jewelry away from direct sunlight and extreme temperature changes. For heirloom pieces, consider insurance or appraisals to protect their financial and sentimental value.</p>
-
-      <p>By dedicating a few minutes each month to care and maintenance, you can keep your jewelry sparkling for a lifetime — a small effort for something truly priceless.</p>
-    `,
+      "A clear checklist for devices and accessories that support the work you actually do.",
+    category: "Technology",
+    author: "Morrow",
+    date: "2026-09-17",
+    readTime: "5 min read",
+    image: "/modern-home-office.png",
+    content: `<p>A good home office setup begins with the tasks you do each day. Video meetings, writing, design, and data work place different demands on a computer and its accessories. Define those needs before comparing specifications.</p>
+      <h2>Start with the essentials</h2><p>Check that your computer can run the software you depend on and connect to the display, storage, and accessories you already own. Confirm port types and operating system compatibility. A small adapter can be useful, but it should not hide a larger mismatch.</p>
+      <h2>Think about comfort</h2><p>Arrange your screen, keyboard, and pointing device so you can work comfortably. If possible, try a few positions and take regular breaks. A separate keyboard or stand may help with placement, but the right choice depends on your space and habits.</p>
+      <h2>Plan for calls and connectivity</h2><p>If you meet remotely, test the microphone, camera, lighting, and internet connection in the room where you work. Good positioning often improves a call more than buying a new device. Look for a headset when background noise or privacy makes it useful.</p>
+      <h2>Compare ownership costs</h2><p>Include warranty terms, repair options, consumables, and energy use in your decision. A product with a lower sticker price can be less convenient over time if it is difficult to maintain or replace. Read the product listing carefully rather than assuming those details are included.</p>`,
   },
   {
     id: "4",
-    slug: "home-office-setup",
-    title: "Creating the Perfect Home Office Setup",
+    slug: "caring-for-clothing",
+    title: "Caring for Clothes You Love",
     excerpt:
-      "Transform your workspace with the right electronics and accessories for maximum productivity.",
-    category: "Lifestyle",
-    author: "David Kim",
-    date: "2024-01-08",
-    readTime: "8 min read",
-    image: "/modern-home-office.png",
-    content: `
-      <p>Working from home is no longer a temporary solution — it’s a lifestyle. Designing a productive home office involves balancing comfort, technology, and atmosphere to boost focus and creativity.</p>
-
-      <h2>1. Ergonomic Furniture</h2>
-      <p>An ergonomic chair with lumbar support and adjustable height can prevent back pain and fatigue. Standing desks are becoming popular for improving posture and reducing sedentary time. Remember: your workspace should adapt to you, not the other way around.</p>
-
-      <h2>2. Lighting and Ambiance</h2>
-      <p>Natural light improves mood and concentration. Position your desk near a window if possible. For evenings, use warm LED lights with adjustable brightness. Avoid harsh overhead lighting that causes glare on screens.</p>
-
-      <h2>3. Essential Technology Setup</h2>
-      <p>Equip your space with a reliable laptop or desktop, high-speed internet, a good-quality webcam, and noise-canceling headphones. A dual-monitor setup can significantly enhance productivity for multitasking professionals.</p>
-
-      <h2>4. Decluttering and Organization</h2>
-      <p>Minimalism leads to mental clarity. Use cable organizers, monitor stands, and drawer dividers to keep things tidy. A clutter-free environment reduces distractions and improves focus.</p>
-
-      <h2>5. Personal Touch and Inspiration</h2>
-      <p>Add items that inspire you: plants for freshness, artwork for creativity, or a small bookshelf to keep learning materials nearby. Your workspace should reflect who you are while motivating you to stay productive.</p>
-
-      <p>A perfect home office isn’t about expensive furniture — it’s about balance, intention, and comfort. Small adjustments can transform how you feel and perform every day.</p>
-    `,
+      "Simple care habits that help favorite pieces stay useful for longer.",
+    category: "Fashion",
+    author: "Morrow",
+    date: "2026-09-10",
+    readTime: "4 min read",
+    image: "/spring-fashion-trends.jpg",
+    content: `<p>Clothing care starts with the label. Different fabrics and constructions need different treatment, so use the maker's instructions as your first guide. Then build a simple routine you can follow consistently.</p>
+      <h2>Wash when needed</h2><p>Not every piece needs a full wash after every wear. Check for marks, odor, and the garment's care guidance. When washing is needed, sort by care requirement and color, and avoid crowding the machine so clothes can move freely.</p>
+      <h2>Dry thoughtfully</h2><p>Heat and agitation can affect shape and finish. Follow the label's drying instructions and reshape suitable pieces while damp. Allow items to dry fully before storing them to avoid trapped moisture.</p>
+      <h2>Handle small repairs early</h2><p>A loose button, open seam, or snag is easier to address before it worsens. Keep a small repair kit or ask a local tailor for help. Repairing a piece you already like can be more satisfying than searching for a replacement.</p>
+      <h2>Store for the fabric</h2><p>Use hangers for garments that hold their shape and fold pieces that may stretch when hung. Give clothes room and keep them clean before long storage. A few minutes of care can make your favorites easier to wear again.</p>`,
   },
   {
     id: "5",
-    slug: "spring-fashion-trends",
-    title: "Spring Fashion Trends You Need to Know",
+    slug: "comparing-electronics",
+    title: "How to Compare Consumer Electronics",
     excerpt:
-      "Get ready for the new season with these must-have fashion pieces and styling tips.",
-    category: "Fashion",
-    author: "Lisa Wang",
-    date: "2024-01-05",
-    readTime: "7 min read",
-    image: "/spring-fashion-trends.jpg",
-    content: `
-      <p>Spring 2024 celebrates color, freedom, and creativity. Designers are embracing individuality more than ever — from bold patterns to gender-neutral silhouettes, this season is all about self-expression.</p>
-
-      <h2>1. Pastel Revival</h2>
-      <p>Soft tones like lilac, mint, and peach are back. These colors bring calm energy and freshness, perfect for transitioning out of winter’s darker palette. Pastel suits and oversized blouses are particularly trendy this year.</p>
-
-      <h2>2. Effortless Comfort</h2>
-      <p>Comfort-driven style continues to rule. Expect relaxed tailoring, flowy skirts, and lightweight knitwear. Designers are proving that you can look elegant without sacrificing comfort.</p>
-
-      <h2>3. Sustainable Fabrics</h2>
-      <p>Eco-friendly fabrics like Tencel, linen, and organic cotton dominate the runways. Brands are proudly showcasing their environmental responsibility while maintaining luxurious textures.</p>
-
-      <h2>4. Statement Accessories</h2>
-      <p>Oversized earrings, chunky necklaces, and bright handbags are everywhere. The idea is to make a statement without overcomplicating the outfit — one bold piece can redefine your entire look.</p>
-
-      <h2>5. Floral and Nature-Inspired Prints</h2>
-      <p>Florals remain a spring favorite, but in 2024, they come with a twist: watercolor-like patterns and abstract plant motifs that blend modern art with nature.</p>
-
-      <p>Spring fashion this year is about self-confidence, sustainability, and playfulness — embracing change with style.</p>
-    `,
+      "A buyer's checklist for comparing features without getting lost in specification sheets.",
+    category: "Technology",
+    author: "Morrow",
+    date: "2026-09-03",
+    readTime: "5 min read",
+    image: "/modern-technology-trends.jpg",
+    content: `<p>Specification sheets can make very different products look similar. A better comparison starts with a short list of tasks, a budget, and the features that matter for those tasks. Use that list to decide what to investigate further.</p>
+      <h2>Define your use case</h2><p>Write down the software, accessories, and environment the device must support. For portable products, consider weight, charging, and battery expectations. For shared devices, think about who will use them and how often.</p>
+      <h2>Check compatibility first</h2><p>Verify connectors, supported formats, and platform requirements from the manufacturer's documentation. A high-performing device is a poor purchase if it cannot work with your existing setup. Look closely at what is included in the box.</p>
+      <h2>Compare meaningful details</h2><p>Use the same criteria for each product. Screen size, storage, repairability, warranty, and return terms may be more useful than a single headline number. Independent reviews can help identify tradeoffs, especially when they explain their testing method.</p>
+      <h2>Leave room for uncertainty</h2><p>Published battery life and performance figures often depend on test conditions. Treat them as reference points and look for reviews that resemble your own use. If a feature is unclear, ask the seller before buying rather than filling the gap with an assumption.</p>`,
   },
   {
     id: "6",
-    slug: "smart-shopping-tips",
-    title: "Smart Shopping: How to Get the Best Deals",
+    slug: "shopping-with-intention",
+    title: "Shopping with More Intention",
     excerpt:
-      "Insider secrets to finding quality products at great prices and making informed purchases.",
+      "A calm framework for evaluating value, usefulness, and long-term fit.",
     category: "Shopping",
-    author: "Alex Thompson",
-    date: "2024-01-03",
-    readTime: "8 min read",
+    author: "Morrow",
+    date: "2026-08-27",
+    readTime: "4 min read",
     image: "/smart-shopping-deals.jpg",
-    content: `
-      <p>Smart shopping isn’t just about saving money — it’s about buying wisely. By understanding market cycles, product quality, and timing, you can stretch your budget while still enjoying premium goods.</p>
-
-      <h2>1. Research and Compare Prices</h2>
-      <p>Use price comparison tools like Google Shopping or Honey. Check historical pricing trends to see if “discounts” are genuine. Many online stores raise prices before a sale to make discounts look bigger than they are.</p>
-
-      <h2>2. Understand Seasonal Cycles</h2>
-      <p>Most products follow predictable sale patterns. Electronics drop in price after new versions launch, while clothing is cheapest at the end of each season. Patience and planning make a big difference.</p>
-
-      <h2>3. Leverage Loyalty and Cashback Programs</h2>
-      <p>Sign up for reward programs or browser extensions that give you cashback. Websites like Rakuten or Honey Gold can return a percentage of your purchase — savings that add up over time.</p>
-
-      <h2>4. Read Reviews and Watch for Red Flags</h2>
-      <p>Customer reviews reveal a lot. Look for patterns rather than isolated complaints. Be wary of listings with only generic five-star reviews — they might be fake.</p>
-
-      <h2>5. Quality Over Quantity</h2>
-      <p>Buying fewer, better-quality items saves money in the long run. Invest in products with warranties and durable materials. Avoid impulse buying — wait 24 hours before purchasing anything expensive.</p>
-
-      <p>Smart shopping means thinking like an investor: every dollar spent should bring lasting value. Once you master the strategy, finding the best deals becomes second nature.</p>
-    `,
+    content: `<p>A good purchase serves a real need and fits comfortably within your budget. That does not mean every item must be purely practical. It means taking a moment to understand why you want it and what owning it will involve.</p>
+      <h2>Name the need</h2><p>Describe the task or pleasure the product would provide. Check whether something you own already covers it. If the purchase is a replacement, note what the old item did well and what you want to improve.</p>
+      <h2>Compare the full cost</h2><p>Look beyond the listed price. Delivery, accessories, maintenance, and replacement parts can change the total. In a real store, read the return policy and warranty carefully. This portfolio storefront uses simulated checkout and does not fulfill orders.</p>
+      <h2>Look for clear information</h2><p>Measurements, materials, compatibility, and care instructions help reduce guesswork. When a listing is vague, pause. A useful product page should help you decide whether an item fits your needs, not merely make it look attractive.</p>
+      <h2>Give yourself time</h2><p>If the purchase is not urgent, revisit it later. You may find a better match or realize it is no longer needed. A small pause can make choosing easier and leave more room for the items you genuinely value.</p>`,
   },
-];
+] as const;
 
-export function BlogGrid() {
+export function BlogGrid({
+  category,
+  query,
+}: {
+  category?: string;
+  query?: string;
+}) {
+  const normalizedQuery = query?.trim().toLowerCase() ?? "";
+  const visiblePosts = blogPosts.filter(
+    (post) =>
+      (!category || post.category === category) &&
+      (!normalizedQuery ||
+        `${post.title} ${post.excerpt} ${post.category}`
+          .toLowerCase()
+          .includes(normalizedQuery)),
+  );
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {blogPosts.map((post) => (
-        <Link key={post.id} href={`/blog/${post.slug}`}>
-          <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full">
-            <CardHeader className="p-0">
-              <div className="relative aspect-video overflow-hidden rounded-t-lg bg-muted">
-                <img
-                  src={post.image || "/placeholder.svg"}
-                  alt={post.title}
-                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                />
-                <Badge className="absolute top-4 left-4">{post.category}</Badge>
+    <div>
+      <form action="/blog" role="search" className="mb-6 flex max-w-lg gap-3">
+        {category && <input type="hidden" name="category" value={category} />}
+        <input
+          name="q"
+          type="search"
+          defaultValue={query}
+          aria-label="Search articles"
+          placeholder="Search articles"
+          className="min-w-0 flex-1 rounded-xl border border-border bg-card px-4 py-3 text-foreground focus-visible:outline-2 focus-visible:outline-primary"
+        />
+        <button
+          type="submit"
+          className="min-h-11 rounded-xl bg-primary px-5 text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Search
+        </button>
+      </form>
+      <nav
+        aria-label="Article categories"
+        className="mb-9 flex flex-wrap gap-2"
+      >
+        {["All", ...new Set(blogPosts.map((post) => post.category))].map(
+          (item) => (
+            <Link
+              key={item}
+              href={
+                item === "All"
+                  ? "/blog"
+                  : `/blog?category=${encodeURIComponent(item)}`
+              }
+              aria-current={(category || "All") === item ? "page" : undefined}
+              className={`rounded-full border px-4 py-2 text-sm transition hover:border-primary focus-visible:outline-2 focus-visible:outline-primary ${(category || "All") === item ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card"}`}
+            >
+              {item}
+            </Link>
+          ),
+        )}
+      </nav>
+      {visiblePosts.length === 0 && (
+        <div className="rounded-2xl border border-border bg-card p-10 text-center">
+          <h2 className="font-serif text-2xl">No articles found</h2>
+          <p className="mt-2 text-muted-foreground">
+            Try a different search or category.
+          </p>
+        </div>
+      )}
+      <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
+        {visiblePosts.map((post, index) => (
+          <Link
+            key={post.id}
+            href={`/blog/${post.slug}`}
+            className={`glass-panel group overflow-hidden rounded-[1.5rem] transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${index === 0 && !category && !query ? "lg:col-span-2 lg:grid lg:grid-cols-[1.08fr_.92fr]" : ""}`}
+          >
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:min-h-[320px]">
+              <Image
+                src={post.image}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.035]"
+              />
+            </div>
+            <div className="flex flex-col p-6 sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[.2em] text-primary">
+                {post.category}
+              </p>
+              <h2 className="mt-3 text-2xl font-medium leading-tight tracking-[-.035em] group-hover:text-primary sm:text-3xl">
+                {post.title}
+              </h2>
+              <p className="mt-3 line-clamp-3 leading-relaxed text-muted-foreground">
+                {post.excerpt}
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                <span>
+                  {post.readTime} ·{" "}
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+                <ArrowUpRight className="size-5 text-primary" aria-hidden />
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="space-y-3">
-                <h3 className="text-xl font-semibold line-clamp-2 group-hover:text-primary transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-muted-foreground line-clamp-3">
-                  {post.excerpt}
-                </p>
-
-                <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1">
-                      <User className="h-4 w-4" />
-                      <span>{post.author}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(post.date).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-1 text-primary">
-                    <span>{post.readTime}</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      ))}
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

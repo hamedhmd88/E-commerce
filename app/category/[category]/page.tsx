@@ -1,27 +1,26 @@
-import { Navigation } from "@/components/layout/navigation"
-import { CategoryProducts } from "@/components/category-products"
-import { Footer } from "@/components/layout/footer"
+import { PageLayout } from "@/components/layout/page-layout";
+import { CategoryCatalog } from "@/components/product/category-catalog";
 
 interface CategoryPageProps {
-  params: {
-    category: string
-  }
+  params: Promise<{ category: string }>;
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const decodedCategory = decodeURIComponent(params.category)
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = await params;
+  const selected = decodeURIComponent(category);
 
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-balance mb-4 capitalize">{decodedCategory}</h1>
-          <p className="text-muted-foreground">Browse our {decodedCategory} collection</p>
-        </div>
-        <CategoryProducts category={decodedCategory} />
-      </main>
-      <Footer />
-    </div>
-  )
+    <PageLayout customLastLabel={selected}>
+      <header className="mb-10 max-w-2xl">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+          The collection
+        </p>
+        <h1 className="text-4xl font-semibold capitalize tracking-tight md:text-5xl">
+          {selected}
+        </h1>
+        <p className="mt-3 text-muted-foreground">Explore this collection.</p>
+      </header>
+      <CategoryCatalog category={selected} />
+    </PageLayout>
+  );
 }

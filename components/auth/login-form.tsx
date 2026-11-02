@@ -1,109 +1,100 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useAuth } from "@/components/auth/auth-provider"
-import { Loader2, Eye, EyeOff } from "lucide-react"
-import { toast } from "sonner"
-import { AUTH_STORAGE_KEYS } from "@/lib/auth-constants"
+import type React from "react";
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/components/auth/auth-provider";
+import { Loader2, Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 export function LoginForm() {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const [emailError, setEmailError] = useState("")
-  const { login, isLoading } = useAuth()
-  const router = useRouter()
-
-  // State for registered credentials
-  const [registeredUsername, setRegisteredUsername] = useState<string | null>(null)
-  const [registeredEmail, setRegisteredEmail] = useState<string | null>(null)
-  const [hasRegisteredPassword, setHasRegisteredPassword] = useState(false)
-  
-  // Load credentials from localStorage on client side only
-  useEffect(() => {
-    const username = localStorage.getItem(AUTH_STORAGE_KEYS.REGISTERED_USERNAME)
-    const email = localStorage.getItem(AUTH_STORAGE_KEYS.REGISTERED_EMAIL)
-    const storedPassword = localStorage.getItem(AUTH_STORAGE_KEYS.REGISTERED_PASSWORD)
-    setRegisteredUsername(username)
-    setRegisteredEmail(email)
-    setHasRegisteredPassword(!!storedPassword)
-  }, [])
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const { login, isLoading } = useAuth();
 
   // Email validation function
   const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
-  // Auto-fill registered credentials
-  const fillRegisteredCredentials = () => {
-    if (registeredUsername) setUsername(registeredUsername)
-    if (registeredEmail) setEmail(registeredEmail)
-    const storedPassword = localStorage.getItem("registeredPassword")
-    if (storedPassword) setPassword(storedPassword)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setEmailError("")
+    e.preventDefault();
+    setError("");
+    setEmailError("");
 
     // Validate required fields
     if (!username.trim()) {
-      setError("Username is required")
-      return
+      setError("Username is required");
+      return;
     }
 
     if (!email.trim()) {
-      setError("Email is required")
-      return
+      setError("Email is required");
+      return;
     }
 
     if (!password) {
-      setError("Password is required")
-      return
+      setError("Password is required");
+      return;
     }
 
     // Validate email format
     if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address")
-      return
+      setEmailError("Please enter a valid email address");
+      return;
     }
 
     try {
-      const success = await login(username.trim(), email.trim(), password)
+      const success = await login(username.trim(), email.trim(), password);
       if (success) {
         // Show success message
-        toast.success("Login successful! Redirecting...")
-        
-        // Small delay to ensure cookie is set before redirect
+        toast.success("Login successful! Redirecting...");
+
+        // Give the demo session state a moment to update before navigation.
         setTimeout(() => {
-          // Force a full page reload to ensure middleware picks up the new cookie
-          window.location.href = "/account"
-        }, 100)
+          const requested = new URLSearchParams(window.location.search).get(
+            "redirect",
+          );
+          window.location.href =
+            requested?.startsWith("/") && !requested.startsWith("//")
+              ? requested
+              : "/account";
+        }, 100);
       } else {
-        setError("Invalid credentials. Please check your username, email, and password.")
+        setError(
+          "Invalid credentials. Please check your username, email, and password.",
+        );
       }
-    } catch (error) {
-      setError("An error occurred during login. Please try again.")
+    } catch {
+      setError("An error occurred during login. Please try again.");
     }
-  }
+  };
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
-        <CardDescription>Enter your credentials to access your account</CardDescription>
+        <CardDescription>
+          Demo account: username demo, email demo@example.com, password
+          demo12345.
+        </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -133,15 +124,13 @@ export function LoginForm() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value)
-                if (emailError) setEmailError("")
+                setEmail(e.target.value);
+                if (emailError) setEmailError("");
               }}
               disabled={isLoading}
               className={emailError ? "border-red-500" : ""}
             />
-            {emailError && (
-              <p className="text-sm text-red-500">{emailError}</p>
-            )}
+            {emailError && <p className="text-sm text-red-500">{emailError}</p>}
           </div>
 
           <div className="space-y-2 relative">
@@ -156,12 +145,17 @@ export function LoginForm() {
               className="pr-10"
             />
             <button
+              aria-label={showPassword ? "Hide password" : "Show password"}
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-8 text-muted-foreground hover:text-foreground"
               disabled={isLoading}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </button>
           </div>
 
@@ -174,9 +168,9 @@ export function LoginForm() {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  setUsername("mor_2314")
-                  setEmail("mor_2314@example.com")
-                  setPassword("83r5^_")
+                  setUsername("demo");
+                  setEmail("demo@example.com");
+                  setPassword("demo12345");
                 }}
                 disabled={isLoading}
                 className="w-full"
@@ -184,22 +178,11 @@ export function LoginForm() {
                 Use Demo Credentials
               </Button>
             </div>
-            
-            {registeredUsername && (
-              <div className="p-3 bg-muted rounded-md">
-                <p className="font-medium mb-2">Your Registered Account:</p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={fillRegisteredCredentials}
-                  disabled={isLoading}
-                  className="w-full"
-                >
-                  Use My Credentials
-                </Button>
-              </div>
-            )}
+
+            <p>
+              Registration creates a session-only demo profile. No password is
+              stored.
+            </p>
           </div>
         </CardContent>
 
@@ -210,7 +193,7 @@ export function LoginForm() {
           </Button>
 
           <p className="text-sm text-center text-muted-foreground">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-primary hover:underline">
               Sign up
             </Link>
@@ -218,5 +201,5 @@ export function LoginForm() {
         </CardFooter>
       </form>
     </Card>
-  )
+  );
 }

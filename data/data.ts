@@ -8,12 +8,13 @@ interface Slide {
   link: string;
 }
 
-export const dataSlider : Slide[] = [
+export const dataSlider: Slide[] = [
   {
     id: 1,
     title: "Summer Collection 2024",
     subtitle: "Discover the latest trends",
-    description: "Explore our curated selection of premium fashion and accessories",
+    description:
+      "Explore our curated selection of premium fashion and accessories",
     image: "/photo-slider/womanclth1.jpg",
     cta: "Shop Now",
     link: "/category/women's clothing",
@@ -22,7 +23,8 @@ export const dataSlider : Slide[] = [
     id: 2,
     title: "Men's Collection 2024",
     subtitle: "Discover the latest trends",
-    description: "Explore our curated selection of premium fashion and accessories",
+    description:
+      "Explore our curated selection of premium fashion and accessories",
     image: "/photo-slider/manclth1.jpg",
     cta: "Shop Now",
     link: "/category/men's clothing",
@@ -56,11 +58,12 @@ export const dataSlider : Slide[] = [
     cta: "Shop Now",
     link: "/category/electronics",
   },
-   {
+  {
     id: 6,
     title: "Summer Collection 2024",
     subtitle: "Discover the latest trends",
-    description: "Explore our curated selection of premium fashion and accessories",
+    description:
+      "Explore our curated selection of premium fashion and accessories",
     image: "/photo-slider/womanclth2.jpg",
     cta: "Shop Now",
     link: "/category/women's clothing",
@@ -69,12 +72,13 @@ export const dataSlider : Slide[] = [
     id: 7,
     title: "Men's Collection 2024",
     subtitle: "Discover the latest trends",
-    description: "Explore our curated selection of premium fashion and accessories",
+    description:
+      "Explore our curated selection of premium fashion and accessories",
     image: "/photo-slider/manclth2.jpg",
     cta: "Shop Now",
     link: "/category/men's clothing",
   },
-  
+
   {
     id: 8,
     title: "Luxury Jewelry",
@@ -84,7 +88,7 @@ export const dataSlider : Slide[] = [
     cta: "View Collection",
     link: "/category/jewelery",
   },
-]
+];
 
 ///////////////////////////////////////////////////////
 
@@ -111,7 +115,8 @@ export const testimonials: Testimonial[] = [
     id: 2,
     name: "Mike Chen",
     role: "Tech Professional",
-    content: "The electronics section has everything I need. Great prices and authentic products. Highly recommended!",
+    content:
+      "The electronics section has everything I need. Great prices and authentic products. Highly recommended!",
     rating: 5,
     avatar: "MC",
   },
@@ -119,7 +124,8 @@ export const testimonials: Testimonial[] = [
     id: 3,
     name: "Emma Davis",
     role: "Jewelry Collector",
-    content: "Beautiful jewelry collection with unique pieces. The customer service is exceptional and very helpful.",
+    content:
+      "Beautiful jewelry collection with unique pieces. The customer service is exceptional and very helpful.",
     rating: 5,
     avatar: "ED",
   },
@@ -128,7 +134,8 @@ export const testimonials: Testimonial[] = [
     id: 4,
     name: "John Smith",
     role: "Home Decor Expert",
-    content: "Great variety in home decor items. Transformed my living space with affordable and stylish pieces!",
+    content:
+      "Great variety in home decor items. Transformed my living space with affordable and stylish pieces!",
     rating: 4,
     avatar: "JS",
   },
@@ -136,7 +143,8 @@ export const testimonials: Testimonial[] = [
     id: 5,
     name: "Lisa Wong",
     role: "Fitness Trainer",
-    content: "Excellent sports wear collection. Comfortable, durable, and perfect for my daily workouts.",
+    content:
+      "Excellent sports wear collection. Comfortable, durable, and perfect for my daily workouts.",
     rating: 5,
     avatar: "LW",
   },
@@ -144,12 +152,12 @@ export const testimonials: Testimonial[] = [
     id: 6,
     name: "David Kim",
     role: "Gadget Lover",
-    content: "Top-notch gadgets with quick delivery. The quality exceeds expectations every time!",
+    content:
+      "Top-notch gadgets with quick delivery. The quality exceeds expectations every time!",
     rating: 5,
     avatar: "DK",
   },
 ];
-
 
 /////////////////////////////////////////////////////////
 
@@ -162,30 +170,36 @@ export interface FAQItem {
 export const faqItems: FAQItem[] = [
   {
     question: "How can I track my order?",
-    answer: "After placing an order, you'll receive a confirmation email. You can track the status in your account dashboard."
+    answer:
+      "After placing an order, you'll receive a confirmation email. You can track the status in your account dashboard.",
   },
   {
     question: "What are the available payment methods?",
-    answer: "We support online payments via bank gateways, credit cards, and cash on delivery."
+    answer:
+      "We support online payments via bank gateways, credit cards, and cash on delivery.",
   },
   {
     question: "How long does shipping take?",
-    answer: "Orders are typically shipped within 1-3 business days. Exact time depends on your location."
+    answer:
+      "Orders are typically shipped within 1-3 business days. Exact time depends on your location.",
   },
   {
     question: "Is there a return policy?",
-    answer: "Yes, you can return items within 7 days of receipt, provided they are unused and in original packaging."
+    answer:
+      "Yes, you can return items within 7 days of receipt, provided they are unused and in original packaging.",
   },
   {
     question: "How do I create an account?",
-    answer: "Click on the register button and enter your details. The process is quick and simple."
+    answer:
+      "Click on the register button and enter your details. The process is quick and simple.",
   },
   {
     question: "Are there any special discounts?",
-    answer: "Yes, check the featured products section or subscribe to our newsletter for exclusive deals."
+    answer:
+      "Yes, check the featured products section or subscribe to our newsletter for exclusive deals.",
   },
   {
     question: "How can I contact support?",
-    answer: "Reach us via the contact page or email us at support@example.com."
-  }
+    answer: "Reach us via the contact page or email us at support@example.com.",
+  },
 ];

@@ -1,209 +1,153 @@
 "use client";
 
-import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Heart, ShoppingBag, Star, Trash2, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Star, ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "@/components/cart/cart-provider";
 import { useWishlist } from "@/components/account/wishlist-provider";
 import { useAuth } from "@/components/auth/auth-provider";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { Trash2 } from "lucide-react";
+import { storeToast } from "@/components/ui/store-toast";
+import type { Product } from "@/services/productService";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
-
-interface ProductCardProps {
-  product: Product;
-}
-
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product }: { product: Product }) {
   const { addItem, updateQuantity, removeItem, items } = useCart();
   const { user } = useAuth();
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
-  const { toast } = useToast();
+  const quantity = items.find((item) => item.id === product.id)?.quantity ?? 0;
+  const saved = isInWishlist(product.id);
 
-  const cartItem = items.find((item) => item.id === product.id);
-  const quantity = cartItem ? cartItem.quantity : 0;
-
-  const handleAddToCart = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!user) {
-      toast({
-        title: "To add product to cart, please log in first.",
-        className: " bg-muted dark:text-white text-black border-4 border-b-destructive"
-      });
-      return;
-    }
-    setIsAddingToCart(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
+  const addToCart = () => {
+    if (!user) return storeToast.signIn("add items to your bag");
     addItem({
       id: product.id,
       title: product.title,
       price: product.price,
       image: product.image,
     });
-    setIsAddingToCart(false);
+    storeToast.success("Added to your bag", product.title);
   };
-
-  const handleUpdateQuantity = (newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeItem(product.id);
-    } else {
-      updateQuantity(product.id, newQuantity);
-    }
-  };
-
-  const handleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!user) {
-      toast({
-        title: "To add to wishlist, please log in first.",
-        className: " bg-muted dark:text-white text-black border-4 border-b-destructive"
-      });
-      return;
-    }
-
-    const isCurrentlyWishlisted = isInWishlist(product.id);
-
-    if (isCurrentlyWishlisted) {
+  const toggleWishlist = () => {
+    if (!user) return storeToast.signIn("save items");
+    if (saved) {
       removeFromWishlist(product.id);
-      toast({
-        title: "Removed from wishlist",
-        className: " bg-muted dark:text-white text-black border-4 border-b-accent"
-      });
+      storeToast.success("Removed from saved items");
     } else {
       addToWishlist(product);
-      toast({
-        title: "Added to wishlist",
-        className: " bg-muted dark:text-white text-black border-4 border-b-accent"
-      });
+      storeToast.success("Saved for later", product.title);
     }
   };
 
   return (
-    <Link href={`/products/${product.id}`}>
-      <Card className="group hover:shadow-xl transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] h-full relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-        <CardContent className="p-4 relative z-10">
-          <div className="relative w-full max-w-[200px] mx-auto h-[180px] sm:h-[200px] mb-4 overflow-hidden rounded-lg bg-transparent">
-            <Image
-              src={product.image || "/placeholder.svg"}
-              alt={product.title}
-              className="object-contain group-hover:scale-110 transition-transform duration-500"
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-              style={{ objectFit: "contain" }}
-              fill
-            />
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-2 left-2 bg-white/80 hover:bg-white hover:scale-110 transition-all duration-200 opacity-0 group-hover:opacity-100"
-              onClick={handleWishlist}
-            >
-              <Heart
-                className={`h-4 w-4 transition-all duration-200 ${
-                  isInWishlist(product.id)
-                    ? "fill-red-500 text-red-500 scale-110"
-                    : "text-muted-foreground hover:text-red-400"
-                }`}
-              />
-            </Button>
-          </div>
-
-          <Badge className="absolute top-4 right-6 capitalize animate-in fade-in-0 slide-in-from-top-2 duration-300 delay-200">
+    <Card className="catalog-product-card glass-panel group relative h-full min-w-0 gap-0 overflow-hidden rounded-[1.65rem] border-border/65 p-3 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-primary/45 hover:shadow-[0_26px_65px_-30px_rgba(0,0,0,.35)]">
+      <Link
+        href={`/products/${product.id}`}
+        aria-label={`View details for ${product.title}`}
+        className="absolute inset-0 z-10 rounded-[1.65rem] focus-visible:outline-2 focus-visible:outline-ring"
+      />
+      <CardContent className="relative flex flex-1 flex-col px-0">
+        <div className="catalog-image-stage relative aspect-[1.12] overflow-hidden rounded-[1.2rem] border border-border/35">
+          <Image
+            src={product.image || "/placeholder.svg"}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="pointer-events-none object-cover opacity-20 blur-3xl scale-125"
+            aria-hidden="true"
+          />
+          <Image
+            src={product.image || "/placeholder.svg"}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="pointer-events-none object-contain p-6 transition-transform duration-500 group-hover:scale-[1.055] sm:p-7"
+          />
+          <span className="absolute right-3 top-3 rounded-full border border-primary/20 bg-background/85 px-2.5 py-1 text-[11px] font-medium capitalize text-primary backdrop-blur-xl">
             {product.category}
-          </Badge>
-
-          <div className="space-y-2">
-            <h3 className="font-semibold text-sm line-clamp-2 group-hover:text-primary transition-colors duration-300">
-              {product.title}
-            </h3>
-
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 group-hover:scale-110 transition-transform duration-200" />
-              <span className="text-sm text-muted-foreground">
-                {product.rating.rate} ({product.rating.count})
-              </span>
-            </div>
-
-            <p className="text-lg font-bold text-primary group-hover:scale-105 transition-transform duration-200 origin-left">
-              ${product.price.toFixed(2)}
-            </p>
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={toggleWishlist}
+          aria-label={
+            saved
+              ? `Remove ${product.title} from saved items`
+              : `Save ${product.title}`
+          }
+          aria-pressed={saved}
+          className="absolute left-3 top-3 z-20 grid size-10 place-items-center rounded-full border border-border/70 bg-background/85 text-foreground shadow-sm backdrop-blur-xl transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
+        >
+          <Heart
+            className={`size-4 ${saved ? "fill-primary text-primary" : ""}`}
+          />
+        </button>
+        <div className="flex flex-1 flex-col px-3 pb-3 pt-4">
+          <h3 className="line-clamp-2 min-h-[2.8rem] text-sm font-semibold leading-6 text-foreground transition-colors group-hover:text-primary sm:text-base">
+            {product.title}
+          </h3>
+          <div className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Star
+              className="size-4 fill-accent text-accent"
+              aria-hidden="true"
+            />
+            <span>{product.rating.rate.toFixed(1)}</span>
+            <span>({product.rating.count})</span>
           </div>
-        </CardContent>
-
-        <CardFooter className="p-4 pt-0 relative z-10">
-          {quantity > 0 ? (
-            <div className="flex items-center justify-between w-full border border-border rounded-md overflow-hidden">
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-primary text-primary-foreground hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleUpdateQuantity(quantity - 1);
-                }}
-              >
-                {quantity === 1 ? <Trash2 className="h-4 w-4" /> : "-"}
-              </Button>
-              <span className="flex-1 text-center font-medium">{quantity}</span>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-primary text-primary-foreground hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handleUpdateQuantity(quantity + 1);
-                }}
-              >
-                +
-              </Button>
-            </div>
-          ) : (
+          <p className="mt-auto pt-3 text-xl font-semibold tracking-tight text-foreground">
+            ${product.price.toFixed(2)}
+          </p>
+        </div>
+      </CardContent>
+      <CardFooter className="relative z-20 px-1 pb-1 pt-1">
+        {quantity > 0 ? (
+          <div className="flex h-10 w-full items-center justify-between rounded-xl border border-border/70 bg-background/65 p-1">
             <Button
-              onClick={handleAddToCart}
-              className="w-full hover:scale-105 transition-all duration-200 relative overflow-hidden"
-              size="sm"
-              disabled={isAddingToCart}
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-8 rounded-lg"
+              onClick={() =>
+                quantity === 1
+                  ? removeItem(product.id)
+                  : updateQuantity(product.id, quantity - 1)
+              }
+              aria-label={
+                quantity === 1
+                  ? `Remove ${product.title} from bag`
+                  : `Decrease ${product.title} quantity`
+              }
             >
-              <div
-                className={`absolute inset-0 bg-white/20 transform transition-transform duration-300 ${
-                  isAddingToCart ? "translate-x-0" : "-translate-x-full"
-                }`}
-              />
-              <ShoppingCart
-                className={`mr-2 h-4 w-4 transition-transform duration-200 ${
-                  isAddingToCart ? "animate-bounce" : ""
-                }`}
-              />
-              {isAddingToCart ? "Adding..." : "Add to Cart"}
+              {quantity === 1 ? (
+                <Trash2 className="size-4" />
+              ) : (
+                <Minus className="size-4" />
+              )}
             </Button>
-          )}
-        </CardFooter>
-      </Card>
-    </Link>
+            <span className="font-medium tabular-nums" aria-live="polite">
+              {quantity} in bag
+            </span>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="size-8 rounded-lg"
+              onClick={() => updateQuantity(product.id, quantity + 1)}
+              aria-label={`Increase ${product.title} quantity`}
+            >
+              <Plus className="size-4" />
+            </Button>
+          </div>
+        ) : (
+          <Button
+            type="button"
+            onClick={addToCart}
+            className="h-10 w-full rounded-xl"
+          >
+            <ShoppingBag className="size-4" /> Add to bag
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
   );
 }

@@ -84,7 +84,9 @@ export default function ContactError({ error, reset }: ErrorProps) {
                     <Mail className="w-4 h-4" />
                     <span>Email us at: support@modernstore.com</span>
                   </div>
-                  <p>We'll get back to you within 24 hours</p>
+                  <p>
+                    This demo form does not send messages to a support team.
+                  </p>
                 </div>
               </div>
             </CardContent>

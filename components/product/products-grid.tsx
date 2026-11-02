@@ -1,175 +1,187 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { useSearchParams } from "next/navigation"
-import { ProductCard } from "@/components/product/product-card"
-import { ProductFilters, type FilterState } from "@/components/product/product-filters"
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProductCard } from "@/components/product/product-card";
+import { ProductFilters } from "@/components/product/product-filters";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { Product } from "@/services/productService";
+import {
+  filterProducts,
+  paginateProducts,
+  readProductFilters,
+} from "@/lib/catalog";
 
-interface Product {
-  id: number
-  title: string
-  price: number
-  description: string
-  category: string
-  image: string
-  rating: {
-    rate: number
-    count: number
-  }
-}
+const pageSizes = [6, 9, 12] as const;
 
-export function ProductsGrid({ initialProducts }: { initialProducts: Product[] }) {
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [productsPerPage] = useState(12)
-  const searchParams = useSearchParams()
+export function ProductsGrid({
+  initialProducts,
+}: {
+  initialProducts: Product[];
+}) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const query = searchParams.toString();
+  const filters = useMemo(
+    () => readProductFilters(new URLSearchParams(query)),
+    [query],
+  );
+  const filteredProducts = useMemo(
+    () => filterProducts(initialProducts, filters),
+    [initialProducts, filters],
+  );
+  const sizeParam = Number(searchParams.get("size"));
+  const pageSize = pageSizes.find((size) => size === sizeParam) ?? 9;
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const pageParam = Number(searchParams.get("page"));
+  const currentPage =
+    Number.isInteger(pageParam) && pageParam > 0
+      ? Math.min(pageParam, totalPages)
+      : 1;
+  const currentProducts = paginateProducts(
+    filteredProducts,
+    currentPage,
+    pageSize,
+  );
+  const first = filteredProducts.length ? (currentPage - 1) * pageSize + 1 : 0;
+  const last = Math.min(currentPage * pageSize, filteredProducts.length);
 
-
-
-  // اصلاح applyFilters با useCallback
-  const applyFilters = useCallback((filters: FilterState) => {
-    let filtered = [...initialProducts]
-
-    // Search filter
-    if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase()
-      filtered = filtered.filter(
-        (product) =>
-          product.title.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query),
-      )
-    }
-
-    // Category filter
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter((product) => filters.categories.includes(product.category))
-    }
-
-    // Price range filter
-    filtered = filtered.filter(
-      (product) => product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1],
-    )
-
-    // Rating filter
-    if (filters.minRating > 0) {
-      filtered = filtered.filter((product) => product.rating.rate >= filters.minRating)
-    }
-
-    // Sort
-    switch (filters.sortBy) {
-      case "price-low":
-        filtered.sort((a, b) => a.price - b.price)
-        break
-      case "price-high":
-        filtered.sort((a, b) => b.price - a.price)
-        break
-      case "rating":
-        filtered.sort((a, b) => b.rating.rate - a.rating.rate)
-        break
-      case "name":
-        filtered.sort((a, b) => a.title.localeCompare(b.title))
-        break
-      default:
-        break
-    }
-
-    setFilteredProducts(filtered)
-    setCurrentPage(1)
-  }, [initialProducts])
-
-  const indexOfLastProduct = currentPage * productsPerPage
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
-
-  const paginate = useCallback((pageNumber: number) => {
-    setCurrentPage(pageNumber)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }, [])
-
-
+  const updatePage = (page: number) => {
+    const params = new URLSearchParams(query);
+    if (page <= 1) params.delete("page");
+    else params.set("page", String(page));
+    router.push(`${pathname}${params.size ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+    document.getElementById("catalog-results")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+      block: "start",
+    });
+  };
+  const updatePageSize = (size: string) => {
+    const params = new URLSearchParams(query);
+    params.delete("page");
+    if (size === "9") params.delete("size");
+    else params.set("size", size);
+    router.replace(`${pathname}${params.size ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+  };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      {/* Filters Sidebar */}
-      <div className="lg:col-span-1">
-        <ProductFilters onFiltersChange={applyFilters} />
-      </div>
-
-      {/* Products Grid */}
-      <div className="lg:col-span-3">
-        <div className="mb-6">
-          <p className="text-muted-foreground">
-            Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, filteredProducts.length)} of{" "}
-            {filteredProducts.length} products
-            {searchParams.get("q") && <span> for "{searchParams.get("q")}"</span>}
+    <div className="grid items-start gap-7 pb-20 lg:grid-cols-[minmax(245px,290px)_minmax(0,1fr)] lg:gap-8">
+      <ProductFilters />
+      <section
+        id="catalog-results"
+        className="min-w-0 scroll-mt-28"
+        aria-label="Products"
+      >
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground" aria-live="polite">
+            Showing{" "}
+            <span className="font-semibold tabular-nums text-foreground">
+              {first}–{last}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold tabular-nums text-foreground">
+              {filteredProducts.length}
+            </span>{" "}
+            products
           </p>
+          <div className="flex items-center gap-3">
+            <label
+              htmlFor="catalog-page-size"
+              className="text-sm text-muted-foreground"
+            >
+              Per page
+            </label>
+            <Select value={String(pageSize)} onValueChange={updatePageSize}>
+              <SelectTrigger
+                id="catalog-page-size"
+                className="h-10 w-20 rounded-xl border-border bg-card/70"
+              >
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl border-border bg-card/95 shadow-xl backdrop-blur-xl">
+                {pageSizes.map((size) => (
+                  <SelectItem
+                    key={size}
+                    value={String(size)}
+                    className="rounded-lg focus:bg-primary/10 focus:text-foreground"
+                  >
+                    {size}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-
         {filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">No products found matching your criteria.</p>
-            <p className="text-sm text-muted-foreground">Try adjusting your filters or search terms.</p>
+          <div className="glass-panel rounded-[1.75rem] px-6 py-20 text-center">
+            <h2 className="text-2xl font-medium">No matching products</h2>
+            <p className="mt-3 text-muted-foreground">
+              Try a different category, rating, or price range.
+            </p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <ProductCard product={product} />
-                </div>
+            <div className="grid auto-rows-fr gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {currentProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
-
             {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-2 mt-12">
+              <nav
+                aria-label="Product pages"
+                className="mt-12 flex flex-wrap items-center justify-center gap-2"
+              >
                 <Button
                   variant="outline"
-                  size="sm"
-                  onClick={() => paginate(currentPage - 1)}
+                  onClick={() => updatePage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="hover:scale-105 transition-transform"
+                  className="rounded-xl"
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
+                  <ChevronLeft className="size-4" /> Previous
                 </Button>
-
-                <div className="flex space-x-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                    <Button
-                      key={number}
-                      variant={currentPage === number ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => paginate(number)}
-                      className="hover:scale-105 transition-transform"
-                    >
-                      {number}
-                    </Button>
-                  ))}
-                </div>
-
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1,
+                ).map((page) => (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    onClick={() => updatePage(page)}
+                    aria-current={currentPage === page ? "page" : undefined}
+                    aria-label={`Page ${page}`}
+                    className="size-10 rounded-xl px-0 tabular-nums"
+                  >
+                    {page}
+                  </Button>
+                ))}
                 <Button
                   variant="outline"
-                  size="sm"
-                  onClick={() => paginate(currentPage + 1)}
+                  onClick={() => updatePage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="hover:scale-105 transition-transform"
+                  className="rounded-xl"
                 >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
+                  Next <ChevronRight className="size-4" />
                 </Button>
-              </div>
+              </nav>
             )}
           </>
         )}
-      </div>
+      </section>
     </div>
-  )
+  );
 }

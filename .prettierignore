@@ -1,0 +1,7 @@
+.next
+.agents
+node_modules
+output
+test-results
+repomix-output.xml
+pnpm-lock.yaml

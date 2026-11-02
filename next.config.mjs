@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  distDir:
+    process.env.NEXT_VISUAL_DIST_DIR ||
+    (process.env.NODE_ENV === "production" ? ".next-build" : ".next"),
   typescript: {
-    ignoreBuildErrors: true,
+    tsconfigPath:
+      process.env.NODE_ENV === "production"
+        ? "tsconfig.build.json"
+        : "tsconfig.json",
   },
+  outputFileTracingRoot: process.cwd(),
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      { protocol: "https", hostname: "fakestoreapi.com", pathname: "/img/**" },
+    ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

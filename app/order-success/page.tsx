@@ -1,14 +1,15 @@
-import { Navigation } from "@/components/layout/navigation"
-import { OrderSuccess } from "@/components/cart/order-success"
-import { Footer } from "@/components/layout/footer"
-import { PageLayout } from "@/components/layout/page-layout"
+import { OrderSuccess } from "@/components/cart/order-success";
+import { PageLayout } from "@/components/layout/page-layout";
+import { Suspense } from "react";
 
 export default function OrderSuccessPage() {
   return (
-
-        <PageLayout customLastLabel="Order Success">
-          <OrderSuccess />
-        </PageLayout>
-
-  )
+    <PageLayout customLastLabel="Order Success">
+      <Suspense
+        fallback={<p className="py-16 text-center">Loading demo order...</p>}
+      >
+        <OrderSuccess />
+      </Suspense>
+    </PageLayout>
+  );
 }

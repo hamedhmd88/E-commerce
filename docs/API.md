@@ -1,0 +1,7 @@
+# Product API
+
+`services/productService.ts` requests Fake Store API product and category endpoints and validates product responses with the Zod schema in `lib/product-schema.ts`. The official [Fake Store API repository](https://github.com/keikaavousi/fake-store-api) confirms `/products`, `/products/:id`, `/products/categories`, and `/products/category/:category`.
+
+Run `pnpm api:check` to test these four endpoints from Node, the same kind of environment used by Next.js server rendering. In the current environment all four requests returned HTTP 403, HTML rather than JSON, and `Cf-Mitigated: challenge`. This is a Cloudflare browser challenge, not an invalid API path or product schema. Opening a URL in a browser may succeed while a server request is challenged. The application does not attempt to bypass that challenge or silently substitute fabricated products.
+
+`services/catalog-error.ts` classifies transport errors. The catalog, category, product detail, and homepage featured sections request data from the browser using the documented browser-fetch pattern. This lets the user browser handle any provider browser check and avoids making a server-render request that Cloudflare challenges in some environments. A clear unavailable state remains for actual request failures. Valid responses continue through the shared Zod schema. A development or deployment environment can set `NEXT_PUBLIC_API_URL` to an authorized compatible origin. `pnpm api:check` checks server-side reachability only; a 403 there does not prove browser CORS requests will fail.

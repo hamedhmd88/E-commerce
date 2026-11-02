@@ -1,156 +1,80 @@
-import { Navigation } from "@/components/layout/navigation";
-import { Footer } from "@/components/layout/footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, Award, Globe, Heart } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  Layers3,
+  MousePointerClick,
+  ShieldCheck,
+} from "lucide-react";
 import { PageLayout } from "@/components/layout/page-layout";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "The story and scope of the Morrow portfolio storefront.",
+};
 
 export default function AboutPage() {
   return (
     <PageLayout customLastLabel="About">
-      {/* Hero Section */}
-      <div className="text-center mb-16">
-        <h1 className="text-4xl lg:text-6xl font-bold text-balance mb-6">
-          About ModernStore
+      <section className="mx-auto max-w-5xl py-10 lg:py-20">
+        <p className="mb-5 text-xs font-semibold uppercase tracking-[.28em] text-primary">
+          About the project
+        </p>
+        <h1 className="max-w-4xl font-serif text-5xl leading-tight tracking-tight sm:text-7xl">
+          A more considered way to <em className="text-primary">explore.</em>
         </h1>
-        <p className="text-xl text-muted-foreground text-pretty max-w-3xl mx-auto">
-          We're passionate about bringing you the finest products from around
-          the world, combining quality, style, and innovation in every purchase.
+        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          Morrow is a portfolio demonstration of a modern storefront. It brings
+          a varied product catalog into a calm, useful shopping interface
+          designed to make discovery feel effortless.
         </p>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-16">
-        <Card>
-          <CardContent className="p-6 text-center">
-            <Users className="h-8 w-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">50K+</div>
-            <p className="text-sm text-muted-foreground">Happy Customers</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <Award className="h-8 w-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">1000+</div>
-            <p className="text-sm text-muted-foreground">Premium Products</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <Globe className="h-8 w-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">25+</div>
-            <p className="text-sm text-muted-foreground">Countries Served</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
-            <Heart className="h-8 w-8 text-primary mx-auto mb-2" />
-            <div className="text-2xl font-bold">99%</div>
-            <p className="text-sm text-muted-foreground">Satisfaction Rate</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Story Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-        <div>
-          <h2 className="text-3xl font-bold mb-6">Our Story</h2>
-          <div className="space-y-4 text-muted-foreground leading-relaxed">
-            <p>
-              Founded in 2020, ModernStore began as a vision to create a premium
-              e-commerce experience that puts quality and customer satisfaction
-              at the forefront. We believe that shopping online should be as
-              enjoyable and trustworthy as visiting your favorite local store.
-            </p>
-            <p>
-              Our carefully curated selection spans electronics, fashion, and
-              jewelry, with each product chosen for its exceptional quality,
-              innovative design, and value. We work directly with trusted
-              manufacturers and brands to ensure authenticity and competitive
-              pricing.
-            </p>
-            <p>
-              Today, we're proud to serve customers worldwide, maintaining our
-              commitment to excellence in every aspect of the shopping
-              experience.
-            </p>
-          </div>
-        </div>
-        <div className="bg-muted rounded-lg p-8 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-6xl mb-4">🏪</div>
-            <h3 className="text-xl font-semibold mb-2">Premium Quality</h3>
-            <p className="text-muted-foreground">
-              Every product is carefully selected and quality-tested
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Values */}
-      <div className="mb-16">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Values</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card>
-            <CardContent className="p-6">
-              <Badge className="mb-4">Quality First</Badge>
-              <h3 className="text-xl font-semibold mb-3">
-                Uncompromising Standards
-              </h3>
-              <p className="text-muted-foreground">
-                We source only the highest quality products from trusted
-                suppliers and conduct rigorous quality checks.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <Badge className="mb-4">Customer Focus</Badge>
-              <h3 className="text-xl font-semibold mb-3">
-                Your Satisfaction Matters
-              </h3>
-              <p className="text-muted-foreground">
-                Our dedicated support team is here to ensure your shopping
-                experience exceeds expectations.
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <Badge className="mb-4">Innovation</Badge>
-              <h3 className="text-xl font-semibold mb-3">Always Evolving</h3>
-              <p className="text-muted-foreground">
-                We continuously improve our platform and services to provide the
-                best possible experience.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Team Section */}
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-6">Meet Our Team</h2>
-        <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Our passionate team works tirelessly to bring you the best products
-          and shopping experience.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-14 grid gap-5 md:grid-cols-3">
           {[
-            { name: "Sarah Johnson", role: "CEO & Founder", avatar: "👩‍💼" },
-            { name: "Michael Chen", role: "Head of Product", avatar: "👨‍💻" },
-            { name: "Emily Rodriguez", role: "Customer Success", avatar: "👩‍🎓" },
-          ].map((member) => (
-            <Card key={member.name}>
-              <CardContent className="p-6 text-center">
-                <div className="text-4xl mb-4">{member.avatar}</div>
-                <h3 className="font-semibold mb-1">{member.name}</h3>
-                <p className="text-sm text-muted-foreground">{member.role}</p>
-              </CardContent>
-            </Card>
+            {
+              icon: Layers3,
+              title: "Real catalog",
+              copy: "Products, prices, and categories are sourced from Fake Store API. Availability depends on that service.",
+            },
+            {
+              icon: MousePointerClick,
+              title: "Thoughtful interaction",
+              copy: "Search, shopping lists, cart controls, and account journeys are designed as a coherent frontend experience.",
+            },
+            {
+              icon: ShieldCheck,
+              title: "Honest demonstration",
+              copy: "Accounts and checkout are simulated. No real payment is collected and no physical order is placed.",
+            },
+          ].map(({ icon: Icon, title, copy }) => (
+            <div
+              key={title}
+              className="rounded-2xl border border-border bg-card p-7"
+            >
+              <Icon className="mb-6 size-7 text-primary" aria-hidden />
+              <h2 className="font-serif text-2xl">{title}</h2>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                {copy}
+              </p>
+            </div>
           ))}
         </div>
-      </div>
+        <div className="mt-16 flex flex-wrap items-center justify-between gap-6 rounded-3xl bg-muted p-8 sm:p-12">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[.25em] text-primary">
+              Explore the collection
+            </p>
+            <h2 className="mt-3 font-serif text-3xl">
+              Find something that fits your day.
+            </h2>
+          </div>
+          <Link
+            href="/products"
+            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-primary px-6 text-primary-foreground"
+          >
+            Browse products <ArrowUpRight className="size-4" />
+          </Link>
+        </div>
+      </section>
     </PageLayout>
   );
 }

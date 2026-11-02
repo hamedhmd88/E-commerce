@@ -1,31 +1,32 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Checkbox } from "@/components/ui/checkbox"
-import { ArrowLeft, CreditCard, Truck, Shield } from "lucide-react"
-import { useCart } from "@/components/cart/cart-provider"
-import Link from "next/link"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowLeft, CreditCard, Truck, Shield } from "lucide-react";
+import { useCart } from "@/components/cart/cart-provider";
+import Link from "next/link";
+import { createDemoOrder, saveDemoOrder } from "@/lib/demo-orders";
 
 export function CheckoutPage() {
-  const { items, totalPrice, totalItems, clearCart } = useCart()
-  const router = useRouter()
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState("card")
+  const { items, totalPrice, totalItems, clearCart, pricing, promoCode } =
+    useCart();
+  const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState("demo-standard");
+  const [agreed, setAgreed] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const shipping = totalPrice > 50 ? 0 : 9.99
-  const tax = totalPrice * 0.08
-  const finalTotal = totalPrice + shipping + tax
+  const { shipping, tax, discount, total: finalTotal } = pricing;
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,38 +37,63 @@ export function CheckoutPage() {
     state: "",
     zipCode: "",
     country: "US",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    nameOnCard: "",
-  })
+  });
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsProcessing(true)
-
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Clear cart and redirect to success page
-    clearCart()
-    router.push("/order-success")
-  }
+    e.preventDefault();
+    if (!agreed || items.length === 0) return;
+    if (!formData.state) {
+      setSubmitError("Choose a state or region before placing the demo order.");
+      return;
+    }
+    setIsProcessing(true);
+    setSubmitError("");
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      if (paymentMethod === "demo-failure") {
+        setSubmitError(
+          "Demo payment declined as requested. Your cart is still here; choose another demo method to continue.",
+        );
+        setIsProcessing(false);
+        return;
+      }
+      const order = createDemoOrder({
+        email: formData.email.trim(),
+        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
+        address: `${formData.address.trim()}, ${formData.city.trim()}, ${formData.state}, ${formData.zipCode.trim()}, ${formData.country}`,
+        paymentMethod,
+        items: items.map((item) => ({ ...item })),
+        subtotal: totalPrice,
+        shipping,
+        tax,
+        discount,
+        total: finalTotal,
+      });
+      saveDemoOrder(order);
+      clearCart();
+      router.push(`/order-success?id=${encodeURIComponent(order.id)}`);
+    } catch {
+      setSubmitError("Could not save this demo order. Please try again.");
+      setIsProcessing(false);
+    }
+  };
 
   if (items.length === 0) {
     return (
       <div className="max-w-4xl mx-auto text-center py-16">
         <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-        <p className="text-muted-foreground mb-6">Add some products before checking out</p>
+        <p className="text-muted-foreground mb-6">
+          Add some products before checking out
+        </p>
         <Button asChild>
           <Link href="/products">Continue Shopping</Link>
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -124,7 +150,9 @@ export function CheckoutPage() {
                       id="firstName"
                       required
                       value={formData.firstName}
-                      onChange={(e) => handleInputChange("firstName", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("firstName", e.target.value)
+                      }
                     />
                   </div>
                   <div>
@@ -133,7 +161,9 @@ export function CheckoutPage() {
                       id="lastName"
                       required
                       value={formData.lastName}
-                      onChange={(e) => handleInputChange("lastName", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("lastName", e.target.value)
+                      }
                     />
                   </div>
                 </div>
@@ -144,7 +174,9 @@ export function CheckoutPage() {
                     id="address"
                     required
                     value={formData.address}
-                    onChange={(e) => handleInputChange("address", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("address", e.target.value)
+                    }
                   />
                 </div>
 
@@ -155,22 +187,22 @@ export function CheckoutPage() {
                       id="city"
                       required
                       value={formData.city}
-                      onChange={(e) => handleInputChange("city", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("city", e.target.value)
+                      }
                     />
                   </div>
                   <div>
                     <Label htmlFor="state">State</Label>
-                    <Select value={formData.state} onValueChange={(value) => handleInputChange("state", value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="CA">California</SelectItem>
-                        <SelectItem value="NY">New York</SelectItem>
-                        <SelectItem value="TX">Texas</SelectItem>
-                        <SelectItem value="FL">Florida</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      id="state"
+                      value={formData.state}
+                      onChange={(e) =>
+                        handleInputChange("state", e.target.value)
+                      }
+                      required
+                      autoComplete="address-level1"
+                    />
                   </div>
                 </div>
 
@@ -181,21 +213,22 @@ export function CheckoutPage() {
                       id="zipCode"
                       required
                       value={formData.zipCode}
-                      onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("zipCode", e.target.value)
+                      }
                     />
                   </div>
                   <div>
                     <Label htmlFor="country">Country</Label>
-                    <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="US">United States</SelectItem>
-                        <SelectItem value="CA">Canada</SelectItem>
-                        <SelectItem value="UK">United Kingdom</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      id="country"
+                      value={formData.country}
+                      onChange={(e) =>
+                        handleInputChange("country", e.target.value)
+                      }
+                      required
+                      autoComplete="country-name"
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -210,76 +243,42 @@ export function CheckoutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
+                <p className="text-sm text-muted-foreground">
+                  This is a portfolio demo. Contact, address, and order details
+                  are saved in this browser only. No payment is collected, and
+                  no order is shipped.
+                </p>
+                <RadioGroup
+                  value={paymentMethod}
+                  onValueChange={setPaymentMethod}
+                >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="card" id="card" />
-                    <Label htmlFor="card">Credit/Debit Card</Label>
+                    <RadioGroupItem value="demo-standard" id="demo-standard" />
+                    <Label htmlFor="demo-standard">
+                      Demo payment · standard
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="paypal" id="paypal" />
-                    <Label htmlFor="paypal">PayPal</Label>
+                    <RadioGroupItem value="demo-express" id="demo-express" />
+                    <Label htmlFor="demo-express">Demo payment · express</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="demo-failure" id="demo-failure" />
+                    <Label htmlFor="demo-failure">
+                      Simulate a declined payment
+                    </Label>
                   </div>
                 </RadioGroup>
 
-                {paymentMethod === "card" && (
-                  <div className="space-y-4 pt-4">
-                    <div>
-                      <Label htmlFor="cardNumber">Card Number</Label>
-                      <Input
-                        id="cardNumber"
-                        placeholder="1234 5678 9012 3456"
-                        required
-                        value={formData.cardNumber}
-                        onChange={(e) => handleInputChange("cardNumber", e.target.value)}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="expiryDate">Expiry Date</Label>
-                        <Input
-                          id="expiryDate"
-                          placeholder="MM/YY"
-                          required
-                          value={formData.expiryDate}
-                          onChange={(e) => handleInputChange("expiryDate", e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="cvv">CVV</Label>
-                        <Input
-                          id="cvv"
-                          placeholder="123"
-                          required
-                          value={formData.cvv}
-                          onChange={(e) => handleInputChange("cvv", e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="nameOnCard">Name on Card</Label>
-                      <Input
-                        id="nameOnCard"
-                        required
-                        value={formData.nameOnCard}
-                        onChange={(e) => handleInputChange("nameOnCard", e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex items-center space-x-2 pt-4">
-                  <Checkbox id="terms" required />
+                  <Checkbox
+                    id="terms"
+                    checked={agreed}
+                    onCheckedChange={(value) => setAgreed(value === true)}
+                    required
+                  />
                   <Label htmlFor="terms" className="text-sm">
-                    I agree to the{" "}
-                    <Link href="#" className="text-primary hover:underline">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="#" className="text-primary hover:underline">
-                      Privacy Policy
-                    </Link>
+                    I understand this creates a local demo order only.
                   </Label>
                 </div>
               </CardContent>
@@ -306,10 +305,16 @@ export function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium line-clamp-1">{item.title}</p>
-                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                        <p className="text-sm font-medium line-clamp-1">
+                          {item.title}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Qty: {item.quantity}
+                        </p>
                       </div>
-                      <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm font-medium">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -324,12 +329,20 @@ export function CheckoutPage() {
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                    <span>
+                      {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Tax</span>
                     <span>${tax.toFixed(2)}</span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-700 dark:text-green-400">
+                      <span>Demo promotion ({promoCode})</span>
+                      <span>−${discount.toFixed(2)}</span>
+                    </div>
+                  )}
                   <Separator />
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total</span>
@@ -337,8 +350,20 @@ export function CheckoutPage() {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full" size="lg" disabled={isProcessing}>
-                  {isProcessing ? "Processing..." : `Complete Order - $${finalTotal.toFixed(2)}`}
+                {submitError && (
+                  <p role="alert" className="text-sm text-destructive">
+                    {submitError}
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  size="lg"
+                  disabled={isProcessing || !agreed}
+                >
+                  {isProcessing
+                    ? "Saving demo order..."
+                    : `Place demo order · $${finalTotal.toFixed(2)}`}
                 </Button>
               </CardContent>
             </Card>
@@ -348,7 +373,7 @@ export function CheckoutPage() {
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                   <Shield className="h-4 w-4" />
-                  <span>Your payment information is secure and encrypted</span>
+                  <span>No payment details are requested or processed.</span>
                 </div>
               </CardContent>
             </Card>
@@ -356,5 +381,5 @@ export function CheckoutPage() {
         </div>
       </form>
     </div>
-  )
+  );
 }

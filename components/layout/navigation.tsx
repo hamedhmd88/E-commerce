@@ -1,12 +1,11 @@
 "use client";
 
-import type React from "react";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ShoppingCart, User, Menu, X } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { CartSidebar } from "@/components/cart/cart-sidebar";
 import { useCart } from "@/components/cart/cart-provider";
@@ -15,60 +14,62 @@ import { useAuth } from "@/components/auth/auth-provider";
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "Cart", href: "/cart" },
   { name: "Blog", href: "/blog" },
-  { name: "About Us", href: "/about" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const { totalItems, setIsOpen } = useCart();
   const { user } = useAuth();
-  const router = useRouter();
   const pathname = usePathname();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?q=${encodeURIComponent(searchQuery.trim())}`);
-      setIsMenuOpen(false);
-    }
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchQuery(value);
-    if (value === "") {
-      router.push("/products");
-    }
-  };
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:ring-2 focus:ring-ring"
+      >
+        Skip to main content
+      </a>
+      <nav
+        aria-label="Main navigation"
+        className="glass-surface sticky top-0 z-50 border-b border-border"
+      >
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-14">
+          <div className="flex h-[4.5rem] items-center justify-between">
             {/* Logo */}
             <Link
               href="/"
               scroll={true}
-              className="text-2xl font-bold text-primary hover:scale-105 transition-transform"
+              className="flex items-center gap-2.5 font-semibold tracking-[-.055em] text-foreground sm:text-xl"
             >
-              ModernStore
+              <Image
+                src="/morrow-mark.svg"
+                alt=""
+                width={33}
+                height={33}
+                className="size-8"
+                priority
+              />
+              <span>
+                Morrow<span className="text-primary">.</span>
+              </span>
             </Link>
 
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden lg:flex items-center gap-1">
               {menuItems.map((item) => (
-                <Button
-                  key={item.name}
-                  variant={pathname === item.href ? "default" : "ghost"}
-                  asChild
-                >
+                <Button key={item.name} variant="ghost" asChild>
                   <Link
                     href={item.href}
                     scroll={true}
-                    className="text-foreground  transition-colors hover:scale-105 transform"
+                    className={`hover:!bg-primary/10 hover:!text-foreground dark:hover:!text-foreground ${
+                      pathname === item.href
+                        ? "text-primary"
+                        : "text-foreground"
+                    }`}
+                    aria-current={pathname === item.href ? "page" : undefined}
                   >
                     {item.name}
                   </Link>
@@ -76,28 +77,8 @@ export function Navigation() {
               ))}
             </div>
 
-            <div className="hidden md:flex items-center flex-1 max-w-sm mx-8">
-              <form onSubmit={handleSearch} className="relative w-full group">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
-                <Input
-                  type="search"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 pr-12 border-2 focus:border-primary transition-all duration-200 hover:shadow-md"
-                />
-                <Button
-                  type="submit"
-                  size="sm"
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 px-3 bg-primary hover:bg-primary/90 transition-all duration-200 hover:scale-105"
-                >
-                  Search
-                </Button>
-              </form>
-            </div>
-
             {/* Right Side Actions */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-1 sm:gap-2">
               <ThemeToggle />
 
               {/* Cart Button */}
@@ -106,6 +87,7 @@ export function Navigation() {
                 size="icon"
                 className="relative hover:scale-110 transition-transform"
                 onClick={() => setIsOpen(true)}
+                aria-label={`Open cart, ${totalItems} items`}
               >
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
@@ -116,9 +98,17 @@ export function Navigation() {
               </Button>
 
               {/* User Account */}
-              <Link href={user ? "/account" : "/login"} scroll={true}>
+              <Link
+                href={user ? "/account" : "/login"}
+                scroll={true}
+                aria-label={user ? "Account" : "Sign in"}
+              >
                 <Button
-                  variant={pathname === "/account" || pathname === "/login" ? "default" : "ghost"}
+                  variant={
+                    pathname === "/account" || pathname === "/login"
+                      ? "default"
+                      : "ghost"
+                  }
                   size="icon"
                   className="hover:scale-110 transition-transform"
                 >
@@ -130,8 +120,11 @@ export function Navigation() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden hover:scale-110 transition-transform"
+                className="lg:hidden"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-navigation"
               >
                 {isMenuOpen ? (
                   <X className="h-5 w-5" />
@@ -143,18 +136,11 @@ export function Navigation() {
           </div>
 
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t animate-in slide-in-from-top-2 duration-200">
+            <div
+              id="mobile-navigation"
+              className="animate-in slide-in-from-top-2 border-t py-4 duration-200 lg:hidden"
+            >
               <div className="flex flex-col space-y-4">
-                <form onSubmit={handleSearch} className="relative group">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    type="search"
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                    className="pl-10 border-2 focus:border-primary transition-all duration-200"
-                  />
-                </form>
                 {menuItems.map((item) => (
                   <Button
                     key={item.name}
@@ -165,7 +151,8 @@ export function Navigation() {
                     <Link
                       href={item.href}
                       scroll={true}
-                      className="text-foreground transition-colors py-2 hover:translate-x-2 transform duration-200"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-foreground transition-colors py-2 hover:!text-foreground"
                     >
                       {item.name}
                     </Link>

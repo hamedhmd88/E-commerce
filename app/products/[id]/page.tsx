@@ -1,21 +1,23 @@
-import { Navigation } from "@/components/layout/navigation"
-import { ProductDetail } from "@/components/product/product-detail"
-import { Footer } from "@/components/layout/footer"
-import { PageLayout } from '@/components/layout/page-layout'
-import { productService } from "@/services/productService"
+import { ProductCatalogDetail } from "@/components/product/product-catalog-detail";
+import { PageLayout } from "@/components/layout/page-layout";
+import type { Metadata } from "next";
 
 interface ProductPageProps {
-  params: {
-    id: string
-  }
+  params: Promise<{
+    id: string;
+  }>;
 }
 
-export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await productService.getProduct(Number(params.id))
+export const metadata: Metadata = {
+  title: "Product details",
+  description: "View details from the Fake Store API demo catalog.",
+};
 
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = await params;
   return (
-    <PageLayout customLastLabel={product.title}>
-      <ProductDetail productId={params.id} />
+    <PageLayout variant="catalog">
+      <ProductCatalogDetail id={Number(id)} />
     </PageLayout>
-  )
+  );
 }

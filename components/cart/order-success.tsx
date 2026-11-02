@@ -1,65 +1,105 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle, Package, Mail, ArrowRight } from "lucide-react"
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { getDemoOrders, type DemoOrder } from "@/lib/demo-orders";
 
 export function OrderSuccess() {
-  const orderNumber = `ORD-${Date.now().toString().slice(-6)}`
-
+  const id = useSearchParams().get("id");
+  const [order, setOrder] = useState<DemoOrder | null>(null);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    setOrder(getDemoOrders().find((item) => item.id === id) ?? null);
+    setLoaded(true);
+  }, [id]);
   return (
-    <div className="max-w-2xl mx-auto text-center py-16">
-      <div className="mb-8">
-        <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-balance mb-4">Order Confirmed!</h1>
-        <p className="text-muted-foreground text-pretty">
-          Thank you for your purchase. Your order has been successfully placed and is being processed.
-        </p>
-      </div>
-
-      <Card className="mb-8">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Order Details</h2>
-              <p className="text-muted-foreground">Order Number: #{orderNumber}</p>
-              <p className="text-muted-foreground">
-                Estimated delivery: {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()}
+    <div className="mx-auto max-w-2xl py-16 text-center space-y-6">
+      <h1 className="text-3xl font-bold">
+        {!loaded
+          ? "Loading demo order..."
+          : order
+            ? "Demo order placed"
+            : "Order not found"}
+      </h1>
+      {order ? (
+        <Card>
+          <CardContent className="p-6 text-left space-y-3">
+            <p className="font-semibold">{order.id}</p>
+            <p className="text-muted-foreground">
+              {order.status} · {new Date(order.createdAt).toLocaleDateString()}
+            </p>
+            <p>
+              {order.items.length} product{order.items.length === 1 ? "" : "s"}{" "}
+              · ${order.total.toFixed(2)}
+            </p>
+            <div className="border-t pt-3 space-y-2">
+              {order.items.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex justify-between gap-3 text-sm"
+                >
+                  <span>
+                    {item.title} × {item.quantity}
+                  </span>
+                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+            <div className="border-t pt-3 text-sm space-y-1">
+              <p className="flex justify-between">
+                <span>Subtotal</span>
+                <span>${order.subtotal.toFixed(2)}</span>
+              </p>
+              <p className="flex justify-between">
+                <span>Shipping</span>
+                <span>${order.shipping.toFixed(2)}</span>
+              </p>
+              <p className="flex justify-between">
+                <span>Tax</span>
+                <span>${order.tax.toFixed(2)}</span>
+              </p>
+              {order.discount > 0 && (
+                <p className="flex justify-between">
+                  <span>Demo discount</span>
+                  <span>−${order.discount.toFixed(2)}</span>
+                </p>
+              )}
+              <p className="flex justify-between font-semibold">
+                <span>Total</span>
+                <span>${order.total.toFixed(2)}</span>
               </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-              <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-primary" />
-                <div className="text-left">
-                  <p className="font-medium">Confirmation Email</p>
-                  <p className="text-sm text-muted-foreground">Sent to your email address</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Package className="h-5 w-5 text-primary" />
-                <div className="text-left">
-                  <p className="font-medium">Order Tracking</p>
-                  <p className="text-sm text-muted-foreground">Updates via email & SMS</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-4">
-        <Button asChild size="lg">
-          <Link href="/products">
-            Continue Shopping
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
+            <p className="text-sm">
+              Demo payment:{" "}
+              {order.paymentMethod === "demo-express" ? "Express" : "Standard"}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Contact: {order.email}
+              <br />
+              Entered address: {order.address}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Saved in this browser for demonstration. No payment, shipping,
+              email, or SMS occurred.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <p className="text-muted-foreground">
+          Open an order from your demo order history or place a new one.
+        </p>
+      )}
+      <div className="flex justify-center gap-3">
+        <Button asChild>
+          <Link href="/account/orders">View orders</Link>
         </Button>
-        <div>
-          <Button variant="outline" asChild>
-            <Link href="/account">View Order History</Link>
-          </Button>
-        </div>
+        <Button variant="outline" asChild>
+          <Link href="/products">Continue shopping</Link>
+        </Button>
       </div>
     </div>
-  )
+  );
 }

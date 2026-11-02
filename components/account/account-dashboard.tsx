@@ -1,33 +1,36 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { useAuth } from "@/components/auth/auth-provider"
-import { useWishlist } from "@/components/account/wishlist-provider"
-import { User, ShoppingBag, Heart, Settings, LogOut } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useAuth } from "@/components/auth/auth-provider";
+import { useWishlist } from "@/components/account/wishlist-provider";
+import { ShoppingBag, Heart, Settings, LogOut } from "lucide-react";
+import { getDemoOrders, type DemoOrder } from "@/lib/demo-orders";
 
 export function AccountDashboard() {
-  const { user, logout, isLoading } = useAuth()
-  const { wishlistCount } = useWishlist()
-  const router = useRouter()
-
-  console.log('AccountDashboard render:', { user: !!user, isLoading })
+  const { user, logout, isLoading } = useAuth();
+  const { wishlistCount } = useWishlist();
+  const router = useRouter();
+  const [orders, setOrders] = useState<DemoOrder[]>([]);
+  useEffect(() => {
+    setOrders(getDemoOrders());
+  }, []);
 
   useEffect(() => {
-    console.log('AccountDashboard useEffect:', { user: !!user, isLoading })
-    // Only redirect if not loading AND no user AND no token in localStorage
     if (!isLoading && !user) {
-      const token = localStorage.getItem('auth_token')
-      if (!token) {
-        console.log('No token found, redirecting to login')
-        router.push("/login")
-      }
+      router.push("/login");
     }
-  }, [user, isLoading, router])
+  }, [user, isLoading, router]);
 
   if (isLoading) {
     return (
@@ -37,29 +40,29 @@ export function AccountDashboard() {
           <p className="mt-2 text-muted-foreground">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!user) {
-    return null
+    return null;
   }
 
   const handleLogout = async () => {
     try {
       // Call logout to clear all data
-      logout()
-      
+      logout();
+
       // Use replace instead of push to prevent going back to account page
-      await router.replace("/login")
-      
+      await router.replace("/login");
+
       // Force a complete page refresh to ensure clean state
-      window.location.href = "/login"
+      window.location.href = "/login";
     } catch (error) {
-      console.error('Logout error:', error)
+      console.error("Logout error:", error);
       // Fallback: force navigation to login
-      window.location.href = "/login"
+      window.location.href = "/login";
     }
-  }
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -96,8 +99,10 @@ export function AccountDashboard() {
               <ShoppingBag className="h-4 w-4 ml-auto text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
-              <p className="text-xs text-muted-foreground">Total orders placed</p>
+              <div className="text-2xl font-bold">{orders.length}</div>
+              <p className="text-xs text-muted-foreground">
+                Total orders placed
+              </p>
             </CardContent>
           </Card>
         </Link>
@@ -133,34 +138,50 @@ export function AccountDashboard() {
       <Card className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300">
         <CardHeader>
           <CardTitle>Account Information</CardTitle>
-          <CardDescription>Manage your personal information and preferences</CardDescription>
+          <CardDescription>
+            Manage your personal information and preferences
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">First Name</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                First Name
+              </label>
               <p className="text-sm">{user.name.firstname}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Last Name</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Last Name
+              </label>
               <p className="text-sm">{user.name.lastname}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Email</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Email
+              </label>
               <p className="text-sm">{user.email}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Username</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Username
+              </label>
               <p className="text-sm">{user.username}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Phone</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Phone
+              </label>
               <p className="text-sm">{user.phone || "Not provided"}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Address</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Address
+              </label>
               <p className="text-sm">
-                {user.address ? `${user.address.city}, ${user.address.street}` : "Not provided"}
+                {user.address
+                  ? `${user.address.city}, ${user.address.street}`
+                  : "Not provided"}
               </p>
             </div>
           </div>
@@ -172,17 +193,32 @@ export function AccountDashboard() {
       <Card className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-500">
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
-          <CardDescription>Your recent orders and account activity</CardDescription>
+          <CardDescription>
+            Recent demo orders saved in this browser
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <ShoppingBag className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No recent activity</p>
-            <p className="text-sm">Start shopping to see your order history here</p>
-          </div>
+          {orders.length ? (
+            <div className="space-y-3">
+              {orders.slice(0, 3).map((order) => (
+                <Link
+                  key={order.id}
+                  href={`/order-success?id=${encodeURIComponent(order.id)}`}
+                  className="flex justify-between rounded-lg border p-3 hover:bg-muted/50"
+                >
+                  <span>{order.id}</span>
+                  <span>${order.total.toFixed(2)}</span>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              <ShoppingBag className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No demo orders yet</p>
+            </div>
+          )}
         </CardContent>
       </Card>
-
     </div>
-  )
+  );
 }

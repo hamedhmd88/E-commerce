@@ -1,31 +1,46 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { ShoppingBag, Plus, Minus, X, ArrowLeft, ArrowRight } from "lucide-react"
-import { useCart } from "@/components/cart/cart-provider"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+  ShoppingBag,
+  Plus,
+  Minus,
+  X,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react";
+import { useCart } from "@/components/cart/cart-provider";
 
 export function CartPage() {
-  const { items, updateQuantity, removeItem, totalPrice, totalItems, clearCart } = useCart()
-  const [promoCode, setPromoCode] = useState("")
-  const [discount, setDiscount] = useState(0)
+  const {
+    items,
+    updateQuantity,
+    removeItem,
+    totalPrice,
+    totalItems,
+    clearCart,
+    pricing,
+    promoCode: appliedPromo,
+    applyPromoCode,
+  } = useCart();
+  const [promoCode, setPromoCode] = useState("");
+  const [promoMessage, setPromoMessage] = useState("");
 
-  const shipping = totalPrice > 50 ? 0 : 9.99
-  const tax = totalPrice * 0.08
-  const finalTotal = totalPrice + shipping + tax - discount
+  const { shipping, tax, discount, total: finalTotal } = pricing;
 
-  const applyPromoCode = () => {
-    if (promoCode.toLowerCase() === "save10") {
-      setDiscount(totalPrice * 0.1)
-    } else if (promoCode.toLowerCase() === "freeship") {
-      setDiscount(shipping)
-    }
-  }
+  const handleApplyPromo = () => {
+    setPromoMessage(
+      applyPromoCode(promoCode)
+        ? "Demo promotion applied."
+        : "Code not found. Try SAVE10 or FREESHIP.",
+    );
+  };
 
   if (items.length === 0) {
     return (
@@ -35,7 +50,9 @@ export function CartPage() {
           <CardContent className="flex flex-col items-center justify-center py-16">
             <ShoppingBag className="h-16 w-16 text-muted-foreground mb-4" />
             <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
-            <p className="text-muted-foreground mb-6">Add some products to get started</p>
+            <p className="text-muted-foreground mb-6">
+              Add some products to get started
+            </p>
             <Button asChild>
               <Link href="/products">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -45,13 +62,15 @@ export function CartPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
     <div className="max-w-6xl mx-auto">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Shopping Cart ({totalItems} items)</h1>
+        <h1 className="text-3xl font-bold">
+          Shopping Cart ({totalItems} items)
+        </h1>
         <Button variant="outline" onClick={clearCart}>
           Clear Cart
         </Button>
@@ -74,12 +93,17 @@ export function CartPage() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm line-clamp-2">{item.title}</h3>
-                    <p className="text-lg font-bold text-primary mt-1">${item.price.toFixed(2)}</p>
+                    <h3 className="font-semibold text-sm line-clamp-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-lg font-bold text-primary mt-1">
+                      ${item.price.toFixed(2)}
+                    </p>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Button
+                      aria-label={`Decrease quantity of ${item.title}`}
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 bg-transparent"
@@ -88,13 +112,20 @@ export function CartPage() {
                       <Minus className="h-3 w-3" />
                     </Button>
                     <Input
+                      aria-label={`Quantity of ${item.title}`}
                       type="number"
                       value={item.quantity}
-                      onChange={(e) => updateQuantity(item.id, Number.parseInt(e.target.value) || 1)}
+                      onChange={(e) =>
+                        updateQuantity(
+                          item.id,
+                          Number.parseInt(e.target.value) || 1,
+                        )
+                      }
                       className="w-16 text-center"
                       min="1"
                     />
                     <Button
+                      aria-label={`Increase quantity of ${item.title}`}
                       variant="outline"
                       size="icon"
                       className="h-8 w-8 bg-transparent"
@@ -105,8 +136,11 @@ export function CartPage() {
                   </div>
 
                   <div className="text-right">
-                    <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="font-semibold">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </p>
                     <Button
+                      aria-label={`Remove ${item.title} from cart`}
                       variant="ghost"
                       size="sm"
                       className="text-destructive hover:text-destructive"
@@ -145,7 +179,9 @@ export function CartPage() {
 
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span>
+                  {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
+                </span>
               </div>
 
               <div className="flex justify-between">
@@ -184,16 +220,19 @@ export function CartPage() {
             <CardContent className="space-y-4">
               <div className="flex space-x-2">
                 <Input
+                  aria-label="Demo promotion code"
                   placeholder="Enter promo code"
                   value={promoCode}
                   onChange={(e) => setPromoCode(e.target.value)}
                 />
-                <Button onClick={applyPromoCode} variant="outline">
+                <Button onClick={handleApplyPromo} variant="outline">
                   Apply
                 </Button>
               </div>
               <div className="text-xs text-muted-foreground">
                 <p>Try: SAVE10 for 10% off or FREESHIP for free shipping</p>
+                {appliedPromo && <p>Applied: {appliedPromo}</p>}
+                {promoMessage && <p role="status">{promoMessage}</p>}
               </div>
             </CardContent>
           </Card>
@@ -208,11 +247,11 @@ export function CartPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Returns</span>
-                  <span>30-day return policy</span>
+                  <span>Demo only · no physical returns</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Support</span>
-                  <span>24/7 customer service</span>
+                  <span>See the contact page</span>
                 </div>
               </div>
             </CardContent>
@@ -220,5 +259,5 @@ export function CartPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

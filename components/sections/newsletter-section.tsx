@@ -1,82 +1,87 @@
-"use client"
-
-import type React from "react"
-
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Mail, Gift } from "lucide-react"
-import { toast } from "sonner"
+"use client";
+import type React from "react";
+import Image from "next/image";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 export function NewsletterSection() {
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!email) return
-
-    setLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    toast.success("Successfully subscribed to newsletter!")
-    setEmail("")
-    setLoading(false)
-  }
-
+  const [email, setEmail] = useState("");
+  const [subscribed, setSubscribed] = useState<string[]>([]);
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const normalized = email.trim().toLowerCase();
+    if (!normalized) return;
+    if (subscribed.includes(normalized))
+      return void toast.info(
+        "This address has already been used in this demo session.",
+      );
+    setSubscribed((current) => [...current, normalized]);
+    toast.success(
+      "Demo signup saved for this page session. No email will be sent.",
+    );
+    setEmail("");
+  };
   return (
-    <section className="py-16 bg-gradient-to-br from-primary/10 via-background to-accent/10">
-      <div className="container mx-auto px-4">
-        <Card className="max-w-4xl mx-auto hover:shadow-xl transition-shadow duration-300 animate-in fade-in-0 zoom-in-95">
-          <CardContent className="p-8 md:p-12">
-            <div className="text-center">
-              <div className="flex justify-center mb-6">
-                <div className="bg-primary/10 p-4 rounded-full animate-pulse">
-                  <Mail className="h-8 w-8 text-primary" />
-                </div>
-              </div>
-
-              <h2 className="text-3xl font-bold mb-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700">
-                Stay Updated with Our Newsletter
-              </h2>
-
-              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-200">
-                Get the latest updates on new products, exclusive offers, and fashion trends delivered straight to your
-                inbox.
-              </p>
-
-              <div className="flex items-center justify-center mb-6 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300">
-                <Gift className="h-5 w-5 text-primary mr-2" />
-                <span className="text-sm font-medium">Get 10% off your first order when you subscribe!</span>
-              </div>
-
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-500"
-              >
-                <Input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 transition-all duration-200 focus:scale-105"
-                  required
-                />
-                <Button type="submit" disabled={loading} className="hover:scale-105 transition-transform">
-                  {loading ? "Subscribing..." : "Subscribe"}
-                </Button>
-              </form>
-
-              <p className="text-xs text-muted-foreground mt-4 animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-700">
-                We respect your privacy. Unsubscribe at any time.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+    <section
+      className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 lg:px-14 lg:py-24"
+      aria-labelledby="newsletter-title"
+    >
+      <div className="glass-panel grid overflow-hidden rounded-[2rem] lg:grid-cols-[.9fr_1.1fr]">
+        <div className="newsletter-art relative min-h-[320px] overflow-hidden sm:min-h-[390px]">
+          <Image
+            src="/luxury-jewelry-elegant-accessories.jpg"
+            alt="Jewelry and everyday objects arranged together"
+            fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/35 to-transparent" />
+          <div className="newsletter-ring" aria-hidden="true" />
+          <span className="absolute bottom-6 left-6 rounded-full border border-white/35 bg-black/30 px-4 py-2 text-sm text-white backdrop-blur-lg">
+            A little inspiration, occasionally.
+          </span>
+        </div>
+        <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-16">
+          <Mail className="mb-6 size-7 text-primary" aria-hidden="true" />
+          <h2
+            id="newsletter-title"
+            className="max-w-lg text-4xl font-medium leading-tight tracking-[-.055em] sm:text-5xl"
+          >
+            Good finds are worth sharing.
+          </h2>
+          <p className="mt-5 max-w-lg leading-7 text-muted-foreground">
+            Try the Morrow newsletter experience. This is an on-page demo: no
+            email is sent or stored by a mailing service.
+          </p>
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 flex max-w-lg flex-col gap-3 sm:flex-row"
+          >
+            <label className="sr-only" htmlFor="newsletter-email">
+              Email address
+            </label>
+            <Input
+              id="newsletter-email"
+              type="email"
+              autoComplete="email"
+              placeholder="Your email address"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="h-12 flex-1 rounded-xl border-border bg-background/70 px-4"
+              required
+            />
+            <Button type="submit" className="h-12 rounded-xl px-5">
+              Try signup <ArrowRight className="size-4" />
+            </Button>
+          </form>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Demo only. The address stays in memory until this page reloads.
+          </p>
+        </div>
       </div>
     </section>
-  )
+  );
 }

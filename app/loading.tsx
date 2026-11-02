@@ -1,9 +1,11 @@
 export default function Loading() {
   return (
     <div className="min-h-screen relative">
-      <div className="bg-muted h-16 animate-pulse" /> {/* Navigation skeleton */}
+      <div className="bg-muted h-16 animate-pulse" />{" "}
+      {/* Navigation skeleton */}
       <main>
-        <div className="h-96 bg-muted animate-pulse" /> {/* AnimatedSlider skeleton */}
+        <div className="h-96 bg-muted animate-pulse" />{" "}
+        {/* AnimatedSlider skeleton */}
         <section className="py-20 bg-gradient-to-br from-primary/10 via-background to-accent/10 animate-pulse">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center space-y-6">
@@ -31,5 +33,5 @@ export default function Loading() {
       </main>
       <div className="bg-muted h-32 animate-pulse" /> {/* Footer skeleton */}
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Filter, Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -13,368 +13,247 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { X, Filter, Plus, Minus } from "lucide-react";
-import { CustomSlider } from "../ui/custom-slider";
-
-interface ProductFiltersProps {
-  onFiltersChange: (filters: FilterState) => void;
-}
-
-export interface FilterState {
-  categories: string[];
-  priceRange: [number, number];
-  minRating: number;
-  sortBy: string;
-  searchQuery: string;
-}
+import { readProductFilters } from "@/lib/catalog";
 
 const categories = [
   { id: "electronics", label: "Electronics" },
   { id: "jewelery", label: "Jewelry" },
-  { id: "men's clothing", label: "Men's Clothing" },
-  { id: "women's clothing", label: "Women's Clothing" },
+  { id: "men's clothing", label: "Men's clothing" },
+  { id: "women's clothing", label: "Women's clothing" },
 ];
-
-const sortOptions = [
-  { value: "default", label: "Default" },
-  { value: "price-low", label: "Price: Low to High" },
-  { value: "price-high", label: "Price: High to Low" },
-  { value: "rating", label: "Highest Rated" },
-  { value: "name", label: "Name: A to Z" },
+const sorts = [
+  { id: "default", label: "Featured" },
+  { id: "price-low", label: "Price: low to high" },
+  { id: "price-high", label: "Price: high to low" },
+  { id: "rating", label: "Highest rated" },
+  { id: "name", label: "Name: A to Z" },
 ];
+const dropdownClass =
+  "rounded-2xl border-border bg-card/95 p-1 shadow-2xl backdrop-blur-2xl";
+const itemClass = "rounded-xl py-2.5 focus:bg-primary/10 focus:text-foreground";
 
-export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
+export function ProductFilters() {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+  const query = searchParams.toString();
+  const filters = useMemo(
+    () => readProductFilters(new URLSearchParams(query)),
+    [query],
+  );
+  const [search, setSearch] = useState(filters.searchQuery);
+  const [range, setRange] = useState<number[]>(filters.priceRange);
+  useEffect(() => setSearch(filters.searchQuery), [filters.searchQuery]);
+  useEffect(
+    () => setRange(filters.priceRange),
+    [filters.priceRange[0], filters.priceRange[1]],
+  );
 
-  const [filters, setFilters] = useState<FilterState>({
-    categories: [],
-    priceRange: [0, 1000],
-    minRating: 0,
-    sortBy: "default",
-    searchQuery: "",
-  });
-
-  const [tempPriceRange, setTempPriceRange] = useState(filters.priceRange);
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
-  const isUpdating = useRef(false);
-
-  // استفاده از useCallback برای onFiltersChange
-  const memoizedOnFiltersChange = useCallback(onFiltersChange, [onFiltersChange]);
-
-  // اصلاح useEffect برای جلوگیری از infinite loop
-  useEffect(() => {
-    memoizedOnFiltersChange(filters);
-  }, [filters, memoizedOnFiltersChange]);
-
-  // تابع برای تغییرات موقت (با debounce)
-  const handleTempChange = useCallback((value: number[]) => {
-    setTempPriceRange(value as [number, number]);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      handleFilterChange("priceRange", value as [number, number]);
-    }, 300);
-  }, []);
-
-  // تابع adjustPrice
-  const adjustPrice = useCallback((index: 0 | 1, delta: number) => {
-    setTempPriceRange((prev) => {
-      const newRange = [...prev];
-      newRange[index] = Math.max(0, Math.min(1000, newRange[index] + delta));
-      if (index === 0 && newRange[0] > newRange[1]) newRange[0] = newRange[1];
-      if (index === 1 && newRange[1] < newRange[0]) newRange[1] = newRange[0];
-      return newRange as [number, number];
+  const update = (values: Record<string, string | null>) => {
+    const params = new URLSearchParams(query);
+    for (const [key, value] of Object.entries(values)) {
+      if (value === null || value === "") params.delete(key);
+      else params.set(key, value);
+    }
+    params.delete("page");
+    router.replace(`${pathname}${params.size ? `?${params}` : ""}`, {
+      scroll: false,
     });
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      setFilters(prev => ({ ...prev, priceRange: tempPriceRange }));
-    }, 300);
-  }, [tempPriceRange]);
-
-  // Initialization from URL (با ref برای جلوگیری از لوپ)
-  useEffect(() => {
-    if (isUpdating.current) return;
-
-    const urlCategories = searchParams.get("categories")?.split(",").filter(Boolean) || [];
-    const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
-    const urlMaxPrice = Number(searchParams.get("maxPrice")) || 1000;
-    const urlMinRating = Number(searchParams.get("minRating")) || 0;
-    const urlSortBy = searchParams.get("sortBy") || "default";
-    const urlSearchQuery = searchParams.get("q") || "";
-
-    const initialFilters = {
-      categories: urlCategories,
-      priceRange: [urlMinPrice, urlMaxPrice] as [number, number],
-      minRating: urlMinRating,
-      sortBy: urlSortBy,
-      searchQuery: urlSearchQuery,
-    };
-
-    const isDifferent = JSON.stringify(filters) !== JSON.stringify(initialFilters);
-    if (isDifferent) {
-      isUpdating.current = true;
-      setFilters(initialFilters);
-      setTempPriceRange(initialFilters.priceRange);
-      setTimeout(() => {
-        isUpdating.current = false;
-      }, 0);
-    }
-  }, [searchParams]);
-
-  // updateURL با چک برای جلوگیری از push غیرضروری
-  const updateURL = useCallback((newFilters: FilterState) => {
-    const params = new URLSearchParams();
-    if (newFilters.searchQuery) params.set("q", newFilters.searchQuery);
-    if (newFilters.categories.length > 0) params.set("categories", newFilters.categories.join(","));
-    if (newFilters.priceRange[0] > 0) params.set("minPrice", newFilters.priceRange[0].toString());
-    if (newFilters.priceRange[1] < 1000) params.set("maxPrice", newFilters.priceRange[1].toString());
-    if (newFilters.minRating > 0) params.set("minRating", newFilters.minRating.toString());
-    if (newFilters.sortBy !== "default") params.set("sortBy", newFilters.sortBy);
-
-    const newUrl = params.toString() ? `/products?${params.toString()}` : "/products";
-    
-    if (window.location.pathname + window.location.search !== newUrl) {
-      isUpdating.current = true;
-      router.push(newUrl, { scroll: false });
-      setTimeout(() => {
-        isUpdating.current = false;
-      }, 0);
-    }
-  }, [router]);
-
-  // handleFilterChange با چک اضافی
-  const handleFilterChange = useCallback((key: keyof FilterState, value: any) => {
-    const newFilters = { ...filters, [key]: value };
-    if (JSON.stringify(newFilters) !== JSON.stringify(filters)) {
-      setFilters(newFilters);
-      updateURL(newFilters);
-    }
-  }, [filters, updateURL]);
-
-  const handleCategoryChange = useCallback((categoryId: string, checked: boolean) => {
-    const newCategories = checked
-      ? [...filters.categories, categoryId]
-      : filters.categories.filter((c) => c !== categoryId);
-    handleFilterChange("categories", newCategories);
-  }, [filters.categories, handleFilterChange]);
-
-  const clearFilters = useCallback(() => {
-    const clearedFilters = {
-      categories: [],
-      priceRange: [0, 1000] as [number, number],
-      minRating: 0,
-      sortBy: "default",
-      searchQuery: filters.searchQuery,
-    };
-    setFilters(clearedFilters);
-    setTempPriceRange(clearedFilters.priceRange);
-    updateURL(clearedFilters);
-  }, [filters.searchQuery, updateURL]);
-
-  const hasActiveFilters =
-    filters.categories.length > 0 ||
-    filters.priceRange[0] > 0 ||
-    filters.priceRange[1] < 1000 ||
-    filters.minRating > 0 ||
-    filters.sortBy !== "default";
+  };
+  const toggleCategory = (category: string) => {
+    const selected = filters.categories.includes(category);
+    update({
+      categories: (selected
+        ? filters.categories.filter((item) => item !== category)
+        : [...filters.categories, category]
+      ).join(","),
+    });
+  };
+  const activeCount =
+    filters.categories.length +
+    Number(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) +
+    Number(filters.minRating > 0) +
+    Number(filters.sortBy !== "default") +
+    Number(Boolean(filters.searchQuery));
+  const clear = () =>
+    update({
+      q: null,
+      categories: null,
+      minPrice: null,
+      maxPrice: null,
+      minRating: null,
+      sortBy: null,
+    });
 
   return (
-    <div className="space-y-6">
-      {/* Sort and Clear */}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base flex items-center">
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
-            </CardTitle>
-            {hasActiveFilters && (
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Clear All
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label className="text-sm font-medium">Sort By</Label>
-            <Select
-              value={filters.sortBy}
-              onValueChange={(value) => handleFilterChange("sortBy", value)}
+    <aside
+      className="glass-panel catalog-filter-panel h-fit self-start rounded-[1.75rem] p-5 sm:p-6 lg:sticky lg:top-24"
+      aria-label="Product filters"
+    >
+      <div className="mb-6 flex items-start justify-between gap-3">
+        <div>
+          <p className="flex items-center gap-2 text-lg font-semibold">
+            <SlidersHorizontal className="size-5 text-primary" /> Refine your
+            view
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Find what feels right.
+          </p>
+        </div>
+        {activeCount > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clear}
+            className="rounded-full text-primary"
+          >
+            <X className="size-3.5" />
+            Clear
+          </Button>
+        )}
+      </div>
+      <div className="space-y-6">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            update({ q: search.trim() });
+          }}
+        >
+          <label
+            htmlFor="product-search"
+            className="mb-2 block text-sm font-medium"
+          >
+            Search the collection
+          </label>
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              id="product-search"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Name or description"
+              className="h-11 rounded-xl border-border/70 bg-background/60 pl-10 pr-16"
+            />
+            <button
+              type="submit"
+              className="absolute right-1 top-1/2 -translate-y-1/2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary-dark"
             >
-              <SelectTrigger className="mt-1">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              Find
+            </button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Active Filters */}
-      {hasActiveFilters && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-wrap gap-2">
-              {filters.categories.map((category) => (
-                <Badge
-                  key={category}
-                  variant="secondary"
-                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-                  onClick={() => handleCategoryChange(category, false)}
-                >
-                  {categories.find((c) => c.id === category)?.label}
-                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-                </Badge>
+        </form>
+        <div className="border-t border-border/60 pt-5">
+          <label
+            htmlFor="product-sort"
+            className="mb-2 block text-sm font-medium"
+          >
+            Sort by
+          </label>
+          <Select
+            value={filters.sortBy}
+            onValueChange={(value) =>
+              update({ sortBy: value === "default" ? null : value })
+            }
+          >
+            <SelectTrigger
+              id="product-sort"
+              className="h-11 w-full rounded-xl border-border/70 bg-background/60"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className={dropdownClass}>
+              {sorts.map((sort) => (
+                <SelectItem value={sort.id} key={sort.id} className={itemClass}>
+                  {sort.label}
+                </SelectItem>
               ))}
-              {(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) && (
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-                  onClick={() => handleFilterChange("priceRange", [0, 1000])}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="border-t border-border/60 pt-5">
+          <p className="mb-3 text-sm font-medium">Categories</p>
+          <div className="grid grid-cols-2 gap-2">
+            {categories.map((category) => {
+              const selected = filters.categories.includes(category.id);
+              return (
+                <button
+                  type="button"
+                  key={category.id}
+                  onClick={() => toggleCategory(category.id)}
+                  aria-pressed={selected}
+                  className={`min-h-11 rounded-xl border px-2 py-2 text-center text-xs font-medium transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-ring sm:text-sm ${selected ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/20" : "border-border/70 bg-background/50 text-foreground hover:border-primary/50 hover:bg-primary/10"}`}
                 >
-                  ${filters.priceRange[0]} - ${filters.priceRange[1]}
-                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-                </Badge>
-              )}
-              {filters.minRating > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1 cursor-pointer hover:bg-secondary/80 transition-colors"
-                  onClick={() => handleFilterChange("minRating", 0)}
-                >
-                  {filters.minRating}+ Stars
-                  <X className="h-4 w-4 ml-1 text-muted-foreground hover:text-destructive transition-colors" />
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Categories */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Categories</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {categories.map((category) => (
-            <div
-              key={category.id}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <Checkbox
-                id={category.id}
-                checked={filters.categories.includes(category.id)}
-                onCheckedChange={(checked) =>
-                  handleCategoryChange(category.id, checked as boolean)
-                }
-              />
-              <Label htmlFor={category.id} className="text-sm font-normal">
-                {category.label}
-              </Label>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Price Range */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Price Range</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <CustomSlider
-            value={tempPriceRange}
-            onValueChange={handleTempChange}
-            max={1000}
-            min={0}
-            step={10}
-            className="w-full"
-          />
-          <div className="flex items-start justify-between text-sm text-muted-foreground">
-            <div className="flex flex-col items-center">
-              <span>${tempPriceRange[0]}</span>
-              <div className="flex space-x-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => adjustPrice(0, -10)}
-                  disabled={tempPriceRange[0] <= 0}
-                  className="h-6 w-6 p-0"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => adjustPrice(0, 10)}
-                  disabled={tempPriceRange[0] >= tempPriceRange[1]}
-                  className="h-6 w-6 p-0"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <span>${tempPriceRange[1]}</span>
-              <div className="flex space-x-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => adjustPrice(1, -10)}
-                  disabled={tempPriceRange[1] <= tempPriceRange[0]}
-                  className="h-6 w-6 p-0"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => adjustPrice(1, 10)}
-                  disabled={tempPriceRange[1] >= 1000}
-                  className="h-6 w-6 p-0"
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+                  {category.label}
+                </button>
+              );
+            })}
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Rating */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Minimum Rating</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {[4, 3, 2, 1].map((rating) => (
-            <div key={rating} className="flex items-center space-x-2">
-              <Checkbox
-                id={`rating-${rating}`}
-                checked={filters.minRating === rating}
-                onCheckedChange={(checked) =>
-                  handleFilterChange("minRating", checked ? rating : 0)
-                }
-              />
-              <Label
-                htmlFor={`rating-${rating}`}
-                className="text-sm font-normal cursor-pointer"
-              >
-                {rating}+ Stars
-              </Label>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+        <div className="border-t border-border/60 pt-5">
+          <div className="mb-4 flex items-center justify-between gap-2">
+            <p className="text-sm font-medium">Price range</p>
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium tabular-nums text-primary">
+              ${range[0]} – ${range[1]}
+            </span>
+          </div>
+          <Slider
+            min={0}
+            max={1000}
+            step={10}
+            thumbLabels={["Minimum price", "Maximum price"]}
+            value={range}
+            onValueChange={setRange}
+            onValueCommit={(values) =>
+              update({
+                minPrice: values[0] === 0 ? null : String(values[0]),
+                maxPrice: values[1] === 1000 ? null : String(values[1]),
+              })
+            }
+            aria-label="Price range"
+            className="py-3"
+          />
+          <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+            <span>$0</span>
+            <span>$1000</span>
+          </div>
+        </div>
+        <div className="border-t border-border/60 pt-5">
+          <label
+            htmlFor="product-rating"
+            className="mb-2 block text-sm font-medium"
+          >
+            Minimum rating
+          </label>
+          <Select
+            value={String(filters.minRating)}
+            onValueChange={(value) =>
+              update({ minRating: value === "0" ? null : value })
+            }
+          >
+            <SelectTrigger
+              id="product-rating"
+              className="h-11 w-full rounded-xl border-border/70 bg-background/60"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className={dropdownClass}>
+              {[0, 4, 3, 2, 1].map((rating) => (
+                <SelectItem
+                  key={rating}
+                  value={String(rating)}
+                  className={itemClass}
+                >
+                  {rating === 0 ? "Any rating" : `${rating}+ stars`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <p className="mt-6 flex items-center gap-2 border-t border-border/60 pt-4 text-xs text-muted-foreground">
+        <Filter className="size-3.5" /> Filters update the live catalog.
+      </p>
+    </aside>
   );
 }

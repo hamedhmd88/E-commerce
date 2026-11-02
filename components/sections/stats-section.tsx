@@ -21,7 +21,7 @@ export function StatsSection() {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const element = document.getElementById("stats-section");

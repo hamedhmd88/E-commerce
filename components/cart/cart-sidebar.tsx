@@ -1,14 +1,27 @@
-"use client"
+"use client";
 
-import { X, Plus, Minus, ShoppingBag } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { useCart } from "@/components/cart/cart-provider"
-import Image from "next/image"
-import Link from "next/link"
+import { X, Plus, Minus, ShoppingBag } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { useCart } from "@/components/cart/cart-provider";
+import Image from "next/image";
+import Link from "next/link";
 
 export function CartSidebar() {
-  const { items, isOpen, setIsOpen, updateQuantity, removeItem, totalPrice, totalItems } = useCart()
+  const {
+    items,
+    isOpen,
+    setIsOpen,
+    updateQuantity,
+    removeItem,
+    totalPrice,
+    totalItems,
+  } = useCart();
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -36,7 +49,10 @@ export function CartSidebar() {
               <div className="flex-1 overflow-y-auto py-4">
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex items-center space-x-4 p-4 border rounded-lg"
+                    >
                       <div className="relative h-16 w-16 flex-shrink-0">
                         <Image
                           src={item.image || "/placeholder.svg"}
@@ -46,28 +62,41 @@ export function CartSidebar() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium truncate">{item.title}</h3>
-                        <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                        <h3 className="text-sm font-medium truncate">
+                          {item.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          ${item.price.toFixed(2)}
+                        </p>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button
+                          aria-label={`Decrease quantity of ${item.title}`}
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <span className="w-8 text-center text-sm">
+                          {item.quantity}
+                        </span>
                         <Button
+                          aria-label={`Increase quantity of ${item.title}`}
                           variant="outline"
                           size="icon"
                           className="h-8 w-8 bg-transparent"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
                         <Button
+                          aria-label={`Remove ${item.title} from cart`}
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-destructive"
@@ -86,10 +115,20 @@ export function CartSidebar() {
                   <span>Total: ${totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="space-y-2">
-                  <Button asChild className="w-full" size="lg" onClick={() => setIsOpen(false)}>
+                  <Button
+                    asChild
+                    className="w-full"
+                    size="lg"
+                    onClick={() => setIsOpen(false)}
+                  >
                     <Link href="/checkout">Proceed to Checkout</Link>
                   </Button>
-                  <Button asChild variant="outline" className="w-full bg-transparent" onClick={() => setIsOpen(false)}>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    onClick={() => setIsOpen(false)}
+                  >
                     <Link href="/cart">View Cart</Link>
                   </Button>
                 </div>
@@ -99,5 +138,5 @@ export function CartSidebar() {
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
