@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { calculateCartPricing } from "../lib/cart-pricing.ts";
 import {
+  clearDemoOrders,
   createDemoOrder,
   getDemoOrders,
   saveDemoOrder,
@@ -47,6 +48,7 @@ test("saved demo order keeps its identifier and totals", () => {
   globalThis.localStorage = {
     getItem: (key) => values.get(key) ?? null,
     setItem: (key, value) => values.set(key, value),
+    removeItem: (key) => values.delete(key),
   };
   const order = createDemoOrder({
     email: "demo@example.com",
@@ -60,6 +62,66 @@ test("saved demo order keeps its identifier and totals", () => {
   assert.equal(getDemoOrders()[0].id, order.id);
   assert.equal(getDemoOrders()[0].total, 49.19);
   assert.equal(getDemoOrders()[0].status, "Simulated order placed");
+  clearDemoOrders();
+  delete globalThis.window;
+  delete globalThis.localStorage;
+});
+
+test("demo orders remain usable when browser storage is blocked", () => {
+  globalThis.window = {};
+  globalThis.localStorage = {
+    getItem: () => {
+      throw new Error("Storage unavailable");
+    },
+    setItem: () => {
+      throw new Error("Storage unavailable");
+    },
+    removeItem: () => {
+      throw new Error("Storage unavailable");
+    },
+  };
+  const order = createDemoOrder({
+    email: "demo@example.com",
+    name: "Demo Shopper",
+    address: "123 Demo St",
+    paymentMethod: "demo-standard",
+    items: [{ id: 1, title: "Item", price: 40, image: "", quantity: 1 }],
+    ...calculateCartPricing(40),
+  });
+  assert.equal(saveDemoOrder(order), false);
+  assert.equal(getDemoOrders()[0].id, order.id);
+  clearDemoOrders();
+  assert.deepEqual(getDemoOrders(), []);
+  delete globalThis.window;
+  delete globalThis.localStorage;
+});
+
+test("malformed saved orders are excluded without hiding valid orders", () => {
+  const values = new Map();
+  globalThis.window = {};
+  globalThis.localStorage = {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value),
+    removeItem: (key) => values.delete(key),
+  };
+  clearDemoOrders();
+  const order = createDemoOrder({
+    email: "demo@example.com",
+    name: "Demo Shopper",
+    address: "123 Demo St",
+    paymentMethod: "demo-standard",
+    items: [{ id: 1, title: "Item", price: 40, image: "", quantity: 1 }],
+    ...calculateCartPricing(40),
+  });
+  values.set(
+    "portfolio-demo-orders-v1",
+    JSON.stringify([{ id: "BROKEN", items: [] }, order]),
+  );
+  assert.deepEqual(
+    getDemoOrders().map((item) => item.id),
+    [order.id],
+  );
+  clearDemoOrders();
   delete globalThis.window;
   delete globalThis.localStorage;
 });

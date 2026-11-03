@@ -145,7 +145,7 @@ export function CartGallery() {
         </div>
         <ShoppingBag
           aria-hidden="true"
-          className="absolute -bottom-10 right-5 size-52 rotate-[-15deg] text-primary/10 sm:right-14 sm:size-64"
+          className="absolute -bottom-10 end-5 size-52 rotate-[-15deg] text-primary/10 sm:end-14 sm:size-64"
           strokeWidth={0.7}
         />
       </div>
@@ -163,10 +163,10 @@ export function CartGallery() {
             <div className="space-y-1.5">
               <Label htmlFor="cart-search">Cart ID or product</Label>
               <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
+                <Search className="pointer-events-none absolute start-3 top-3 size-4 text-muted-foreground" />
                 <Input
                   id="cart-search"
-                  className="h-11 rounded-xl bg-background/55 pl-9"
+                  className="h-11 rounded-xl bg-background/55 ps-9"
                   value={search}
                   onChange={(e) => update(() => setSearch(e.target.value))}
                   placeholder="Search sample carts"
@@ -407,7 +407,7 @@ export function CartGallery() {
                           </div>
                         ),
                       )}
-                      <span className="absolute right-3 top-3 rounded-full border border-primary/25 bg-background/85 px-3 py-1 text-xs font-medium text-primary backdrop-blur-xl">
+                      <span className="absolute end-3 top-3 rounded-full border border-primary/25 bg-background/85 px-3 py-1 text-xs font-medium text-primary backdrop-blur-xl">
                         #{cart.id}
                       </span>
                     </div>

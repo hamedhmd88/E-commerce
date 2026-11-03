@@ -14,12 +14,12 @@ export const generateMetadata = (): Promise<Metadata> =>
 export default function RegisterPage() {
   return (
     <PageLayout customLastLabel="Register" variant="catalog">
-      <section className="mx-auto max-w-xl py-6 lg:py-10">
+      <section className="mx-auto max-w-3xl py-6 lg:py-10">
         <p className="text-sm font-medium text-primary">Your Morrow space</p>
-        <h1 className="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">
+        <h1 className="mt-3 max-w-2xl font-serif text-4xl tracking-tight sm:text-5xl">
           Create a demo account.
         </h1>
-        <p className="mb-8 mt-4 leading-7 text-muted-foreground">
+        <p className="mb-8 mt-4 max-w-2xl leading-7 text-muted-foreground">
           Try saved finds and browser-local orders. This is a portfolio
           demonstration, so use fictional details and a unique demo password.
         </p>

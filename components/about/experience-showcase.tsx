@@ -68,13 +68,13 @@ export function ExperienceShowcase() {
       <div className="relative mt-7 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,.9fr)]">
         <div className="about-map rounded-[1.5rem] border border-border/70 p-5 sm:p-7" aria-label="Four stages of the demo storefront">
           <div className="mb-8 flex items-center justify-between text-xs text-muted-foreground"><span>VISITOR JOURNEY</span><span>0{active + 1} / 0{chapters.length}</span></div>
-          <div className="relative space-y-3 before:absolute before:bottom-7 before:left-6 before:top-7 before:w-px before:bg-primary/25">
+          <div className="relative space-y-3 before:absolute before:bottom-7 before:start-9 before:top-7 before:w-px before:bg-primary/25">
             {chapters.map((item, index) => {
               const StepIcon = item.icon;
               return <button key={item.eyebrow} type="button" onClick={() => setActive(index)} aria-current={index === active ? "step" : undefined} className={`about-map-node relative flex w-full items-center gap-4 rounded-2xl border p-3 text-left transition-all duration-300 ${index === active ? "border-primary/45 bg-primary/12 shadow-lg shadow-primary/5" : "border-border/60 bg-background/50 hover:border-primary/35 hover:bg-primary/5"}`}>
                 <span className={`flex size-12 shrink-0 items-center justify-center rounded-xl ${index === active ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}><StepIcon className="size-5" /></span>
                 <span className="min-w-0"><span className="block text-[.65rem] font-semibold tracking-[.16em] text-primary">{item.eyebrow}</span><span className="mt-0.5 block text-sm font-semibold sm:text-base">{item.title}</span></span>
-                {index === active && <span className="ml-auto hidden size-2 shrink-0 rounded-full bg-primary sm:block" aria-hidden="true" />}
+                {index === active && <span className="ms-auto hidden size-2 shrink-0 rounded-full bg-primary sm:block" aria-hidden="true" />}
               </button>;
             })}
           </div>

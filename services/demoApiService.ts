@@ -1,72 +1,38 @@
 import api from "./api";
+import {
+  parsePublicUser,
+  parsePublicUserWrite,
+  parsePublicUsers,
+  parseSampleCart,
+  parseSampleCarts,
+  type SampleCart,
+  type SampleUser,
+  type SampleUserWriteResult,
+} from "@/lib/sample-api-schema";
 
-export interface SampleCart {
-  id: number;
-  userId: number;
-  date: string;
-  products: { productId: number; quantity: number }[];
-}
+export type { SampleCart, SampleUser, SampleUserWriteResult };
 
-export interface SampleUser {
-  id: number;
-  username: string;
-  email: string;
-  name?: { firstname?: string; lastname?: string };
+type SampleUserInput = {
+  email?: string;
+  username?: string;
+  password?: string;
+  name?: { firstname: string; lastname: string };
   phone?: string;
-  address?: {
-    city?: string;
-    street?: string;
-    number?: number;
-    zipcode?: string;
-    geolocation?: { lat?: string; long?: string };
-  };
-}
+  address?: { city?: string; street?: string };
+};
 
-// The public API includes password fields in user responses. Keep only fields
-// needed for this demo; never put returned credentials in React state.
-function publicUser(value: Record<string, unknown>): SampleUser {
-  const name =
-    value.name && typeof value.name === "object"
-      ? (value.name as Record<string, unknown>)
-      : null;
-  const address =
-    value.address && typeof value.address === "object"
-      ? (value.address as Record<string, unknown>)
-      : null;
-  const geo =
-    address?.geolocation && typeof address.geolocation === "object"
-      ? (address.geolocation as Record<string, unknown>)
-      : null;
+// Fake Store API's user controller reads these nested fields for every write
+// method, including PATCH. The coordinates are placeholders for this demo.
+function userWritePayload(input: SampleUserInput) {
   return {
-    id: Number(value.id),
-    username: String(value.username ?? ""),
-    email: String(value.email ?? ""),
-    name: name
-      ? {
-          firstname:
-            typeof name.firstname === "string" ? name.firstname : undefined,
-          lastname:
-            typeof name.lastname === "string" ? name.lastname : undefined,
-        }
-      : undefined,
-    address: address
-      ? {
-          city: typeof address.city === "string" ? address.city : undefined,
-          street:
-            typeof address.street === "string" ? address.street : undefined,
-          number:
-            typeof address.number === "number" ? address.number : undefined,
-          zipcode:
-            typeof address.zipcode === "string" ? address.zipcode : undefined,
-          geolocation: geo
-            ? {
-                lat: typeof geo.lat === "string" ? geo.lat : undefined,
-                long: typeof geo.long === "string" ? geo.long : undefined,
-              }
-            : undefined,
-        }
-      : undefined,
-    phone: typeof value.phone === "string" ? value.phone : undefined,
+    ...input,
+    firstname: input.name?.firstname ?? "",
+    lastname: input.name?.lastname ?? "",
+    address: {
+      city: input.address?.city ?? "",
+      street: input.address?.street ?? "",
+      geolocation: { lat: "0", long: "0" },
+    },
   };
 }
 
@@ -79,12 +45,12 @@ export const demoApiService = {
       enddate?: string;
     } = {},
   ): Promise<SampleCart[]> {
-    const { data } = await api.get<SampleCart[]>("/carts", { params });
-    return data;
+    const { data } = await api.get<unknown>("/carts", { params });
+    return parseSampleCarts(data);
   },
   async cart(id: number): Promise<SampleCart> {
-    const { data } = await api.get<SampleCart>(`/carts/${id}`);
-    return data;
+    const { data } = await api.get<unknown>(`/carts/${id}`);
+    return parseSampleCart(data);
   },
   async userCarts(
     userId: number,
@@ -95,10 +61,10 @@ export const demoApiService = {
       enddate?: string;
     } = {},
   ): Promise<SampleCart[]> {
-    const { data } = await api.get<SampleCart[]>(`/carts/user/${userId}`, {
+    const { data } = await api.get<unknown>(`/carts/user/${userId}`, {
       params,
     });
-    return data;
+    return parseSampleCarts(data);
   },
   async createCart(input: Omit<SampleCart, "id">): Promise<unknown> {
     const { data } = await api.post("/carts", input);
@@ -119,43 +85,40 @@ export const demoApiService = {
   async users(
     params: { limit?: number; sort?: "asc" | "desc" } = {},
   ): Promise<SampleUser[]> {
-    const { data } = await api.get<Record<string, unknown>[]>("/users", {
+    const { data } = await api.get<unknown>("/users", {
       params,
     });
-    return data.map(publicUser);
+    return parsePublicUsers(data);
   },
   async user(id: number): Promise<SampleUser> {
-    const { data } = await api.get<Record<string, unknown>>(`/users/${id}`);
-    return publicUser(data);
+    const { data } = await api.get<unknown>(`/users/${id}`);
+    return parsePublicUser(data);
   },
-  async createUser(input: {
-    email: string;
-    username: string;
-    password: string;
-    name: { firstname: string; lastname: string };
-  }): Promise<SampleUser> {
-    const { data } = await api.post<Record<string, unknown>>("/users", input);
-    return publicUser(data);
+  async createUser(
+    input: SampleUserInput & {
+      email: string;
+      username: string;
+      password: string;
+      name: { firstname: string; lastname: string };
+    },
+  ): Promise<SampleUserWriteResult> {
+    const { data } = await api.post<unknown>("/users", userWritePayload(input));
+    return parsePublicUserWrite(data);
   },
   async updateUser(
     id: number,
-    input: {
-      email?: string;
-      username?: string;
-      password?: string;
-      name?: { firstname: string; lastname: string };
-    },
+    input: SampleUserInput,
     method: "put" | "patch",
-  ): Promise<SampleUser> {
-    const response = await api[method]<Record<string, unknown>>(
+  ): Promise<SampleUserWriteResult> {
+    const response = await api[method]<unknown>(
       `/users/${id}`,
-      input,
+      userWritePayload(input),
     );
-    return publicUser(response.data);
+    return parsePublicUserWrite(response.data);
   },
-  async deleteUser(id: number): Promise<SampleUser> {
-    const { data } = await api.delete<Record<string, unknown>>(`/users/${id}`);
-    return publicUser(data);
+  async deleteUser(id: number): Promise<SampleUserWriteResult> {
+    const { data } = await api.delete<unknown>(`/users/${id}`);
+    return parsePublicUserWrite(data);
   },
   async sampleLogin(username: string, password: string): Promise<boolean> {
     const { data } = await api.post<{ token?: string }>("/auth/login", {

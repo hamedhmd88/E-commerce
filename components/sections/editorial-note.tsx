@@ -33,7 +33,7 @@ export function EditorialNote() {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          <p className="glass-panel absolute bottom-5 left-5 rounded-full px-4 py-2 text-sm text-white">
+          <p className="glass-panel absolute bottom-5 start-5 rounded-full px-4 py-2 text-sm text-white">
             Objects for the everyday
           </p>
         </div>

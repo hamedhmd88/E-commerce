@@ -154,7 +154,7 @@ export function ApiUsersTable() {
         </div>
         <UsersRound
           aria-hidden="true"
-          className="absolute -bottom-10 right-4 size-56 rotate-[-10deg] text-primary/10 sm:right-16"
+          className="absolute -bottom-10 end-4 size-56 rotate-[-10deg] text-primary/10 sm:end-16"
           strokeWidth={0.7}
         />
       </div>
@@ -179,10 +179,10 @@ export function ApiUsersTable() {
               Search people
             </Label>
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
+              <Search className="pointer-events-none absolute start-3 top-3 size-4 text-muted-foreground" />
               <Input
                 id="users-search"
-                className="h-11 rounded-xl border-border/60 bg-card/75 pl-9"
+                className="h-11 rounded-xl border-border/60 bg-card/75 ps-9"
                 value={search}
                 onChange={(event) =>
                   change(() => setSearch(event.target.value))
@@ -343,7 +343,7 @@ export function ApiUsersTable() {
                     <TableHead
                       scope="col"
                       key={column.title}
-                      className="h-14 border-b border-border/70 px-5 text-xs font-semibold tracking-wide text-muted-foreground first:pl-6"
+                      className="h-14 border-b border-border/70 px-5 text-xs font-semibold tracking-wide text-muted-foreground first:ps-6"
                     >
                       {column.title}
                     </TableHead>
@@ -364,7 +364,7 @@ export function ApiUsersTable() {
                         data-i18n-ignore
                         className={
                           column.title === "ID"
-                            ? "px-5 pl-6 font-semibold tabular-nums text-primary"
+                            ? "px-5 ps-6 font-semibold tabular-nums text-primary"
                             : column.title === "Email"
                               ? "px-5 text-foreground"
                               : "px-5 text-muted-foreground"

@@ -124,18 +124,18 @@ export function ProductFilters() {
             Search the collection
           </label>
           <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="product-search"
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Name or description"
-              className="h-11 rounded-xl border-border/70 bg-background/60 pl-10 pr-16"
+              className="h-11 rounded-xl border-border/70 bg-background/60 ps-10 pe-16"
             />
             <button
               type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary-dark"
+              className="absolute end-1 top-1/2 -translate-y-1/2 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary-dark"
             >
               Find
             </button>

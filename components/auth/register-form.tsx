@@ -51,6 +51,17 @@ export function RegisterForm() {
   const { register, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const fieldAccessibility = (field: keyof FormErrors) => ({
+    "aria-invalid": Boolean(fieldErrors[field]) || undefined,
+    "aria-describedby": fieldErrors[field] ? `${field}-error` : undefined,
+  });
+
+  const normalizeDigits = (value: string) =>
+    value.replace(/[۰-۹٠-٩]/g, (digit) =>
+      String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit) >= 0
+        ? "۰۱۲۳۴۵۶۷۸۹".indexOf(digit)
+        : "٠١٢٣٤٥٦٧٨٩".indexOf(digit)),
+    );
 
   const validateEmail = (email: string): string | undefined => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,7 +73,7 @@ export function RegisterForm() {
   const validateUsername = (username: string): string | undefined => {
     if (!username.trim()) return "Username is required";
     if (username.length < 3) return "Username must be at least 3 characters";
-    if (!/^[a-zA-Z0-9_]+$/.test(username))
+    if (!/^[\p{L}\p{N}_]+$/u.test(username))
       return "Username can only contain letters, numbers, and underscores";
     return undefined;
   };
@@ -70,11 +81,9 @@ export function RegisterForm() {
   const validatePassword = (password: string): string | undefined => {
     if (!password) return "Password is required";
     if (password.length < 8) return "Password must be at least 8 characters";
-    if (!/(?=.*[a-z])/.test(password))
-      return "Password must contain at least one lowercase letter";
-    if (!/(?=.*[A-Z])/.test(password))
-      return "Password must contain at least one uppercase letter";
-    if (!/(?=.*\d)/.test(password))
+    if (!/\p{L}/u.test(password))
+      return "Password must contain at least one letter";
+    if (!/\d/.test(normalizeDigits(password)))
       return "Password must contain at least one number";
     return undefined;
   };
@@ -82,7 +91,7 @@ export function RegisterForm() {
   const validatePhone = (phone: string): string | undefined => {
     if (!phone.trim()) return "Phone number is required";
     const phoneRegex = /^[+]?[1-9]?[0-9]{7,15}$/;
-    if (!phoneRegex.test(phone.replace(/[\s-()]/g, "")))
+    if (!phoneRegex.test(normalizeDigits(phone).replace(/[\s-()]/g, "")))
       return "Please enter a valid phone number";
     return undefined;
   };
@@ -93,7 +102,7 @@ export function RegisterForm() {
   ): string | undefined => {
     if (!name.trim()) return `${fieldName} is required`;
     if (name.length < 2) return `${fieldName} must be at least 2 characters`;
-    if (!/^[a-zA-Z\s]+$/.test(name))
+    if (!/^[\p{L}\p{M}\s'-]+$/u.test(name))
       return `${fieldName} can only contain letters and spaces`;
     return undefined;
   };
@@ -182,28 +191,31 @@ export function RegisterForm() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Account</CardTitle>
+    <Card className="register-card rounded-[2rem] border-border/65 pb-8 pt-8 shadow-[0_30px_85px_-45px_rgba(0,0,0,.45)] sm:pb-10 sm:pt-10">
+      <CardHeader className="px-5 sm:px-8">
+        <CardTitle className="font-serif text-2xl sm:text-3xl">Create Account</CardTitle>
         <CardDescription>
           Fill in your details to create a new account
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 px-5 sm:px-8">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="firstname">First Name</Label>
               <Input
                 id="firstname"
                 name="firstname"
                 type="text"
+                dir="auto"
+                autoComplete="given-name"
+                {...fieldAccessibility("firstname")}
                 placeholder="John"
                 value={formData.firstname}
                 onChange={handleChange}
@@ -211,7 +223,7 @@ export function RegisterForm() {
                 className={fieldErrors.firstname ? "border-red-500" : ""}
               />
               {fieldErrors.firstname && (
-                <p className="text-sm text-red-500">{fieldErrors.firstname}</p>
+                <p id="firstname-error" role="alert" className="text-sm text-destructive">{fieldErrors.firstname}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -220,6 +232,9 @@ export function RegisterForm() {
                 id="lastname"
                 name="lastname"
                 type="text"
+                dir="auto"
+                autoComplete="family-name"
+                {...fieldAccessibility("lastname")}
                 placeholder="Doe"
                 value={formData.lastname}
                 onChange={handleChange}
@@ -227,18 +242,22 @@ export function RegisterForm() {
                 className={fieldErrors.lastname ? "border-red-500" : ""}
               />
               {fieldErrors.lastname && (
-                <p className="text-sm text-red-500">{fieldErrors.lastname}</p>
+                <p id="lastname-error" role="alert" className="text-sm text-destructive">{fieldErrors.lastname}</p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
+                lang="en"
+                dir="ltr"
+                autoComplete="email"
+                {...fieldAccessibility("email")}
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={handleChange}
@@ -246,7 +265,7 @@ export function RegisterForm() {
                 className={fieldErrors.email ? "border-red-500" : ""}
               />
               {fieldErrors.email && (
-                <p className="text-sm text-red-500">{fieldErrors.email}</p>
+                <p id="email-error" role="alert" className="text-sm text-destructive">{fieldErrors.email}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -255,6 +274,9 @@ export function RegisterForm() {
                 id="username"
                 name="username"
                 type="text"
+                dir="auto"
+                autoComplete="username"
+                {...fieldAccessibility("username")}
                 placeholder="johndoe"
                 value={formData.username}
                 onChange={handleChange}
@@ -262,31 +284,33 @@ export function RegisterForm() {
                 className={fieldErrors.username ? "border-red-500" : ""}
               />
               {fieldErrors.username && (
-                <p className="text-sm text-red-500">{fieldErrors.username}</p>
+                <p id="username-error" role="alert" className="text-sm text-destructive">{fieldErrors.username}</p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2 relative">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
+                lang="en"
+                dir="ltr"
+                autoComplete="new-password"
+                {...fieldAccessibility("password")}
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={isLoading}
-                className={
-                  fieldErrors.password ? "border-red-500 pr-10" : "pr-10"
-                }
+                className="register-password-input pr-11"
               />
               <button
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                className="register-password-toggle absolute right-3 top-8 grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
                 disabled={isLoading}
               >
                 {showPassword ? (
@@ -296,7 +320,7 @@ export function RegisterForm() {
                 )}
               </button>
               {fieldErrors.password && (
-                <p className="text-sm text-red-500">{fieldErrors.password}</p>
+                <p id="password-error" role="alert" className="text-sm text-destructive">{fieldErrors.password}</p>
               )}
             </div>
             <div className="space-y-2 relative">
@@ -305,13 +329,15 @@ export function RegisterForm() {
                 id="confirmPassword"
                 name="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
+                lang="en"
+                dir="ltr"
+                autoComplete="new-password"
+                {...fieldAccessibility("confirmPassword")}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 disabled={isLoading}
-                className={
-                  fieldErrors.confirmPassword ? "border-red-500 pr-10" : "pr-10"
-                }
+                className="register-password-input pr-11"
               />
               <button
                 aria-label={
@@ -321,7 +347,7 @@ export function RegisterForm() {
                 }
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-8 text-muted-foreground hover:text-foreground cursor-pointer"
+                className="register-password-toggle absolute right-3 top-8 grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-primary/10 hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
                 disabled={isLoading}
               >
                 {showConfirmPassword ? (
@@ -331,20 +357,24 @@ export function RegisterForm() {
                 )}
               </button>
               {fieldErrors.confirmPassword && (
-                <p className="text-sm text-red-500">
+                <p id="confirmPassword-error" role="alert" className="text-sm text-destructive">
                   {fieldErrors.confirmPassword}
                 </p>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <Input
                 id="phone"
                 name="phone"
                 type="tel"
+                lang="en"
+                dir="ltr"
+                autoComplete="tel"
+                {...fieldAccessibility("phone")}
                 placeholder="+1-555-0123"
                 value={formData.phone}
                 onChange={handleChange}
@@ -352,7 +382,7 @@ export function RegisterForm() {
                 className={fieldErrors.phone ? "border-red-500" : ""}
               />
               {fieldErrors.phone && (
-                <p className="text-sm text-red-500">{fieldErrors.phone}</p>
+                <p id="phone-error" role="alert" className="text-sm text-destructive">{fieldErrors.phone}</p>
               )}
             </div>
 
@@ -362,6 +392,9 @@ export function RegisterForm() {
                 id="street"
                 name="street"
                 type="text"
+                dir="auto"
+                autoComplete="street-address"
+                {...fieldAccessibility("street")}
                 placeholder="123 Main Street"
                 value={formData.street}
                 onChange={handleChange}
@@ -369,7 +402,7 @@ export function RegisterForm() {
                 className={fieldErrors.street ? "border-red-500" : ""}
               />
               {fieldErrors.street && (
-                <p className="text-sm text-red-500">{fieldErrors.street}</p>
+                <p id="street-error" role="alert" className="text-sm text-destructive">{fieldErrors.street}</p>
               )}
             </div>
           </div>
@@ -380,6 +413,9 @@ export function RegisterForm() {
               id="city"
               name="city"
               type="text"
+              dir="auto"
+              autoComplete="address-level2"
+              {...fieldAccessibility("city")}
               placeholder="New York"
               value={formData.city}
               onChange={handleChange}
@@ -387,13 +423,13 @@ export function RegisterForm() {
               className={fieldErrors.city ? "border-red-500" : ""}
             />
             {fieldErrors.city && (
-              <p className="text-sm text-red-500">{fieldErrors.city}</p>
+              <p id="city-error" role="alert" className="text-sm text-destructive">{fieldErrors.city}</p>
             )}
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col space-y-4 mt-4">
-          <Button type="submit" className="w-full" disabled={isLoading}>
+        <CardFooter className="mt-6 flex flex-col space-y-4 px-5 sm:px-8">
+          <Button type="submit" className="h-12 w-full rounded-xl text-base" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Create Account
           </Button>

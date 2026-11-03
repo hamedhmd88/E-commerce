@@ -22,7 +22,7 @@ The App Router stays in `app/`: each route keeps its `page.tsx`, and route-speci
 
 The structure review removed duplicate legacy product and mobile-hook files. It also removed an unused mixed-content data module and a generated repository snapshot. Keep generated outputs out of source control and add new files to the relevant feature directory. Reuse `lib/product-schema.ts` as the sole product model, including when reading browser storage.
 
-Local Persian journal content lives in `data/blog-posts-fa.ts`; the original English articles remain in `data/blog-posts.ts` and `data/additional-blog-posts.ts`. User-facing phrase dictionaries are grouped by feature under `lib/i18n/phrases/`. External Fake Store API values remain in their source language.
+Local Persian journal content lives in `data/blog-posts-fa.ts`; the original English articles remain in `data/blog-posts.ts` and `data/additional-blog-posts.ts`. User-facing phrase dictionaries are grouped by feature under `lib/i18n/phrases/`. External Fake Store API values remain in their source language. `lib/sample-api-schema.ts` validates public cart and user responses while removing private user fields before feature components receive them.
 
 The unused-code audit removed an unmounted statistics section, unused UI primitives and their direct dependencies, a hook used only by those primitives, and unreferenced placeholder images. The product concept sheets remain because the product gallery constructs their URLs from product IDs at runtime.
 

@@ -108,7 +108,7 @@ export default async function BlogPostPage({ params }: Props) {
           Back to journal
         </Link>
       </div>
-      <div className="mt-5 grid items-start gap-10 pb-20 lg:grid-cols-[minmax(0,1fr)_18rem] xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-14">
+      <div className="mt-5 grid items-start gap-8 pb-20 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_24rem] xl:gap-12">
         <article className="min-w-0">
           <header className="mb-7 max-w-3xl">
             <div className="mb-4 flex items-center gap-3">

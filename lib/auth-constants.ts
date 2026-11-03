@@ -1,17 +1,23 @@
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  name: {
-    firstname: string;
-    lastname: string;
-  };
-  phone?: string;
-  address?: {
-    street: string;
-    city: string;
-  };
-}
+import { z } from "zod";
+
+export const userSchema = z.object({
+  id: z.number().int().positive(),
+  username: z.string().min(1),
+  email: z.string().min(1),
+  name: z.object({
+    firstname: z.string().min(1),
+    lastname: z.string().min(1),
+  }),
+  phone: z.string().optional(),
+  address: z
+    .object({
+      street: z.string(),
+      city: z.string(),
+    })
+    .optional(),
+});
+
+export type User = z.infer<typeof userSchema>;
 
 export interface RegisterUserData {
   username: string;

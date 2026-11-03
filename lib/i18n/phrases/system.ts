@@ -102,6 +102,8 @@ export const systemPhrases: Record<string, string> = {
     "اطلاعات ورود نمایشی معتبر نیست. نام کاربری، ایمیل و گذرواژه را بررسی کنید.",
   "The public sample service is unavailable. Please try again.":
     "سرویس نمونهٔ عمومی در دسترس نیست. دوباره تلاش کنید.",
+  "Could not start the demo session. Please try again.":
+    "نشست آزمایشی آغاز نشد. دوباره تلاش کنید.",
   "Hide password": "پنهان‌کردن گذرواژه",
   "Show password": "نمایش گذرواژه",
   "Public API sample account": "حساب نمونهٔ API عمومی",
@@ -114,6 +116,14 @@ export const systemPhrases: Record<string, string> = {
     "نام کاربری باید دست‌کم ۳ نویسه باشد",
   "Username can only contain letters, numbers, and underscores":
     "نام کاربری فقط می‌تواند حروف، عدد و زیرخط داشته باشد",
+  "Password must contain at least one letter":
+    "گذرواژه باید دست‌کم یک حرف داشته باشد",
+  "First name is required": "نام الزامی است",
+  "Last name is required": "نام خانوادگی الزامی است",
+  "First name must be at least 2 characters": "نام باید دست‌کم ۲ نویسه باشد",
+  "Last name must be at least 2 characters": "نام خانوادگی باید دست‌کم ۲ نویسه باشد",
+  "First name can only contain letters and spaces": "نام فقط می‌تواند حروف و فاصله داشته باشد",
+  "Last name can only contain letters and spaces": "نام خانوادگی فقط می‌تواند حروف و فاصله داشته باشد",
   "Password must be at least 8 characters": "گذرواژه باید دست‌کم ۸ نویسه باشد",
   "Password must contain at least one lowercase letter":
     "گذرواژه باید دست‌کم یک حرف کوچک لاتین داشته باشد",

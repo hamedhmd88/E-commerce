@@ -72,6 +72,10 @@ export const cartPhrases: Record<string, string> = {
   "Entered address:": "نشانی واردشده:",
   "Saved in this browser for demonstration. No payment, shipping, email, or SMS occurred.":
     "برای نمایش در این مرورگر ذخیره شد. هیچ پرداخت، ارسال کالا، ایمیل یا پیامکی انجام نشد.",
+  "This demo order is available until you reload or close this tab. No payment, shipping, email, or SMS occurred.":
+    "این سفارش نمایشی تا زمانی که این زبانه را بارگذاری دوباره یا ببندید در دسترس است. هیچ پرداخت، ارسال کالا، ایمیل یا پیامکی انجام نشد.",
+  "Demo orders are available until you reload or close this tab. No shipping or payment takes place.":
+    "سفارش‌های نمایشی تا زمان بارگذاری دوباره یا بستن این زبانه در دسترس‌اند. هیچ پرداخت یا ارسالی انجام نمی‌شود.",
   "Open an order from your demo order history or place a new one.":
     "سفارشی را از تاریخچهٔ آزمایشی باز کنید یا سفارش تازه‌ای بسازید.",
   "View orders": "دیدن سفارش‌ها",

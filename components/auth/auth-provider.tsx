@@ -11,6 +11,7 @@ import {
   type AuthContextType,
   type RegisterUserData,
   type User,
+  userSchema,
 } from "@/lib/auth-constants";
 import { demoApiService } from "@/services/demoApiService";
 
@@ -25,13 +26,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
       if (raw) {
-        const parsed: User = JSON.parse(raw);
-        if (
-          parsed &&
-          typeof parsed.email === "string" &&
-          typeof parsed.username === "string"
-        )
-          setUser(parsed);
+        const parsed = userSchema.safeParse(JSON.parse(raw));
+        if (parsed.success) setUser(parsed.data);
+        else sessionStorage.removeItem(SESSION_KEY);
       }
     } catch {
       // A blocked storage API should not prevent a fresh demo session.
@@ -40,12 +37,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   function establish(nextUser: User) {
+    const safeUser = userSchema.parse(nextUser);
     try {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextUser));
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(safeUser));
     } catch {
       // Keep the session usable in memory when storage is unavailable.
     }
-    setUser(nextUser);
+    setUser(safeUser);
   }
 
   const login = async (username: string, email: string, password: string) => {

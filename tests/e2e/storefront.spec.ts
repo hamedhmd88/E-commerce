@@ -15,7 +15,9 @@ test("public pages and demo sign-in are usable", async ({ page }) => {
 test("unknown routes show a useful recovery page", async ({ page }) => {
   const response = await page.goto("/a-page-that-does-not-exist");
   expect(response?.status()).toBe(404);
-  await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Page not found" }),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Back to home" })).toBeVisible();
 });
 
@@ -83,6 +85,102 @@ test("catalog pages handle provider access failures without a server error", asy
       page.getByText("Request failed with status code 403"),
     ).toHaveCount(0);
   }
+});
+
+test("Persian product badges keep category and wishlist apart", async ({
+  page,
+}) => {
+  await page
+    .context()
+    .addCookies([
+      { name: "morrow-locale", value: "fa", url: "http://127.0.0.1:3100" },
+    ]);
+  await page.route("https://fakestoreapi.com/products", (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(
+        Array.from({ length: 9 }, (_, index) => ({
+          id: index + 1,
+          title: `Sample item ${index + 1}`,
+          price: 29.99,
+          description: "Portfolio fixture",
+          category: "women's clothing",
+          image:
+            "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E",
+          rating: { rate: 4.2, count: 48 },
+        })),
+      ),
+    }),
+  );
+  await page.goto("/products");
+  const card = page.locator(".catalog-product-card").first();
+  await expect(card).toBeVisible();
+  const overlap = await card.evaluate((element) => {
+    const heart = element
+      .querySelector("button[aria-pressed]")
+      ?.getBoundingClientRect();
+    const category = element
+      .querySelector(".catalog-image-stage > span")
+      ?.getBoundingClientRect();
+    if (!heart || !category) return true;
+    return (
+      heart.left < category.right &&
+      heart.right > category.left &&
+      heart.top < category.bottom &&
+      heart.bottom > category.top
+    );
+  });
+  expect(overlap).toBe(false);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > innerWidth,
+    ),
+  ).toBe(false);
+});
+
+test("sample user writes include the API address shape and hide credentials", async ({
+  page,
+}) => {
+  let requestBody: Record<string, unknown> | null = null;
+  await page.route("https://fakestoreapi.com/users**", async (route) => {
+    if (route.request().method() === "POST") {
+      requestBody = route.request().postDataJSON();
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ id: 11, password: "morrow-public-demo-only" }),
+      });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: "[]",
+    });
+  });
+  await page.goto("/login");
+  await page.getByLabel("Username").fill("demo");
+  await page.getByLabel("Email").fill("demo@example.com");
+  await page.getByLabel("Password", { exact: true }).fill("demo12345");
+  await page.getByRole("button", { name: /sign in/i }).click();
+  await expect(page).toHaveURL(/\/account/);
+  await page.goto("/account/users/manage");
+  await page.getByLabel("Username").fill("samplewriter");
+  await page.getByLabel("Email").fill("writer@example.com");
+  await page.getByLabel("First name").fill("Sample");
+  await page.getByLabel("Last name").fill("Writer");
+  await page.getByRole("button", { name: "Send POST request" }).click();
+  await expect(
+    page.getByText("POST returned a sample response.", { exact: false }),
+  ).toBeVisible();
+  expect(requestBody).toMatchObject({
+    firstname: "Sample",
+    lastname: "Writer",
+    address: { geolocation: { lat: "0", long: "0" } },
+  });
+  await page.getByText("View API response").click();
+  await expect(page.locator("pre")).not.toContainText("password");
 });
 
 test("public routes fit the viewport and capture both themes", async ({

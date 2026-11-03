@@ -88,7 +88,7 @@ export function CartSidebar() {
                           lang="en"
                           dir="ltr"
                           data-i18n-ignore
-                          className="line-clamp-2 pr-2 text-sm font-semibold leading-5"
+                          className="line-clamp-2 pe-2 text-sm font-semibold leading-5"
                         >
                           {item.title}
                         </h3>
@@ -125,7 +125,7 @@ export function CartSidebar() {
                             aria-label={`Remove ${item.title} from cart`}
                             variant="ghost"
                             size="icon"
-                            className="ml-auto size-8 rounded-lg text-muted-foreground hover:text-destructive"
+                            className="ms-auto size-8 rounded-lg text-muted-foreground hover:text-destructive"
                             onClick={() => removeItem(item.id)}
                           >
                             <X className="h-3 w-3" />

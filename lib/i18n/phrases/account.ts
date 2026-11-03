@@ -19,6 +19,8 @@ export const accountPhrases: Record<string, string> = {
   Username: "نام کاربری",
   Phone: "تلفن",
   Address: "نشانی",
+  Street: "خیابان",
+  "Street address": "نشانی خیابان",
   "Recent Activity": "فعالیت‌های اخیر",
   "Recent demo orders saved in this browser":
     "سفارش‌های آزمایشی اخیر ذخیره‌شده در این مرورگر",

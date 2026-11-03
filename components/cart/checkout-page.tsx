@@ -3,6 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +18,7 @@ import Link from "next/link";
 import { createDemoOrder, saveDemoOrder } from "@/lib/demo-orders";
 
 export function CheckoutPage() {
+  const router = useRouter();
   const {
     items,
     totalPrice,
@@ -80,9 +82,7 @@ export function CheckoutPage() {
       });
       saveDemoOrder(order);
       clearCart();
-      window.location.assign(
-        `/order-success?id=${encodeURIComponent(order.id)}`,
-      );
+      router.push(`/order-success?id=${encodeURIComponent(order.id)}`);
     } catch {
       setSubmitError("Could not save this demo order. Please try again.");
       setIsProcessing(false);
@@ -117,10 +117,10 @@ export function CheckoutPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex items-center mb-8">
-        <Button variant="ghost" asChild className="mr-4">
+      <div className="mb-8 flex flex-wrap items-center gap-3">
+        <Button variant="ghost" asChild>
           <Link href="/cart">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Back to Cart
           </Link>
         </Button>
@@ -132,8 +132,8 @@ export function CheckoutPage() {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Mail className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center gap-2">
+                  <Mail className="h-5 w-5" />
                   Contact Information
                 </CardTitle>
               </CardHeader>
@@ -143,6 +143,9 @@ export function CheckoutPage() {
                   <Input
                     id="email"
                     type="email"
+                    autoComplete="email"
+                    dir="ltr"
+                    lang="en"
                     required
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
@@ -153,17 +156,19 @@ export function CheckoutPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Truck className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center gap-2">
+                  <Truck className="h-5 w-5" />
                   Shipping Address
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
                       id="firstName"
+                      autoComplete="given-name"
+                      dir="auto"
                       required
                       value={formData.firstName}
                       onChange={(e) =>
@@ -175,6 +180,8 @@ export function CheckoutPage() {
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input
                       id="lastName"
+                      autoComplete="family-name"
+                      dir="auto"
                       required
                       value={formData.lastName}
                       onChange={(e) =>
@@ -188,6 +195,8 @@ export function CheckoutPage() {
                   <Label htmlFor="address">Address</Label>
                   <Input
                     id="address"
+                    autoComplete="street-address"
+                    dir="auto"
                     required
                     value={formData.address}
                     onChange={(e) =>
@@ -196,11 +205,13 @@ export function CheckoutPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="city">City</Label>
                     <Input
                       id="city"
+                      autoComplete="address-level2"
+                      dir="auto"
                       required
                       value={formData.city}
                       onChange={(e) =>
@@ -212,6 +223,7 @@ export function CheckoutPage() {
                     <Label htmlFor="state">State</Label>
                     <Input
                       id="state"
+                      dir="auto"
                       value={formData.state}
                       onChange={(e) =>
                         handleInputChange("state", e.target.value)
@@ -222,11 +234,13 @@ export function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="zipCode">ZIP Code</Label>
                     <Input
                       id="zipCode"
+                      autoComplete="postal-code"
+                      dir="ltr"
                       required
                       value={formData.zipCode}
                       onChange={(e) =>
@@ -238,6 +252,7 @@ export function CheckoutPage() {
                     <Label htmlFor="country">Country</Label>
                     <Input
                       id="country"
+                      dir="auto"
                       value={formData.country}
                       onChange={(e) =>
                         handleInputChange("country", e.target.value)
@@ -267,17 +282,17 @@ export function CheckoutPage() {
                   value={paymentMethod}
                   onValueChange={setPaymentMethod}
                 >
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem value="demo-standard" id="demo-standard" />
                     <Label htmlFor="demo-standard">
                       Demo payment · standard
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem value="demo-express" id="demo-express" />
                     <Label htmlFor="demo-express">Demo payment · express</Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <RadioGroupItem value="demo-failure" id="demo-failure" />
                     <Label htmlFor="demo-failure">
                       Simulate a declined payment
@@ -285,7 +300,7 @@ export function CheckoutPage() {
                   </div>
                 </RadioGroup>
 
-                <div className="flex items-center space-x-2 pt-4">
+                <div className="flex items-center gap-2 pt-4">
                   <Checkbox
                     id="terms"
                     checked={agreed}
@@ -308,7 +323,7 @@ export function CheckoutPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   {items.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-3">
+                    <div key={item.id} className="flex items-center gap-3">
                       <div className="relative h-12 w-12 flex-shrink-0">
                         <Image
                           src={item.image || "/placeholder.svg"}
@@ -387,7 +402,7 @@ export function CheckoutPage() {
 
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Shield className="h-4 w-4" />
                   <span>No payment details are requested or processed.</span>
                 </div>

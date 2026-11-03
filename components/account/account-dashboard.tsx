@@ -49,7 +49,7 @@ export function AccountDashboard() {
 
   const handleLogout = () => {
     logout();
-    window.location.assign("/login");
+    router.replace("/login");
   };
 
   return (
@@ -93,7 +93,7 @@ export function AccountDashboard() {
           <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Orders</CardTitle>
-              <ShoppingBag className="h-4 w-4 ml-auto text-muted-foreground" />
+              <ShoppingBag className="ms-auto h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{orders.length}</div>
@@ -108,7 +108,7 @@ export function AccountDashboard() {
           <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Wishlist</CardTitle>
-              <Heart className="h-4 w-4 ml-auto text-muted-foreground" />
+              <Heart className="ms-auto h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{wishlistCount}</div>
@@ -121,7 +121,7 @@ export function AccountDashboard() {
           <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Profile</CardTitle>
-              <Settings className="h-4 w-4 ml-auto text-muted-foreground" />
+              <Settings className="ms-auto h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">✓</div>
@@ -133,7 +133,7 @@ export function AccountDashboard() {
           <Card className="glass-panel account-tile cursor-pointer rounded-2xl bg-transparent transition-transform duration-200 hover:-translate-y-1 motion-reduce:transform-none">
             <CardHeader className="flex flex-row items-center space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">API users</CardTitle>
-              <Users className="ml-auto size-4 text-muted-foreground" />
+              <Users className="ms-auto size-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-primary">↗</div>

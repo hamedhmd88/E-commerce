@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -81,6 +82,7 @@ export function LanguageProvider({
   initialLocale: Locale;
 }) {
   const [locale, updateLocale] = useState(initialLocale);
+  const translatedOnce = useRef(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -113,15 +115,16 @@ export function LanguageProvider({
         observer.observe(document.body, options);
       });
     });
-    // Next can hydrate nested client components after this provider mounts.
-    // Wait for the document load before touching their server-rendered text.
+    // Next hydrates nested page and Suspense islands after the provider mounts.
+    // Give those islands time to hydrate before editing their server-rendered text.
     let timer: ReturnType<typeof setTimeout> | undefined;
     const start = () => {
       timer = setTimeout(() => {
         if (!active) return;
         applyLanguage(locale);
+        translatedOnce.current = true;
         observer.observe(document.body, options);
-      }, 400);
+      }, translatedOnce.current ? 0 : 1800);
     };
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start, { once: true });

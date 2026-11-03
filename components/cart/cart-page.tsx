@@ -79,7 +79,7 @@ export function CartPage() {
             </p>
             <Button asChild>
               <Link href="/products">
-                <ArrowLeft className="mr-2 h-4 w-4" />
+                <ArrowLeft className="me-2 h-4 w-4" />
                 Continue Shopping
               </Link>
             </Button>
@@ -180,7 +180,7 @@ export function CartPage() {
                     </Button>
                   </div>
 
-                  <div className="ml-auto text-right">
+                  <div className="ms-auto text-end">
                     <p className="font-semibold">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
@@ -191,7 +191,7 @@ export function CartPage() {
                       className="text-destructive hover:text-destructive"
                       onClick={() => removeItem(item.id)}
                     >
-                      <X className="h-4 w-4 mr-1" />
+                      <X className="h-4 w-4 me-1" />
                       Remove
                     </Button>
                   </div>
@@ -203,7 +203,7 @@ export function CartPage() {
           <div className="flex justify-between items-center pt-4">
             <Button variant="outline" asChild>
               <Link href="/products">
-                <ArrowLeft className="mr-2 h-4 w-4" />
+                <ArrowLeft className="me-2 h-4 w-4" />
                 Continue Shopping
               </Link>
             </Button>
@@ -250,7 +250,7 @@ export function CartPage() {
               <Button asChild className="w-full" size="lg">
                 <Link href="/checkout">
                   Proceed to Checkout
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ms-2 h-4 w-4" />
                 </Link>
               </Button>
             </CardContent>

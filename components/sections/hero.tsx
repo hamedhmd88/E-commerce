@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { useLanguage } from "@/components/layout/language-provider";
+import { translate } from "@/lib/i18n/translate";
 
 const slides = [
   {
@@ -59,6 +61,7 @@ const slides = [
 ];
 
 export function Hero() {
+  const { locale } = useLanguage();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -140,7 +143,7 @@ export function Hero() {
             >
               0{active + 1} <span aria-hidden="true">/</span> 0{slides.length}
             </span>
-            <div className="ml-auto flex gap-2">
+            <div className="ms-auto flex gap-2">
               <button
                 type="button"
                 className="glass-control"
@@ -157,22 +160,20 @@ export function Hero() {
               >
                 <ArrowRight className="size-4" />
               </button>
-              {!reduceMotion && (
-                <button
-                  type="button"
-                  className="glass-control"
-                  onClick={() => setPaused((value) => !value)}
-                  aria-label={
-                    paused ? "Play automatic slides" : "Pause automatic slides"
-                  }
-                >
-                  {paused ? (
-                    <Play className="size-4" />
-                  ) : (
-                    <Pause className="size-4" />
-                  )}
-                </button>
-              )}
+              <button
+                type="button"
+                className="glass-control motion-reduce:hidden"
+                onClick={() => setPaused((value) => !value)}
+                aria-label={
+                  paused ? "Play automatic slides" : "Pause automatic slides"
+                }
+              >
+                {paused ? (
+                  <Play className="size-4" />
+                ) : (
+                  <Pause className="size-4" />
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -190,14 +191,15 @@ export function Hero() {
               >
                 <Image
                   src={slide.image}
-                  alt={slide.alt}
+                  alt={translate(slide.alt, locale)}
+                  data-i18n-ignore
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 56vw"
                   className="hero-image object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/5" />
-                <div className="glass-panel absolute bottom-5 left-5 right-5 flex items-center justify-between gap-4 rounded-2xl p-4 text-white sm:bottom-7 sm:left-7 sm:right-7 sm:p-5">
+                <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between gap-4 rounded-2xl border border-white/20 bg-slate-950/55 p-4 text-white shadow-xl backdrop-blur-xl sm:bottom-7 sm:left-7 sm:right-7 sm:p-5">
                   <div>
                     <p className="text-xs text-white/70">
                       Selected for the everyday

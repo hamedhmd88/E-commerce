@@ -28,9 +28,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
     email: user?.email || "",
     username: user?.username || "",
     phone: user?.phone || "",
-    address: user?.address
-      ? `${user.address.street}, ${user.address.city}`
-      : "",
+    street: user?.address?.street || "",
+    city: user?.address?.city || "",
   });
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -41,9 +40,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
         email: user.email,
         username: user.username,
         phone: user.phone || "",
-        address: user.address
-          ? `${user.address.street}, ${user.address.city}`
-          : "",
+        street: user.address?.street || "",
+        city: user.address?.city || "",
       });
   }, [isOpen, user]);
 
@@ -55,28 +53,18 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (user) {
-        // Split address into street and city if it contains a comma
-        let street = formData.address;
-        let city = "";
-
-        if (formData.address.includes(",")) {
-          const addressParts = formData.address.split(",", 2);
-          street = addressParts[0].trim();
-          city = addressParts[1].trim();
-        }
-
         const updatedUser = {
           ...user,
           name: {
-            firstname: formData.firstName,
-            lastname: formData.lastName,
+            firstname: formData.firstName.trim(),
+            lastname: formData.lastName.trim(),
           },
-          email: formData.email,
-          username: formData.username,
-          phone: formData.phone,
+          email: formData.email.trim(),
+          username: formData.username.trim(),
+          phone: formData.phone.trim(),
           address: {
-            street: street,
-            city: city,
+            street: formData.street.trim(),
+            city: formData.city.trim(),
           },
         };
         updateUser(updatedUser);
@@ -110,6 +98,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               <Input
                 id="firstName"
                 type="text"
+                autoComplete="given-name"
+                dir="auto"
                 value={formData.firstName}
                 onChange={handleChange}
                 required
@@ -120,6 +110,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               <Input
                 id="lastName"
                 type="text"
+                autoComplete="family-name"
+                dir="auto"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
@@ -130,6 +122,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               <Input
                 id="email"
                 type="email"
+                autoComplete="email"
+                dir="ltr"
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -140,6 +134,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               <Input
                 id="username"
                 type="text"
+                autoComplete="username"
+                dir="auto"
                 value={formData.username}
                 onChange={handleChange}
                 required
@@ -150,23 +146,39 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
               <Input
                 id="phone"
                 type="tel"
+                autoComplete="tel"
+                dir="ltr"
                 value={formData.phone}
                 onChange={handleChange}
               />
             </div>
-            <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="address">Address</Label>
+            <div className="space-y-2">
+              <Label htmlFor="street">Street</Label>
               <Input
-                id="address"
+                id="street"
                 type="text"
-                value={formData.address}
+                autoComplete="street-address"
+                dir="auto"
+                value={formData.street}
                 onChange={handleChange}
-                placeholder="Street, City"
+                placeholder="Street address"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="city">City</Label>
+              <Input
+                id="city"
+                type="text"
+                autoComplete="address-level2"
+                dir="auto"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="City"
               />
             </div>
           </div>
 
-          <div className="flex space-x-3 pt-4">
+          <div className="flex gap-3 pt-4">
             <Button
               type="button"
               variant="outline"

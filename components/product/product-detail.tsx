@@ -197,10 +197,10 @@ export function ProductDetail({ product }: { product: Product }) {
             <div className="absolute inset-8 overflow-hidden rounded-[1.4rem]">
               {renderView(view)}
             </div>
-            <span className="absolute bottom-5 left-5 rounded-full border border-border/70 bg-background/80 px-4 py-2 text-xs font-medium text-foreground backdrop-blur-xl">
+            <span className="absolute bottom-5 start-5 rounded-full border border-border/70 bg-background/80 px-4 py-2 text-xs font-medium text-foreground backdrop-blur-xl">
               {view.label}
             </span>
-            <span className="absolute right-5 top-5 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-xs text-muted-foreground backdrop-blur-xl">
+            <span className="absolute end-5 top-5 rounded-full border border-border/70 bg-background/80 px-3 py-2 text-xs text-muted-foreground backdrop-blur-xl">
               {selectedView + 1} / {views.length}
             </span>
           </div>

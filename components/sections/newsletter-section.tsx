@@ -40,7 +40,7 @@ export function NewsletterSection() {
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-black/35 to-transparent" />
           <div className="newsletter-ring" aria-hidden="true" />
-          <span className="absolute bottom-6 left-6 rounded-full border border-white/35 bg-black/30 px-4 py-2 text-sm text-white backdrop-blur-lg">
+          <span className="absolute bottom-6 start-6 rounded-full border border-white/35 bg-black/30 px-4 py-2 text-sm text-white backdrop-blur-lg">
             A little inspiration, occasionally.
           </span>
         </div>

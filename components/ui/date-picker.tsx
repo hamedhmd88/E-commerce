@@ -44,7 +44,7 @@ export function DatePicker({
                 ? `${locale === "fa" ? "تاریخ انتخاب‌شده" : "Selected date"}: ${format(selected!, "MMMM d, yyyy", { locale: dateLocale })}`
                 : placeholder
             }
-            className="h-11 min-w-0 flex-1 justify-start gap-3 rounded-xl bg-background/60 px-3 text-left font-normal hover:bg-primary/5"
+            className="h-11 min-w-0 flex-1 justify-start gap-3 rounded-xl border-border/70 bg-background/70 px-3 text-start font-normal text-foreground hover:border-primary/45 hover:bg-muted/70 hover:text-foreground dark:bg-card/75 dark:hover:border-primary/55 dark:hover:bg-muted/80 dark:hover:text-foreground data-[state=open]:border-primary/50 data-[state=open]:bg-muted/70 data-[state=open]:text-foreground"
           >
             <CalendarDays className="size-4 shrink-0 text-primary" />
             <span

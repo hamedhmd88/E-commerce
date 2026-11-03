@@ -1,54 +1,77 @@
-export interface DemoOrderItem {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+import { z } from "zod";
 
-export interface DemoOrder {
-  id: string;
-  createdAt: string;
-  email: string;
-  name: string;
-  address: string;
-  paymentMethod: string;
-  items: DemoOrderItem[];
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  discount: number;
-  total: number;
-  status: "Simulated order placed";
-}
+const demoOrderSchema = z.object({
+  id: z.string().min(1),
+  createdAt: z.string().min(1),
+  email: z.string(),
+  name: z.string(),
+  address: z.string(),
+  paymentMethod: z.string(),
+  items: z.array(
+    z.object({
+      id: z.number().int().positive(),
+      title: z.string(),
+      price: z.number().finite().nonnegative(),
+      image: z.string(),
+      quantity: z.number().int().positive(),
+    }),
+  ),
+  subtotal: z.number().finite().nonnegative(),
+  shipping: z.number().finite().nonnegative(),
+  tax: z.number().finite().nonnegative(),
+  discount: z.number().finite().nonnegative(),
+  total: z.number().finite().nonnegative(),
+  status: z.literal("Simulated order placed"),
+});
+
+export type DemoOrder = z.infer<typeof demoOrderSchema>;
 
 const KEY = "portfolio-demo-orders-v1";
+let memoryOrders: DemoOrder[] = [];
+let memoryOnly = false;
 
 export function getDemoOrders(): DemoOrder[] {
   if (typeof window === "undefined") return [];
+  if (memoryOnly) return memoryOrders;
   try {
     const value: unknown = JSON.parse(localStorage.getItem(KEY) || "[]");
-    return Array.isArray(value)
-      ? value.filter((item): item is DemoOrder =>
-          Boolean(
-            item &&
-            typeof item === "object" &&
-            typeof item.id === "string" &&
-            Array.isArray(item.items),
-          ),
-        )
+    memoryOrders = Array.isArray(value)
+      ? value.flatMap((item) => {
+          const result = demoOrderSchema.safeParse(item);
+          return result.success ? [result.data] : [];
+        })
       : [];
+    return memoryOrders;
   } catch {
-    return [];
+    memoryOnly = true;
+    return memoryOrders;
   }
 }
 
-export function saveDemoOrder(order: DemoOrder): void {
-  localStorage.setItem(KEY, JSON.stringify([order, ...getDemoOrders()]));
+export function saveDemoOrder(order: DemoOrder): boolean {
+  memoryOrders = [order, ...getDemoOrders()];
+  try {
+    localStorage.setItem(KEY, JSON.stringify(memoryOrders));
+    return true;
+  } catch {
+    memoryOnly = true;
+    return false;
+  }
 }
 
 export function clearDemoOrders(): void {
-  if (typeof window !== "undefined") localStorage.removeItem(KEY);
+  memoryOrders = [];
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(KEY);
+    memoryOnly = false;
+  } catch {
+    memoryOnly = true;
+  }
+}
+
+export function areDemoOrdersTemporary(): boolean {
+  return memoryOnly;
 }
 
 export function createDemoOrder(

@@ -4,14 +4,15 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
-import Image from "next/image";
+import { ShoppingCart, UserRoundPlus, CircleUserRound, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useCart } from "@/components/cart/cart-provider";
 import { useAuth } from "@/components/auth/auth-provider";
 import { BackToTop } from "@/components/layout/back-to-top";
 import { LanguageToggle } from "@/components/layout/language-toggle";
+import { BrandLockup } from "@/components/layout/brand-lockup";
+import { useLanguage } from "@/components/layout/language-provider";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -43,6 +44,7 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { totalItems, isOpen, setIsOpen } = useCart();
   const { user } = useAuth();
+  const { locale } = useLanguage();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -84,19 +86,10 @@ export function Navigation() {
               href="/"
               scroll={true}
               onClick={() => beginNavigation("/")}
-              className="flex items-center gap-2.5 font-semibold tracking-[-.055em] text-foreground sm:text-xl"
+              className="flex shrink-0 items-center text-foreground"
+              aria-label={locale === "fa" ? "مورو، صفحهٔ اصلی" : "Morrow, home page"}
             >
-              <Image
-                src="/morrow-mark.svg"
-                alt=""
-                width={33}
-                height={33}
-                className="size-8"
-                priority
-              />
-              <span>
-                Morrow<span className="text-primary">.</span>
-              </span>
+              <BrandLockup />
             </Link>
 
             <div className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/35 p-1 shadow-sm lg:flex">
@@ -153,9 +146,16 @@ export function Navigation() {
                   href={user ? "/account" : "/login"}
                   scroll={true}
                   onClick={() => beginNavigation(user ? "/account" : "/login")}
-                  aria-label={user ? "Account" : "Sign in"}
+                  aria-label={user ? (locale === "fa" ? "حساب کاربری، وارد شده‌اید" : "Your account, signed in") : (locale === "fa" ? "ورود به حساب کاربری" : "Sign in to your account")}
                 >
-                  <User className="h-5 w-5" />
+                  {user ? (
+                    <span className="relative inline-flex">
+                      <CircleUserRound className="h-5 w-5" />
+                      <span aria-hidden="true" className="absolute -bottom-1 -right-1 size-2.5 rounded-full border-2 border-background bg-primary" />
+                    </span>
+                  ) : (
+                    <UserRoundPlus className="h-5 w-5" />
+                  )}
                 </Link>
               </Button>
 

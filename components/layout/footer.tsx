@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, ShoppingBag, Compass, Heart } from "lucide-react";
+import { BrandLockup } from "@/components/layout/brand-lockup";
 
 const groups = [
   {
@@ -40,10 +40,9 @@ export function Footer() {
           <div>
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-2xl font-semibold tracking-[-.06em]"
+              className="inline-flex items-center"
             >
-              <Image src="/morrow-mark.svg" alt="" width={36} height={36} />
-              Morrow<span className="text-primary">.</span>
+              <BrandLockup size="footer" />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
               Thoughtful finds for everyday life. Explore the collection, save

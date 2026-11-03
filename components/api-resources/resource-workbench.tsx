@@ -347,7 +347,7 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
           response = await demoApiService.updateUser(
             selectedId!,
             writeAction === "patch"
-              ? { email: payload.email, username: payload.username }
+              ? payload
               : { ...payload, password: "morrow-public-demo-only" },
             writeAction,
           );
@@ -384,7 +384,7 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
         </div>
         <Icon
           aria-hidden="true"
-          className="absolute -bottom-10 right-2 size-52 rotate-[-15deg] text-primary/10 sm:right-12 sm:size-64"
+          className="absolute -bottom-10 end-2 size-52 rotate-[-15deg] text-primary/10 sm:end-12 sm:size-64"
           strokeWidth={0.7}
         />
       </div>
@@ -604,7 +604,7 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
                             : item.email}
                       </span>
                     </span>
-                    <ArrowRight className="ml-auto size-4 shrink-0 text-primary/70" />
+                    <ArrowRight className="ms-auto size-4 shrink-0 text-primary/70" />
                   </button>
                 ))
               )}

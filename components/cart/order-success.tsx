@@ -5,16 +5,22 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { getDemoOrders, type DemoOrder } from "@/lib/demo-orders";
+import {
+  areDemoOrdersTemporary,
+  getDemoOrders,
+  type DemoOrder,
+} from "@/lib/demo-orders";
 import { useLanguage } from "@/components/layout/language-provider";
 
 export function OrderSuccess() {
   const { locale } = useLanguage();
   const id = useSearchParams().get("id");
   const [order, setOrder] = useState<DemoOrder | null>(null);
+  const [temporary, setTemporary] = useState(false);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     setOrder(getDemoOrders().find((item) => item.id === id) ?? null);
+    setTemporary(areDemoOrdersTemporary());
     setLoaded(true);
   }, [id]);
   return (
@@ -87,8 +93,9 @@ export function OrderSuccess() {
               Entered address: {order.address}
             </p>
             <p className="text-sm text-muted-foreground">
-              Saved in this browser for demonstration. No payment, shipping,
-              email, or SMS occurred.
+              {temporary
+                ? "This demo order is available until you reload or close this tab. No payment, shipping, email, or SMS occurred."
+                : "Saved in this browser for demonstration. No payment, shipping, email, or SMS occurred."}
             </p>
           </CardContent>
         </Card>

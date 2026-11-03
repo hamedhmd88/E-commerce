@@ -63,13 +63,10 @@ export function ProductCard({ product }: { product: Product }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="pointer-events-none object-contain p-6 transition-transform duration-500 group-hover:scale-[1.055] sm:p-7"
           />
-          <span
-            lang="en"
-            dir="ltr"
-            data-i18n-ignore
-            className="absolute right-3 top-3 rounded-full border border-primary/20 bg-background/85 px-2.5 py-1 text-[11px] font-medium capitalize text-primary backdrop-blur-xl"
-          >
-            {product.category}
+          <span className="absolute end-3 top-3 max-w-[calc(100%-4.75rem)] rounded-full border border-primary/20 bg-background/85 px-2.5 py-1 text-center text-[11px] font-medium capitalize text-primary backdrop-blur-xl">
+            <bdi lang="en" dir="ltr" data-i18n-ignore className="line-clamp-2">
+              {product.category}
+            </bdi>
           </span>
         </div>
         <button
@@ -81,7 +78,7 @@ export function ProductCard({ product }: { product: Product }) {
               : `Save ${product.title}`
           }
           aria-pressed={saved}
-          className="absolute left-3 top-3 z-20 grid size-10 place-items-center rounded-full border border-border/70 bg-background/85 text-foreground shadow-sm backdrop-blur-xl transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
+          className="absolute start-3 top-3 z-20 grid size-10 place-items-center rounded-full border border-border/70 bg-background/85 text-foreground shadow-sm backdrop-blur-xl transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-ring"
         >
           <Heart
             className={`size-4 ${saved ? "fill-primary text-primary" : ""}`}

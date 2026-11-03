@@ -6,21 +6,21 @@
 
 ## Website preview
 
-These screenshots are stored in this repository, so they render directly in the GitHub README.
+These fresh screenshots are stored in this repository and render directly on GitHub. The header shows the English and Persian language controls.
 
-| Home · desktop                                                    | Home · mobile                                                   |
-| ----------------------------------------------------------------- | --------------------------------------------------------------- |
-| ![Morrow home page on desktop](docs/screenshots/home-desktop.png) | ![Morrow home page on mobile](docs/screenshots/home-mobile.png) |
+| Home · English | Home · Persian and right-to-left |
+| --- | --- |
+| ![Morrow home page in English with the language toggle visible](docs/screenshots/home-en-desktop.png) | ![Morrow home page in Persian with the language toggle visible](docs/screenshots/home-fa-desktop.png) |
 
-| Journal                                                                            | About · dark theme                                                                  |
-| ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| ![Morrow journal with search and article cards](docs/screenshots/blog-desktop.png) | ![Morrow About page in dark mode](docs/screenshots/about-dark-desktop-chromium.png) |
+| Registration · Persian on mobile | About · Persian slideshow |
+| --- | --- |
+| ![Morrow registration in Persian on mobile](docs/screenshots/register-fa-mobile.png) | ![Morrow About slideshow in Persian](docs/screenshots/about-fa-desktop.png) |
 
-More views: [About in light mode](docs/screenshots/about-light-desktop-chromium.png) · [About on mobile](docs/screenshots/about-dark-mobile-chromium.png)
+More views: [Journal](docs/screenshots/blog-desktop.png) · [About in dark mode](docs/screenshots/about-dark-desktop-chromium.png) · [Home on mobile](docs/screenshots/home-mobile.png)
 
 ## Overview
 
-Morrow is a frontend portfolio project that presents a complete shopping journey: browse a live product catalog, inspect a product, save favorites, manage a bag, and place a **demo** order. It also includes an editorial journal, account screens, and separate views for exploring Fake Store API resources. The interface uses a responsive glass header, light and dark themes, considered typography, and motion that respects reduced-motion preferences.
+Morrow is a bilingual English/Persian frontend portfolio project that presents a complete shopping journey: browse a live product catalog, inspect a product, save favorites, manage a bag, and place a **demo** order. It also includes an editorial journal, account screens, and separate views for exploring Fake Store API resources. The interface uses a responsive glass header, light and dark themes, considered typography, and motion that respects reduced-motion preferences.
 
 Products come from [Fake Store API](https://fakestoreapi.com/). Accounts, wishlist, cart, checkout, orders, contact submissions, and newsletter feedback are demonstrations. There is no production authentication, payment processing, inventory, shipment, or email delivery.
 
@@ -44,7 +44,7 @@ Products come from [Fake Store API](https://fakestoreapi.com/). Accounts, wishli
 - Read 34 local journal articles with search, topic filters, pagination, and related stories.
 - Visit the About, FAQ, and Contact pages. Contact and newsletter forms show local demo feedback without sending a message or subscribing an address.
 - Inspect Fake Store API product, cart, and user resources on dedicated demo pages. Sample write requests do not persist changes to the storefront.
-- Use the site on desktop and mobile, switch between English and Persian with the flags beside the theme control, and navigate with a keyboard. Persian uses a right-to-left layout and local Persian editorial copy; product and public sample API records retain their English source text. Shared loading, error, empty-state, and back-to-top controls support the page flows.
+- Use the site on desktop and mobile, switch between English and Persian with the flags beside the theme control, and navigate with a keyboard. Persian uses a right-to-left layout, a locally hosted Vazirmatn typeface, a Persian brand wordmark, and local Persian editorial copy. Directional controls and overlays follow the active language; product and public sample API records retain their English source text. Shared loading, error, empty-state, and back-to-top controls support the page flows.
 
 ## Technology
 
@@ -54,6 +54,8 @@ Products come from [Fake Store API](https://fakestoreapi.com/). Accounts, wishli
 | Styling and UI | Tailwind CSS, Radix UI, Lucide icons, Framer Motion                        |
 | Data           | Fake Store API, TanStack Query, Zod validation                             |
 | Quality        | ESLint, Prettier, TypeScript, Node.js unit tests, Playwright browser tests |
+
+Persian typography uses the self-hosted [Vazirmatn](https://github.com/rastikerdar/vazirmatn) variable font under the [SIL Open Font License](public/fonts/Vazirmatn-OFL.txt). The English wordmark uses Geist Serif.
 
 ## Run locally
 

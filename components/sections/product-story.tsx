@@ -615,7 +615,7 @@ export function ProductStory() {
           >
             <div className="story-halo" aria-hidden="true" />
             <JourneyArtwork key={active} index={active} />
-            <span className="absolute bottom-6 left-6 z-20 rounded-full border border-border bg-background/85 px-4 py-2 text-sm backdrop-blur-lg">
+            <span className="absolute bottom-6 start-6 z-20 rounded-full border border-border bg-background/85 px-4 py-2 text-sm backdrop-blur-lg">
               Step 0{active + 1} of 0{steps.length}
             </span>
           </div>

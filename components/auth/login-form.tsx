@@ -72,9 +72,17 @@ export function LoginForm() {
         const requested = new URLSearchParams(window.location.search).get(
           "redirect",
         );
-        router.replace(
-          requested?.startsWith("/") && !requested.startsWith("//")
+        const safeRedirect =
+          requested?.startsWith("/") &&
+          !requested.startsWith("//") &&
+          !requested.includes("\\") &&
+          new URL(requested, window.location.origin).origin ===
+            window.location.origin
             ? requested
+            : null;
+        router.replace(
+          safeRedirect
+            ? safeRedirect
             : mode === "api"
               ? "/account/users"
               : "/account",
@@ -88,7 +96,11 @@ export function LoginForm() {
       }
     } catch {
       setPassword("");
-      setError("The public sample service is unavailable. Please try again.");
+      setError(
+        mode === "api"
+          ? "The public sample service is unavailable. Please try again."
+          : "Could not start the demo session. Please try again.",
+      );
     }
   };
 
@@ -134,6 +146,7 @@ export function LoginForm() {
             <Input
               id="username"
               type="text"
+              dir="auto"
               autoComplete="username"
               required
               placeholder="Enter your username"
@@ -149,6 +162,8 @@ export function LoginForm() {
               <Input
                 id="email"
                 type="email"
+                dir="ltr"
+                lang="en"
                 autoComplete="email"
                 required
                 placeholder="Enter your email"
@@ -158,10 +173,14 @@ export function LoginForm() {
                   if (emailError) setEmailError("");
                 }}
                 disabled={isLoading}
+                aria-invalid={Boolean(emailError) || undefined}
+                aria-describedby={emailError ? "login-email-error" : undefined}
                 className={emailError ? "border-red-500" : ""}
               />
               {emailError && (
-                <p className="text-sm text-red-500">{emailError}</p>
+                <p id="login-email-error" className="text-sm text-destructive">
+                  {emailError}
+                </p>
               )}
             </div>
           )}
@@ -171,6 +190,7 @@ export function LoginForm() {
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
+              dir="ltr"
               autoComplete="current-password"
               required
               placeholder="Enter your password"
@@ -183,7 +203,7 @@ export function LoginForm() {
               aria-label={showPassword ? "Hide password" : "Show password"}
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 text-muted-foreground hover:text-foreground"
+              className="absolute right-3 top-9 rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               disabled={isLoading}
             >
               {showPassword ? (

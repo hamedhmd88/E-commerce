@@ -27,34 +27,34 @@ export function RelatedBlogs({
         </h2>
         <span className="text-xs text-muted-foreground">Selected for you</span>
       </div>
-      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
         {related.map((post) => (
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="journal-related glass-panel group grid grid-cols-[5.5rem_minmax(0,1fr)] gap-3 overflow-hidden rounded-2xl p-2.5 focus-visible:outline-offset-3 sm:grid-cols-1 lg:grid-cols-[5.5rem_minmax(0,1fr)]"
+            className="journal-related glass-panel group grid grid-cols-[7rem_minmax(0,1fr)] gap-4 overflow-hidden rounded-[1.3rem] p-3 focus-visible:outline-offset-3 sm:grid-cols-1 lg:grid-cols-[7rem_minmax(0,1fr)]"
           >
-            <div className="relative aspect-square overflow-hidden rounded-xl bg-muted sm:aspect-[1.8] lg:aspect-square">
+            <div className="relative aspect-square overflow-hidden rounded-xl bg-muted sm:aspect-[1.7] lg:aspect-square">
               <Image
                 src={post.image}
                 alt=""
                 fill
-                sizes="(max-width: 1024px) 30vw, 100px"
+                sizes="(max-width: 1024px) 45vw, 112px"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <div className="flex min-w-0 flex-col justify-between py-0.5">
-              <span className="text-[.68rem] font-medium text-primary">
+              <span className="text-xs font-medium text-primary">
                 {post.category}
               </span>
-              <h3 className="line-clamp-2 text-sm font-medium leading-snug tracking-[-.02em] transition-colors group-hover:text-primary">
+              <h3 className="line-clamp-2 text-base font-semibold leading-snug tracking-[-.02em] transition-colors group-hover:text-primary">
                 {post.title}
               </h3>
-              <div className="flex items-center justify-between text-[.67rem] text-muted-foreground">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{post.readTime}</span>
                 <ArrowUpRight
                   aria-hidden="true"
-                  className="size-3.5 text-primary"
+                  className="size-4 text-primary"
                 />
               </div>
             </div>

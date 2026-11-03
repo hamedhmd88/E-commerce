@@ -9,6 +9,7 @@ import { useAuth } from "@/components/auth/auth-provider";
 import { useLanguage } from "@/components/layout/language-provider";
 import { translate } from "@/lib/i18n/translate";
 import {
+  areDemoOrdersTemporary,
   clearDemoOrders,
   getDemoOrders,
   type DemoOrder,
@@ -19,8 +20,10 @@ export function OrdersPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [orders, setOrders] = useState<DemoOrder[]>([]);
+  const [temporary, setTemporary] = useState(false);
   useEffect(() => {
     setOrders(getDemoOrders());
+    setTemporary(areDemoOrdersTemporary());
   }, []);
   useEffect(() => {
     if (!isLoading && !user) router.replace("/login?redirect=/account/orders");
@@ -41,7 +44,9 @@ export function OrdersPage() {
         </p>
         <h1 className="mb-2 font-serif text-3xl">My Orders</h1>
         <p className="text-muted-foreground">
-          Demo orders saved in this browser. No shipping or payment takes place.
+          {temporary
+            ? "Demo orders are available until you reload or close this tab. No shipping or payment takes place."
+            : "Demo orders saved in this browser. No shipping or payment takes place."}
         </p>
         {orders.length > 0 && (
           <Button
@@ -97,12 +102,12 @@ export function OrdersPage() {
             Try the simulated checkout flow to see an order appear here. No real
             payment or delivery takes place.
           </p>
-          <Link href="/products">
-            <Button className="hover:scale-105 transition-transform">
+          <Button asChild className="hover:scale-105 transition-transform">
+            <Link href="/products">
               <ShoppingBag className="mr-2 h-4 w-4" />
               Start Shopping
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       )}
     </div>
