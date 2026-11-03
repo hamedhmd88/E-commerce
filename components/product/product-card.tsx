@@ -63,7 +63,12 @@ export function ProductCard({ product }: { product: Product }) {
             sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="pointer-events-none object-contain p-6 transition-transform duration-500 group-hover:scale-[1.055] sm:p-7"
           />
-          <span className="absolute right-3 top-3 rounded-full border border-primary/20 bg-background/85 px-2.5 py-1 text-[11px] font-medium capitalize text-primary backdrop-blur-xl">
+          <span
+            lang="en"
+            dir="ltr"
+            data-i18n-ignore
+            className="absolute right-3 top-3 rounded-full border border-primary/20 bg-background/85 px-2.5 py-1 text-[11px] font-medium capitalize text-primary backdrop-blur-xl"
+          >
             {product.category}
           </span>
         </div>
@@ -83,7 +88,12 @@ export function ProductCard({ product }: { product: Product }) {
           />
         </button>
         <div className="flex flex-1 flex-col px-3 pb-3 pt-4">
-          <h3 className="line-clamp-2 min-h-[2.8rem] text-sm font-semibold leading-6 text-foreground transition-colors group-hover:text-primary sm:text-base">
+          <h3
+            lang="en"
+            dir="ltr"
+            data-i18n-ignore
+            className="line-clamp-2 min-h-[2.8rem] text-sm font-semibold leading-6 text-foreground transition-colors group-hover:text-primary sm:text-base"
+          >
             {product.title}
           </h3>
           <div className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">

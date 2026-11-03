@@ -1,11 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { blogPosts } from "@/data/blog-posts";
+import type { blogPosts } from "@/data/blog-posts";
 
-export function RelatedBlogs({ currentSlug }: { currentSlug: string }) {
-  const current = blogPosts.find((post) => post.slug === currentSlug);
-  const related = blogPosts
+export function RelatedBlogs({
+  currentSlug,
+  posts,
+}: {
+  currentSlug: string;
+  posts: typeof blogPosts;
+}) {
+  const current = posts.find((post) => post.slug === currentSlug);
+  const related = posts
     .filter((post) => post.slug !== currentSlug)
     .sort(
       (a, b) =>

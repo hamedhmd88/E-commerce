@@ -1,3 +1,4 @@
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -9,10 +10,11 @@ import {
 import { ContactForm } from "@/components/contact/contact-form";
 import { PageLayout } from "@/components/layout/page-layout";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Try the contact form in the Morrow portfolio demo.",
-};
+export const generateMetadata = (): Promise<Metadata> =>
+  localizedMetadata({
+    title: "Contact",
+    description: "Try the contact form in the Morrow portfolio demo.",
+  });
 
 export default function ContactPage() {
   return (

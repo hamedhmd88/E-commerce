@@ -579,14 +579,24 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
                       <span className="block text-xs font-medium text-primary">
                         #{item.id}
                       </span>
-                      <strong className="mt-1 block line-clamp-2 text-sm">
+                      <strong
+                        lang="en"
+                        dir="ltr"
+                        data-i18n-ignore
+                        className="mt-1 block line-clamp-2 text-sm"
+                      >
                         {isProduct(item)
                           ? item.title
                           : isCart(item)
                             ? `Cart for user #${item.userId}`
                             : item.username}
                       </strong>
-                      <span className="mt-1 block truncate text-xs text-muted-foreground">
+                      <span
+                        lang="en"
+                        dir="ltr"
+                        data-i18n-ignore
+                        className="mt-1 block truncate text-xs text-muted-foreground"
+                      >
                         {isProduct(item)
                           ? `$${item.price.toFixed(2)} · ${item.category}`
                           : isCart(item)

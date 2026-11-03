@@ -6,6 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { localeCookie, normalizeLocale } from "@/lib/i18n/locale";
+import { localizedBlogPost, localizedBlogPosts } from "@/data/blog-posts-fa";
+import { translate } from "@/lib/i18n/translate";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -56,7 +60,9 @@ const editorialImages: Record<string, { src: string; caption: string }[]> = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const post = blogPosts.find((item) => item.slug === slug);
+  const locale = normalizeLocale((await cookies()).get(localeCookie)?.value);
+  const found = blogPosts.find((item) => item.slug === slug);
+  const post = found ? localizedBlogPost(found, locale) : undefined;
   return post
     ? {
         title: post.title,
@@ -76,8 +82,10 @@ export function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = blogPosts.find((item) => item.slug === slug);
-  if (!post) notFound();
+  const locale = normalizeLocale((await cookies()).get(localeCookie)?.value);
+  const found = blogPosts.find((item) => item.slug === slug);
+  if (!found) notFound();
+  const post = localizedBlogPost(found, locale);
   const blocks = [...post.content.matchAll(/<(h2|p)>([\s\S]*?)<\/\1>/g)].map(
     (match) => ({ type: match[1], text: match[2].replace(/<[^>]*>/g, "") }),
   );
@@ -124,11 +132,14 @@ export default async function BlogPostPage({ params }: Props) {
               </span>
               <span className="inline-flex items-center gap-2">
                 <CalendarDays className="size-4 text-primary" />
-                {new Date(post.date).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
+                {new Date(post.date).toLocaleDateString(
+                  locale === "fa" ? "fa-IR" : "en-US",
+                  {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  },
+                )}
               </span>
               <span className="inline-flex items-center gap-2">
                 <Clock3 className="size-4 text-primary" />
@@ -192,7 +203,7 @@ export default async function BlogPostPage({ params }: Props) {
                         </div>
                       </div>
                       <figcaption className="mt-2 px-1 text-xs leading-5 text-muted-foreground">
-                        {images[inlineIndex].caption}
+                        {translate(images[inlineIndex].caption, locale)}
                       </figcaption>
                     </figure>
                   )}
@@ -211,7 +222,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </article>
         <aside className="min-w-0 lg:self-stretch">
-          <RelatedBlogs currentSlug={slug} />
+          <RelatedBlogs currentSlug={slug} posts={localizedBlogPosts(locale)} />
         </aside>
       </div>
     </PageLayout>

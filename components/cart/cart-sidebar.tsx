@@ -12,8 +12,10 @@ import {
 import { useCart } from "@/components/cart/cart-provider";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/components/layout/language-provider";
 
 export function CartSidebar() {
+  const { locale } = useLanguage();
   const {
     items,
     isOpen,
@@ -26,7 +28,10 @@ export function CartSidebar() {
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetContent className="cart-drawer w-full gap-0 border-l border-border/70 bg-card/95 p-0 shadow-2xl backdrop-blur-xl sm:max-w-[32rem] [&>button]:right-5 [&>button]:top-5 [&>button]:rounded-full [&>button]:bg-background/70 [&>button]:p-2">
+      <SheetContent
+        side={locale === "fa" ? "left" : "right"}
+        className="cart-drawer w-full gap-0 border-border/70 bg-card/95 p-0 shadow-2xl backdrop-blur-xl sm:max-w-[32rem] [&>button]:right-5 [&>button]:top-5 [&>button]:rounded-full [&>button]:bg-background/70 [&>button]:p-2"
+      >
         <SheetHeader className="border-b border-border/70 px-6 pb-5 pt-7 sm:px-8">
           <div className="mb-3 flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             <ShoppingBag className="size-5" />
@@ -79,7 +84,12 @@ export function CartSidebar() {
                         />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="line-clamp-2 pr-2 text-sm font-semibold leading-5">
+                        <h3
+                          lang="en"
+                          dir="ltr"
+                          data-i18n-ignore
+                          className="line-clamp-2 pr-2 text-sm font-semibold leading-5"
+                        >
                           {item.title}
                         </h3>
                         <p className="mt-1 text-sm font-semibold tabular-nums text-primary">

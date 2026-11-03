@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useCart } from "@/components/cart/cart-provider";
 import { useAuth } from "@/components/auth/auth-provider";
 import { BackToTop } from "@/components/layout/back-to-top";
+import { LanguageToggle } from "@/components/layout/language-toggle";
 
 const menuItems = [
   { name: "Home", href: "/" },
@@ -117,6 +118,7 @@ export function Navigation() {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <LanguageToggle />
               <ThemeToggle />
 
               <Button

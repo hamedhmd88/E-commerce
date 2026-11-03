@@ -318,7 +318,12 @@ export function CheckoutPage() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium line-clamp-1">
+                        <p
+                          lang="en"
+                          dir="ltr"
+                          data-i18n-ignore
+                          className="text-sm font-medium line-clamp-1"
+                        >
                           {item.title}
                         </p>
                         <p className="text-sm text-muted-foreground">

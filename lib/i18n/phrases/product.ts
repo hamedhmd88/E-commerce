@@ -1,0 +1,52 @@
+export const productPhrases: Record<string, string> = {
+  "Loading category products": "در حال بارگذاری محصولات دسته‌بندی",
+  "The product catalog is temporarily unavailable":
+    "کاتالوگ محصولات موقتاً در دسترس نیست",
+  "No products in this collection": "در این مجموعه محصولی وجود ندارد",
+  "Featured Products": "محصولات ویژه",
+  "Featured products are temporarily unavailable":
+    "محصولات ویژه موقتاً در دسترس نیستند",
+  "The pieces people return to": "انتخاب‌های محبوب",
+  "Favorites, for good reason.": "محبوب‌اند، به دلیلی خوب.",
+  "Explore a small selection from the live catalog.":
+    "گزیده‌ای از کاتالوگ زنده را ببینید.",
+  "View All Products": "دیدن همهٔ محصولات",
+  "in bag": "در سبد",
+  "Add to bag": "افزودن به سبد",
+  "Loading product": "در حال بارگذاری محصول",
+  "Product not found": "محصول پیدا نشد",
+  "Back to the collection": "بازگشت به مجموعه",
+  "Product image views": "تصاویر محصول",
+  "catalog ratings": "امتیاز در کاتالوگ",
+  "Catalog price": "قیمت کاتالوگ",
+  "Item #": "کالای شمارهٔ",
+  "About this piece": "دربارهٔ این محصول",
+  "Increase quantity": "افزایش تعداد",
+  "At a glance": "در یک نگاه",
+  Category: "دسته‌بندی",
+  Rating: "امتیاز",
+  "out of 5": "از ۵",
+  "Ratings count": "تعداد امتیازها",
+  "Catalog item": "محصول کاتالوگ",
+  "Product data comes from Fake Store API. Bag, account, and checkout interactions are demonstrations.":
+    "اطلاعات محصول از Fake Store API می‌آید. سبد خرید، حساب کاربری و پرداخت نمایشی هستند.",
+  "Product filters": "فیلترهای محصول",
+  "Refine your view": "نتایج را فیلتر کنید",
+  "Find what feels right.": "انتخاب مناسب خود را پیدا کنید.",
+  Clear: "پاک کردن",
+  "Search the collection": "جست‌وجو در مجموعه",
+  "Name or description": "نام یا توضیحات",
+  Find: "پیدا کن",
+  Categories: "دسته‌بندی‌ها",
+  "Price range": "محدودهٔ قیمت",
+  "Minimum rating": "کمترین امتیاز",
+  "Filters update the live catalog.":
+    "فیلترها کاتالوگ زنده را به‌روزرسانی می‌کنند.",
+  "Loading products": "در حال بارگذاری محصولات",
+  "No matching products": "محصولی پیدا نشد",
+  "Try a different category, rating, or price range.":
+    "دسته‌بندی، امتیاز یا محدودهٔ قیمت دیگری را امتحان کنید.",
+  "Product pages": "صفحه‌های محصولات",
+  "Morrow brings clothing, jewelry, and useful technology into one simple catalog. Browse at your own pace, compare details, and see how a complete storefront can feel clear from first glance to checkout.":
+    "مورو پوشاک، زیورآلات و فناوری کاربردی را در یک کاتالوگ ساده کنار هم می‌آورد. با سرعت دلخواه بگردید، جزئیات را مقایسه کنید و تجربهٔ فروشگاه را از نگاه اول تا پرداخت ببینید.",
+};

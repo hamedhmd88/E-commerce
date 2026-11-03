@@ -44,7 +44,7 @@ Products come from [Fake Store API](https://fakestoreapi.com/). Accounts, wishli
 - Read 34 local journal articles with search, topic filters, pagination, and related stories.
 - Visit the About, FAQ, and Contact pages. Contact and newsletter forms show local demo feedback without sending a message or subscribing an address.
 - Inspect Fake Store API product, cart, and user resources on dedicated demo pages. Sample write requests do not persist changes to the storefront.
-- Use the site on desktop and mobile, switch between light and dark themes, and navigate with a keyboard. Shared loading, error, empty-state, and back-to-top controls support the page flows.
+- Use the site on desktop and mobile, switch between English and Persian with the flags beside the theme control, and navigate with a keyboard. Persian uses a right-to-left layout and local Persian editorial copy; product and public sample API records retain their English source text. Shared loading, error, empty-state, and back-to-top controls support the page flows.
 
 ## Technology
 
@@ -85,6 +85,7 @@ Use fictional details only. This session is a browser demonstration, not server-
 | `services/`   | Fake Store API requests and error handling                                    |
 | `lib/`        | Product schema, catalog rules, cart pricing, and browser demo state helpers   |
 | `data/`       | Static editorial and FAQ content                                              |
+| `lib/i18n/`   | Locale preference and interface translations                                  |
 | `public/`     | Site imagery and labeled product concept views                                |
 | `tests/`      | Unit and browser flow checks                                                  |
 
@@ -105,3 +106,5 @@ Run `pnpm api:check` when diagnosing API access. A server-side 403 can occur if 
 ## Demo scope and documentation
 
 Morrow is a portfolio demonstration. Browser storage can be cleared to reset local sessions and orders. Public API sample writes are non-persistent, and external catalog requests may be unavailable at times. Read more about [demo authentication](docs/DEMO-AUTHENTICATION.md), [demo checkout](docs/DEMO-CHECKOUT.md), and the [feature inventory](docs/FEATURES.md).
+
+The language preference is stored for one year in the `morrow-locale` browser cookie. Switching languages keeps the current URL, search filters, and browser demo data. Product names, descriptions, categories, and public sample records from Fake Store API are shown in English in both languages. The Persian journal is local demonstration editorial content; no external product data is translated.

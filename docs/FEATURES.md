@@ -17,12 +17,13 @@
 - Demo login and registration create browser sessions.
 - Checkout creates browser-local demo orders, which appear on confirmation and history pages.
 - Theme, contact form, and newsletter provide local interaction feedback.
-- The journal contains 34 local editorial demo articles. Search and topic filters use shareable URL parameters; the listing has 10 articles per page by default, with 20 and 30 article options that apply immediately and reset pagination. Each article has a distinct local cover and three related reads in a sticky sidebar on wide screens. These articles are demonstration content rather than live publications.
+- The journal contains 34 local editorial demo articles with Persian titles, summaries, and article bodies. Search and topic filters use shareable URL parameters; the listing has 10 articles per page by default, with 20 and 30 article options that apply immediately and reset pagination. Each article has a distinct local cover and three related reads in a sticky sidebar on wide screens. These articles are demonstration content rather than live publications.
 - About and FAQ provide editorial demonstration content.
 - Home includes a five-slide, user-controllable collection carousel, a journal preview, a five-step illustrated shopping journey linked to scrolling, featured products, an editorial overview, a demo newsletter, and an FAQ. The journey illustration advances when the next step's text reaches the reading area after the previous step's text ends.
-- The home page is statically rendered for faster navigation. Product content still comes from Fake Store API through the shared service layer.
+- The root layout reads the locale cookie to set the document language and direction, so route rendering can vary by visitor. Product content still comes from Fake Store API through the shared service layer.
 - The Morrow visual identity, glass surfaces, and animated gradient support light and dark themes. Motion honors reduced-motion preferences.
 - The glass navigation keeps its three-part layout at the top of each page, then smoothly narrows and compacts on scroll. Reduced-motion preferences remove the transition.
+- The header offers Iran and UK flag controls beside the theme toggle. English uses left-to-right layout; Persian uses right-to-left layout, Persian typography and local interface/editorial translations. The preference is saved in the `morrow-locale` cookie for one year. The current route, URL filters and local demo state stay in place when switching. Fake Store API product and public sample values remain English, with isolated left-to-right presentation.
 - Every page uses the shared route loader, and a keyboard-accessible back-to-top control appears after scrolling. Smooth scrolling and loader motion respect reduced-motion preferences.
 
 These are portfolio features, not production commerce services.

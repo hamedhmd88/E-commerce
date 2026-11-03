@@ -1,13 +1,15 @@
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/page-layout";
 import { RegisterGate } from "@/components/auth/register-gate";
 
-export const metadata: Metadata = {
-  title: "Create a Demo Account",
-  description:
-    "Try the Morrow portfolio storefront account experience in your browser.",
-  robots: { index: false, follow: false },
-};
+export const generateMetadata = (): Promise<Metadata> =>
+  localizedMetadata({
+    title: "Create a Demo Account",
+    description:
+      "Try the Morrow portfolio storefront account experience in your browser.",
+    robots: { index: false, follow: false },
+  });
 
 export default function RegisterPage() {
   return (

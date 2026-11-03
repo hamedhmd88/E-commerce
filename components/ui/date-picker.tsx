@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
+import { faIR } from "date-fns/locale";
 import { CalendarDays, X } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useLanguage } from "@/components/layout/language-provider";
 
 type DatePickerProps = {
   id: string;
@@ -25,7 +27,9 @@ export function DatePicker({
   placeholder = "Choose date",
 }: DatePickerProps) {
   const [open, setOpen] = useState(false);
+  const { locale } = useLanguage();
   const selected = value ? parseISO(value) : undefined;
+  const dateLocale = locale === "fa" ? faIR : undefined;
 
   return (
     <div className="flex items-center gap-2">
@@ -37,7 +41,7 @@ export function DatePicker({
             variant="outline"
             aria-label={
               value
-                ? `Selected date: ${format(selected!, "MMMM d, yyyy")}`
+                ? `${locale === "fa" ? "تاریخ انتخاب‌شده" : "Selected date"}: ${format(selected!, "MMMM d, yyyy", { locale: dateLocale })}`
                 : placeholder
             }
             className="h-11 min-w-0 flex-1 justify-start gap-3 rounded-xl bg-background/60 px-3 text-left font-normal hover:bg-primary/5"
@@ -46,7 +50,9 @@ export function DatePicker({
             <span
               className={value ? "truncate" : "truncate text-muted-foreground"}
             >
-              {selected ? format(selected, "MMM d, yyyy") : placeholder}
+              {selected
+                ? format(selected, "MMM d, yyyy", { locale: dateLocale })
+                : placeholder}
             </span>
           </Button>
         </PopoverTrigger>
@@ -55,6 +61,8 @@ export function DatePicker({
           className="w-auto rounded-2xl border-border/70 bg-card/95 p-2 shadow-xl backdrop-blur-xl"
         >
           <Calendar
+            dir={locale === "fa" ? "rtl" : "ltr"}
+            locale={dateLocale}
             mode="single"
             selected={selected}
             onSelect={(date) => {

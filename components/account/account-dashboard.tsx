@@ -66,10 +66,16 @@ export function AccountDashboard() {
             <p className="text-xs font-semibold tracking-[.15em] text-primary">
               YOUR SPACE
             </p>
-            <h1 className="font-serif text-2xl sm:text-3xl">
+            <h1
+              data-i18n-ignore
+              dir="auto"
+              className="font-serif text-2xl sm:text-3xl"
+            >
               {user.name.firstname} {user.name.lastname}
             </h1>
-            <p className="text-muted-foreground">{user.email}</p>
+            <p data-i18n-ignore dir="auto" className="text-muted-foreground">
+              {user.email}
+            </p>
           </div>
         </div>
         <Button
@@ -152,37 +158,55 @@ export function AccountDashboard() {
               <label className="text-sm font-medium text-muted-foreground">
                 First Name
               </label>
-              <p className="text-sm">{user.name.firstname}</p>
+              <p data-i18n-ignore dir="auto" className="text-sm">
+                {user.name.firstname}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Last Name
               </label>
-              <p className="text-sm">{user.name.lastname}</p>
+              <p data-i18n-ignore dir="auto" className="text-sm">
+                {user.name.lastname}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Email
               </label>
-              <p className="text-sm">{user.email}</p>
+              <p data-i18n-ignore dir="auto" className="text-sm">
+                {user.email}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Username
               </label>
-              <p className="text-sm">{user.username}</p>
+              <p data-i18n-ignore dir="auto" className="text-sm">
+                {user.username}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Phone
               </label>
-              <p className="text-sm">{user.phone || "Not provided"}</p>
+              <p
+                data-i18n-ignore={user.phone ? true : undefined}
+                dir={user.phone ? "auto" : undefined}
+                className="text-sm"
+              >
+                {user.phone || "Not provided"}
+              </p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Address
               </label>
-              <p className="text-sm">
+              <p
+                data-i18n-ignore={user.address ? true : undefined}
+                dir={user.address ? "auto" : undefined}
+                className="text-sm"
+              >
                 {user.address
                   ? `${user.address.city}, ${user.address.street}`
                   : "Not provided"}

@@ -206,12 +206,22 @@ export function ApiUsersTable() {
                 id="users-city"
                 className="h-11 w-full rounded-xl border-border/60 bg-card/75"
               >
-                <SelectValue />
+                <SelectValue
+                  lang={city === "all" ? undefined : "en"}
+                  dir={city === "all" ? undefined : "ltr"}
+                  data-i18n-ignore={city === "all" ? undefined : true}
+                />
               </SelectTrigger>
               <SelectContent className="border-border bg-card/95 backdrop-blur-xl">
                 <SelectItem value="all">All cities</SelectItem>
                 {cities.map((entry) => (
-                  <SelectItem key={entry} value={entry}>
+                  <SelectItem
+                    key={entry}
+                    value={entry}
+                    lang="en"
+                    dir="ltr"
+                    data-i18n-ignore
+                  >
                     {entry}
                   </SelectItem>
                 ))}
@@ -349,6 +359,9 @@ export function ApiUsersTable() {
                     {columns.map((column) => (
                       <TableCell
                         key={column.title}
+                        lang="en"
+                        dir="ltr"
+                        data-i18n-ignore
                         className={
                           column.title === "ID"
                             ? "px-5 pl-6 font-semibold tabular-nums text-primary"

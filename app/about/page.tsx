@@ -1,3 +1,4 @@
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -9,10 +10,11 @@ import {
 import { PageLayout } from "@/components/layout/page-layout";
 import { ExperienceShowcase } from "@/components/about/experience-showcase";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: "The story and scope of the Morrow portfolio storefront.",
-};
+export const generateMetadata = (): Promise<Metadata> =>
+  localizedMetadata({
+    title: "About",
+    description: "The story and scope of the Morrow portfolio storefront.",
+  });
 
 export default function AboutPage() {
   return (

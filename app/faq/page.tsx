@@ -1,3 +1,4 @@
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import type { Metadata } from "next";
 import {
   Accordion,
@@ -8,10 +9,11 @@ import {
 import { PageLayout } from "@/components/layout/page-layout";
 import { faqItems } from "@/data/faq";
 
-export const metadata: Metadata = {
-  title: "FAQ",
-  description: "How the catalog, demo account, and simulated checkout work.",
-};
+export const generateMetadata = (): Promise<Metadata> =>
+  localizedMetadata({
+    title: "FAQ",
+    description: "How the catalog, demo account, and simulated checkout work.",
+  });
 
 export default function FaqPage() {
   return (

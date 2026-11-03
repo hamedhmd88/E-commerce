@@ -166,10 +166,20 @@ export function CartDetail({ id }: { id: number }) {
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs uppercase tracking-widest text-primary">
+                    <p
+                      lang={line.product ? "en" : undefined}
+                      dir={line.product ? "ltr" : undefined}
+                      data-i18n-ignore={line.product ? true : undefined}
+                      className="text-xs uppercase tracking-widest text-primary"
+                    >
                       {line.product?.category ?? `Product #${line.productId}`}
                     </p>
-                    <h3 className="mt-1 font-serif text-lg sm:text-xl">
+                    <h3
+                      lang={line.product ? "en" : undefined}
+                      dir={line.product ? "ltr" : undefined}
+                      data-i18n-ignore={line.product ? true : undefined}
+                      className="mt-1 font-serif text-lg sm:text-xl"
+                    >
                       {line.product?.title ??
                         (products.isPending
                           ? "Loading product…"

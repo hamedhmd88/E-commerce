@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -130,6 +131,40 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html[lang="fa"] body,
+html[lang="fa"] .font-serif {
+  font-family: "Vazirmatn", Tahoma, sans-serif;
+  letter-spacing: normal;
+}
+
+html[dir="rtl"] .text-left:not([lang="en"]) {
+  text-align: right;
+}
+
+html[dir="rtl"] [data-slot="breadcrumb-separator"] svg {
+  transform: rotate(180deg);
+}
+
+[lang="en"][dir="ltr"] {
+  unicode-bidi: isolate;
+}
+html[lang="fa"] [data-i18n-ignore][lang="en"] {
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  letter-spacing: normal;
+}
+html[dir="rtl"] .site-header .-right-2 {
+  right: auto;
+  left: -0.5rem;
+}
+html[dir="rtl"] .cart-drawer [data-slot="sheet-close"] {
+  right: auto;
+  left: 1.25rem;
+}
+html[dir="rtl"] .journal-page-control svg,
+html[dir="rtl"] .site-header [data-slot="breadcrumb-separator"] svg {
+  transform: rotate(180deg);
 }
 @media (prefers-reduced-motion: reduce) {
   *,

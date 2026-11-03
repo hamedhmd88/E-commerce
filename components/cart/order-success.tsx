@@ -6,8 +6,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getDemoOrders, type DemoOrder } from "@/lib/demo-orders";
+import { useLanguage } from "@/components/layout/language-provider";
 
 export function OrderSuccess() {
+  const { locale } = useLanguage();
   const id = useSearchParams().get("id");
   const [order, setOrder] = useState<DemoOrder | null>(null);
   const [loaded, setLoaded] = useState(false);
@@ -29,7 +31,10 @@ export function OrderSuccess() {
           <CardContent className="p-6 text-left space-y-3">
             <p className="font-semibold">{order.id}</p>
             <p className="text-muted-foreground">
-              {order.status} · {new Date(order.createdAt).toLocaleDateString()}
+              {order.status} ·{" "}
+              {new Date(order.createdAt).toLocaleDateString(
+                locale === "fa" ? "fa-IR" : "en-US",
+              )}
             </p>
             <p>
               {order.items.length} product{order.items.length === 1 ? "" : "s"}{" "}
@@ -41,7 +46,7 @@ export function OrderSuccess() {
                   key={item.id}
                   className="flex justify-between gap-3 text-sm"
                 >
-                  <span>
+                  <span lang="en" dir="ltr" data-i18n-ignore>
                     {item.title} × {item.quantity}
                   </span>
                   <span>${(item.price * item.quantity).toFixed(2)}</span>

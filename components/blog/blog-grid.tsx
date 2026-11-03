@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Search } from "lucide-react";
-import { blogPosts } from "@/data/blog-posts";
+import type { blogPosts } from "@/data/blog-posts";
+import type { Locale } from "@/lib/i18n/locale";
 import { BlogPageSize } from "./blog-page-size";
 
 const categories = ["All", "Jewelry", "Technology", "Fashion", "Shopping"];
@@ -17,11 +18,15 @@ function blogHref(category?: string, query?: string, size = 10, page = 1) {
 }
 
 export function BlogGrid({
+  posts,
+  locale,
   category,
   query,
   page = 1,
   size = 10,
 }: {
+  posts: typeof blogPosts;
+  locale: Locale;
   category?: string;
   query?: string;
   page?: number;
@@ -30,7 +35,7 @@ export function BlogGrid({
   const topic = categories.includes(category || "") ? category : undefined;
   const term = query?.trim().toLocaleLowerCase() || "";
   const pageSize = sizes.includes(size) ? size : 10;
-  const filtered = blogPosts.filter(
+  const filtered = posts.filter(
     (post) =>
       (!topic || topic === "All" || post.category === topic) &&
       (!term ||
@@ -81,8 +86,9 @@ export function BlogGrid({
             aria-live="polite"
             className="shrink-0 text-sm text-muted-foreground"
           >
-            {filtered.length} {filtered.length === 1 ? "story" : "stories"} to
-            explore
+            {locale === "fa"
+              ? `${filtered.length.toLocaleString("fa-IR")} مقاله برای خواندن`
+              : `${filtered.length} ${filtered.length === 1 ? "story" : "stories"} to explore`}
           </p>
         </div>
         <nav
@@ -147,11 +153,14 @@ export function BlogGrid({
                 </p>
                 <div className="mt-auto flex items-center justify-between gap-3 border-t border-border/60 pt-5 text-xs text-muted-foreground">
                   <span>
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}{" "}
+                    {new Date(post.date).toLocaleDateString(
+                      locale === "fa" ? "fa-IR" : "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      },
+                    )}{" "}
                     · {post.readTime}
                   </span>
                   <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-primary transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">

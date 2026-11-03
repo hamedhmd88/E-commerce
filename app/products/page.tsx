@@ -1,15 +1,17 @@
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import { ProductsCatalog } from "@/components/product/products-catalog";
 import { PageLayout } from "@/components/layout/page-layout";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "All products",
-  description:
-    "Browse the full demo catalog of clothing, jewelry, and electronics from Fake Store API.",
-  alternates: { canonical: "/products" },
-};
+export const generateMetadata = (): Promise<Metadata> =>
+  localizedMetadata({
+    title: "All products",
+    description:
+      "Browse the full demo catalog of clothing, jewelry, and electronics from Fake Store API.",
+    alternates: { canonical: "/products" },
+  });
 
 export default function ProductsPage() {
   return (

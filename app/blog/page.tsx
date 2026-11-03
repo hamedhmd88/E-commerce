@@ -1,11 +1,23 @@
 import { BlogGrid } from "@/components/blog/blog-grid";
 import { PageLayout } from "@/components/layout/page-layout";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { localeCookie, normalizeLocale } from "@/lib/i18n/locale";
+import { localizedBlogPosts } from "@/data/blog-posts-fa";
 
-export const metadata: Metadata = {
-  title: "Journal",
-  description: "Ideas on style, thoughtful shopping, and everyday technology.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale((await cookies()).get(localeCookie)?.value);
+  return locale === "fa"
+    ? {
+        title: "مجله",
+        description: "ایده‌هایی دربارهٔ سبک، خرید آگاهانه و فناوری روزمره.",
+      }
+    : {
+        title: "Journal",
+        description:
+          "Ideas on style, thoughtful shopping, and everyday technology.",
+      };
+}
 
 export default async function BlogPage({
   searchParams,
@@ -18,6 +30,7 @@ export default async function BlogPage({
   }>;
 }) {
   const { category, q, page, size } = await searchParams;
+  const locale = normalizeLocale((await cookies()).get(localeCookie)?.value);
   return (
     <PageLayout customLastLabel="Blog" variant="catalog">
       <header className="mb-8 max-w-3xl pt-6 lg:mb-10 lg:pt-9">
@@ -32,6 +45,8 @@ export default async function BlogPage({
         </p>
       </header>
       <BlogGrid
+        posts={localizedBlogPosts(locale)}
+        locale={locale}
         category={category}
         query={q}
         page={Number(page) || 1}

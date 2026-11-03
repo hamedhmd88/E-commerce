@@ -275,12 +275,20 @@ export function ProductDetail({ product }: { product: Product }) {
         <div className="min-w-0 py-2 lg:py-4">
           <Link
             href={`/category/${encodeURIComponent(product.category)}`}
+            lang="en"
+            dir="ltr"
+            data-i18n-ignore
             className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-xs font-medium capitalize text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
           >
             {product.category}
             <ArrowUpRight className="size-3.5" />
           </Link>
-          <h1 className="max-w-2xl text-3xl font-medium leading-[1.08] tracking-[-.055em] sm:text-4xl xl:text-5xl">
+          <h1
+            lang="en"
+            dir="ltr"
+            data-i18n-ignore
+            className="max-w-2xl text-3xl font-medium leading-[1.08] tracking-[-.055em] sm:text-4xl xl:text-5xl"
+          >
             {product.title}
           </h1>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
@@ -305,7 +313,12 @@ export function ProductDetail({ product }: { product: Product }) {
           </div>
           <div className="py-7">
             <h2 className="text-lg font-medium">About this piece</h2>
-            <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
+            <p
+              lang="en"
+              dir="ltr"
+              data-i18n-ignore
+              className="mt-3 max-w-xl leading-7 text-muted-foreground"
+            >
               {product.description}
             </p>
           </div>
@@ -373,7 +386,9 @@ export function ProductDetail({ product }: { product: Product }) {
               <div>
                 <dt className="text-muted-foreground">Category</dt>
                 <dd className="mt-1 font-medium capitalize">
-                  {product.category}
+                  <span lang="en" dir="ltr" data-i18n-ignore>
+                    {product.category}
+                  </span>
                 </dd>
               </div>
               <div>

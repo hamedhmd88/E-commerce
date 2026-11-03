@@ -218,12 +218,23 @@ export function CartGallery() {
                   id="cart-category"
                   className="h-11 w-full rounded-xl bg-background/55"
                 >
-                  <SelectValue />
+                  <SelectValue
+                    lang={category === "all" ? undefined : "en"}
+                    dir={category === "all" ? undefined : "ltr"}
+                    data-i18n-ignore={category === "all" ? undefined : true}
+                  />
                 </SelectTrigger>
                 <SelectContent className="border-border bg-card/95 backdrop-blur-xl">
                   <SelectItem value="all">All categories</SelectItem>
                   {categories.map((item) => (
-                    <SelectItem key={item} value={item} className="capitalize">
+                    <SelectItem
+                      key={item}
+                      value={item}
+                      lang="en"
+                      dir="ltr"
+                      data-i18n-ignore
+                      className="capitalize"
+                    >
                       {item}
                     </SelectItem>
                   ))}

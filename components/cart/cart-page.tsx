@@ -133,7 +133,12 @@ export function CartPage() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-sm line-clamp-2">
+                    <h3
+                      lang="en"
+                      dir="ltr"
+                      data-i18n-ignore
+                      className="font-semibold text-sm line-clamp-2"
+                    >
                       {item.title}
                     </h3>
                     <p className="text-lg font-bold text-primary mt-1">
