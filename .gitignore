@@ -6,6 +6,7 @@
 # next.js
 /.next/
 /.next-build/
+/.next-visual-preview/
 /out/
 /repomix-output.xml
 
@@ -17,6 +18,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+pnpm-debug.log*
 
 # env files
 .env*
@@ -25,6 +27,15 @@ yarn-error.log*
 # local browser captures
 /output/
 /test-results/
+/playwright-report/
+/blob-report/
+/coverage/
+
+# local tooling and operating system files
+/.turbo/
+.DS_Store
+Thumbs.db
+Desktop.ini
 
 # vercel
 .vercel
