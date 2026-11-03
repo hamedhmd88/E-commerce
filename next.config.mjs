@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir:
-    process.env.NEXT_VISUAL_DIST_DIR ||
-    (process.env.NODE_ENV === "production" ? ".next-build" : ".next"),
+  distDir: process.env.NEXT_VISUAL_DIST_DIR || ".next",
   typescript: {
     tsconfigPath:
       process.env.NODE_ENV === "production"

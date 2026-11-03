@@ -1,23 +1,27 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "plugins": [{ "name": "next" }]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
-    "next-env.d.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
     "components/**/*.ts",
     "components/**/*.tsx",
+    "data/**/*.ts",
     "hooks/**/*.ts",
     "hooks/**/*.tsx",
     "lib/**/*.ts",
     "lib/**/*.tsx",
+    "middleware.ts",
+    "next-env.d.ts",
     "services/**/*.ts",
     "services/**/*.tsx",
-    "data/**/*.ts",
-    "middleware.ts",
-    ".next-build/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", ".next-visual-preview"]
 }

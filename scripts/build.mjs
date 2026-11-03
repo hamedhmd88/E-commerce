@@ -3,13 +3,12 @@ import { rm } from "node:fs/promises";
 import { resolve, sep } from "node:path";
 
 const root = resolve(process.cwd());
-const output = resolve(root, ".next-build");
+const output = resolve(root, process.env.NEXT_VISUAL_DIST_DIR || ".next");
 if (!output.startsWith(root + sep)) {
   throw new Error("Build output must stay inside the project.");
 }
 
-const customOutput = Boolean(process.env.NEXT_VISUAL_DIST_DIR);
-const maxAttempts = customOutput ? 1 : 3;
+const maxAttempts = process.env.NEXT_VISUAL_DIST_DIR ? 1 : 3;
 
 function runNextBuild() {
   return new Promise((resolveResult) => {
@@ -43,7 +42,7 @@ function runNextBuild() {
 
 let exitCode = 1;
 for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-  if (!customOutput) {
+  if (!process.env.NEXT_VISUAL_DIST_DIR) {
     try {
       await rm(output, {
         recursive: true,
