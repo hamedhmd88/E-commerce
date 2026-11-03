@@ -7,19 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
+import { productSchema, type Product } from "@/lib/product-schema";
 
 interface WishlistContextType {
   wishlistItems: Product[];
@@ -38,31 +26,32 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    const savedWishlist = localStorage.getItem("wishlist");
-    if (savedWishlist) {
-      try {
+    try {
+      const savedWishlist = localStorage.getItem("wishlist");
+      if (savedWishlist) {
         const parsed: unknown = JSON.parse(savedWishlist);
         if (Array.isArray(parsed))
           setWishlistItems(
-            parsed.filter((item): item is Product =>
-              Boolean(
-                item &&
-                typeof item === "object" &&
-                Number.isInteger(item.id) &&
-                typeof item.title === "string",
-              ),
-            ),
+            parsed.flatMap((item) => {
+              const result = productSchema.safeParse(item);
+              return result.success ? [result.data] : [];
+            }),
           );
-      } catch {
-        localStorage.removeItem("wishlist");
       }
+    } catch {
+      // Browser storage may be unavailable; keep the in-memory wishlist usable.
     }
     setHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (hydrated)
-      localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
+    if (hydrated) {
+      try {
+        localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
+      } catch {
+        // In-memory wishlist remains usable when storage is blocked.
+      }
+    }
   }, [wishlistItems, hydrated]);
 
   const addToWishlist = (product: Product) => {

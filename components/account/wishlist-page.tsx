@@ -38,7 +38,10 @@ export function WishlistPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 py-4 lg:py-7">
       <div className="glass-panel rounded-[1.75rem] p-6 sm:p-8">
-        <p className="mb-2 text-xs font-semibold tracking-[.16em] text-primary">YOUR SPACE / SAVED FINDS</p><h1 className="mb-2 font-serif text-3xl">My Wishlist</h1>
+        <p className="mb-2 text-xs font-semibold tracking-[.16em] text-primary">
+          YOUR SPACE / SAVED FINDS
+        </p>
+        <h1 className="mb-2 font-serif text-3xl">My Wishlist</h1>
         <p className="text-muted-foreground">
           {wishlistCount > 0
             ? `You have ${wishlistCount} item${wishlistCount === 1 ? "" : "s"} in your wishlist`
@@ -48,20 +51,20 @@ export function WishlistPage() {
 
       {wishlistItems.length === 0 ? (
         <div className="glass-panel rounded-[1.75rem] px-6 py-14 text-center">
-          <span className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Heart className="size-8" /></span>
-          <h2 className="mb-3 font-serif text-2xl">
-            Your wishlist is empty
-          </h2>
+          <span className="mx-auto mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <Heart className="size-8" />
+          </span>
+          <h2 className="mb-3 font-serif text-2xl">Your wishlist is empty</h2>
           <p className="mx-auto mb-6 max-w-md text-muted-foreground">
             Start adding products to your wishlist by clicking the heart icon on
             any product
           </p>
-          <Link href="/products">
-            <Button className="hover:scale-105 transition-transform">
+          <Button asChild className="hover:scale-105 transition-transform">
+            <Link href="/products">
               <ShoppingBag className="mr-2 h-4 w-4" />
               Browse Products
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

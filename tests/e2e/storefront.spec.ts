@@ -12,15 +12,53 @@ test("public pages and demo sign-in are usable", async ({ page }) => {
   await expect(page).toHaveURL(/\/account/, { timeout: 30_000 });
 });
 
+test("unknown routes show a useful recovery page", async ({ page }) => {
+  const response = await page.goto("/a-page-that-does-not-exist");
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back to home" })).toBeVisible();
+});
+
+test("glass header compacts on scroll and restores at the top", async ({
+  page,
+}) => {
+  await page.goto("/about");
+  const header = page.getByRole("navigation", { name: "Main navigation" });
+  const row = header.locator(".site-header-row");
+  await expect(header).toHaveAttribute("data-scrolled", "false");
+  const expandedHeight = await row.evaluate(
+    (element) => element.getBoundingClientRect().height,
+  );
+  await page.evaluate(() => window.scrollTo(0, 500));
+  await expect(header).toHaveAttribute("data-scrolled", "true");
+  await expect
+    .poll(() =>
+      row.evaluate((element) => element.getBoundingClientRect().height),
+    )
+    .toBeLessThan(expandedHeight);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(header).toHaveAttribute("data-scrolled", "false");
+});
+
+test("back to top returns to the start of a long page", async ({ page }) => {
+  await page.goto("/about");
+  const control = page.getByRole("button", { name: "Back to top" });
+  await expect(control).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await expect(control).toBeVisible();
+  await control.click();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
 test("contact demo reports submission without claiming delivery", async ({
   page,
 }) => {
   await page.goto("/contact");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await page.getByLabel("Full Name *").fill("Demo Visitor");
-  await page.getByLabel("Email Address *").fill("visitor@example.com");
-  await page.getByLabel("Subject *").fill("Portfolio inquiry");
-  await page.getByLabel("Message *").fill("This is a local demo message.");
+  await page.getByLabel("Your name").fill("Demo Visitor");
+  await page.getByLabel("Email address").fill("visitor@example.com");
+  await page.getByLabel("Subject").fill("Portfolio inquiry");
+  await page.getByLabel("Your message").fill("This is a local demo message.");
   await page.getByRole("button", { name: "Submit Demo Message" }).click();
   await expect(page.getByText("Demo message recorded")).toBeVisible();
   await expect(

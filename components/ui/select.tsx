@@ -24,7 +24,6 @@ function SelectValue({
   return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
 
-// تغییر SelectTrigger به memoized version
 const SelectTrigger = React.memo(function SelectTrigger({
   className,
   size = "default",

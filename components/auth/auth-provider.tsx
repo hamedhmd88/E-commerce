@@ -34,13 +34,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(parsed);
       }
     } catch {
-      sessionStorage.removeItem(SESSION_KEY);
+      // A blocked storage API should not prevent a fresh demo session.
     }
     setIsLoading(false);
   }, []);
 
   function establish(nextUser: User) {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextUser));
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextUser));
+    } catch {
+      // Keep the session usable in memory when storage is unavailable.
+    }
     setUser(nextUser);
   }
 
@@ -126,7 +130,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateUser = (nextUser: User) => establish(nextUser);
   const logout = () => {
-    sessionStorage.removeItem(SESSION_KEY);
+    try {
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch {
+      // The in-memory session still ends.
+    }
     setUser(null);
   };
 

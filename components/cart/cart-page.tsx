@@ -16,6 +16,17 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useCart } from "@/components/cart/cart-provider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export function CartPage() {
   const {
@@ -28,6 +39,7 @@ export function CartPage() {
     pricing,
     promoCode: appliedPromo,
     applyPromoCode,
+    isHydrated,
   } = useCart();
   const [promoCode, setPromoCode] = useState("");
   const [promoMessage, setPromoMessage] = useState("");
@@ -41,6 +53,18 @@ export function CartPage() {
         : "Code not found. Try SAVE10 or FREESHIP.",
     );
   };
+
+  if (!isHydrated) {
+    return (
+      <div
+        className="mx-auto max-w-6xl space-y-4 py-8"
+        aria-label="Loading cart"
+      >
+        <div className="h-10 w-48 animate-pulse rounded-xl bg-muted motion-reduce:animate-none" />
+        <div className="h-56 animate-pulse rounded-2xl bg-muted/60 motion-reduce:animate-none" />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -67,22 +91,38 @@ export function CartPage() {
 
   return (
     <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-bold">
           Shopping Cart ({totalItems} items)
         </h1>
-        <Button variant="outline" onClick={clearCart}>
-          Clear Cart
-        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline">Clear Cart</Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Clear your demo bag?</AlertDialogTitle>
+              <AlertDialogDescription>
+                All items and the applied demo promotion will be removed from
+                this browser.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep items</AlertDialogCancel>
+              <AlertDialogAction onClick={clearCart}>
+                Clear cart
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
             <Card key={item.id}>
               <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-wrap items-center gap-4 sm:flex-nowrap">
                   <div className="relative h-20 w-20 flex-shrink-0">
                     <Image
                       src={item.image || "/placeholder.svg"}
@@ -101,7 +141,7 @@ export function CartPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-2">
                     <Button
                       aria-label={`Decrease quantity of ${item.title}`}
                       variant="outline"
@@ -135,7 +175,7 @@ export function CartPage() {
                     </Button>
                   </div>
 
-                  <div className="text-right">
+                  <div className="ml-auto text-right">
                     <p className="font-semibold">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
@@ -165,7 +205,6 @@ export function CartPage() {
           </div>
         </div>
 
-        {/* Order Summary */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -212,7 +251,6 @@ export function CartPage() {
             </CardContent>
           </Card>
 
-          {/* Promo Code */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Promo Code</CardTitle>
@@ -237,7 +275,6 @@ export function CartPage() {
             </CardContent>
           </Card>
 
-          {/* Shipping Info */}
           <Card>
             <CardContent className="p-4">
               <div className="space-y-2 text-sm">

@@ -41,13 +41,11 @@ export function ProductFilters() {
     () => readProductFilters(new URLSearchParams(query)),
     [query],
   );
+  const [priceMin, priceMax] = filters.priceRange;
   const [search, setSearch] = useState(filters.searchQuery);
   const [range, setRange] = useState<number[]>(filters.priceRange);
   useEffect(() => setSearch(filters.searchQuery), [filters.searchQuery]);
-  useEffect(
-    () => setRange(filters.priceRange),
-    [filters.priceRange[0], filters.priceRange[1]],
-  );
+  useEffect(() => setRange([priceMin, priceMax]), [priceMin, priceMax]);
 
   const update = (values: Record<string, string | null>) => {
     const params = new URLSearchParams(query);

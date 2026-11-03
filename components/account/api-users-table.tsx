@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
-  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  RefreshCw,
   Search,
+  SlidersHorizontal,
+  MapPin,
   UsersRound,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -32,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { demoApiService, type SampleUser } from "@/services/demoApiService";
+import { StatusPanel } from "@/components/feedback/status-panel";
 
 const sizes = [5, 10, 20] as const;
 type Sort = "id-asc" | "id-desc" | "name-asc" | "name-desc";
@@ -60,7 +60,7 @@ export function ApiUsersTable() {
   const [search, setSearch] = useState("");
   const [city, setCity] = useState("all");
   const [sort, setSort] = useState<Sort>("id-asc");
-  const [pageSize, setPageSize] = useState<(typeof sizes)[number]>(10);
+  const [pageSize, setPageSize] = useState<(typeof sizes)[number]>(5);
   const [page, setPage] = useState(1);
   const query = useQuery({
     queryKey: ["sample-api-users-table"],
@@ -151,12 +151,6 @@ export function ApiUsersTable() {
             Explore public sample records, filter by person or city, and control
             how many rows you see. Passwords are never shown.
           </p>
-          <Link
-            href="/account/users/manage"
-            className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-primary/35 bg-background/55 px-5 text-sm text-primary transition-colors hover:bg-primary/10"
-          >
-            Try user API methods <ArrowRight className="size-4" />
-          </Link>
         </div>
         <UsersRound
           aria-hidden="true"
@@ -165,14 +159,30 @@ export function ApiUsersTable() {
         />
       </div>
       <div className="glass-panel mt-7 rounded-[1.75rem] p-5 sm:p-7">
-        <div className="flex flex-wrap items-end gap-4">
-          <div className="min-w-[200px] flex-[2] space-y-1.5">
-            <Label htmlFor="users-search">Find a user</Label>
+        <div className="mb-5 flex items-center gap-3">
+          <span className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary">
+            <SlidersHorizontal className="size-5" />
+          </span>
+          <div>
+            <h2 className="font-semibold">Refine the directory</h2>
+            <p className="text-xs text-muted-foreground">
+              Search people, choose a city, or change the order.
+            </p>
+          </div>
+        </div>
+        <div className="grid gap-3 rounded-[1.25rem] border border-border/70 bg-background/40 p-3 sm:p-4 lg:grid-cols-[minmax(240px,2fr)_minmax(160px,1fr)_minmax(160px,1fr)_auto] lg:items-end">
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="users-search"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Search people
+            </Label>
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-3 size-4 text-muted-foreground" />
               <Input
                 id="users-search"
-                className="h-11 rounded-xl bg-background/55 pl-9"
+                className="h-11 rounded-xl border-border/60 bg-card/75 pl-9"
                 value={search}
                 onChange={(event) =>
                   change(() => setSearch(event.target.value))
@@ -181,15 +191,20 @@ export function ApiUsersTable() {
               />
             </div>
           </div>
-          <div className="min-w-36 flex-1 space-y-1.5">
-            <Label htmlFor="users-city">City</Label>
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="users-city"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground"
+            >
+              <MapPin className="size-3.5" /> City
+            </Label>
             <Select
               value={city}
               onValueChange={(value) => change(() => setCity(value))}
             >
               <SelectTrigger
                 id="users-city"
-                className="h-11 w-full rounded-xl bg-background/55"
+                className="h-11 w-full rounded-xl border-border/60 bg-card/75"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -203,15 +218,20 @@ export function ApiUsersTable() {
               </SelectContent>
             </Select>
           </div>
-          <div className="min-w-36 flex-1 space-y-1.5">
-            <Label htmlFor="users-sort">Sort</Label>
+          <div className="space-y-1.5">
+            <Label
+              htmlFor="users-sort"
+              className="text-xs font-semibold text-muted-foreground"
+            >
+              Sort by
+            </Label>
             <Select
               value={sort}
               onValueChange={(value) => change(() => setSort(value as Sort))}
             >
               <SelectTrigger
                 id="users-sort"
-                className="h-11 w-full rounded-xl bg-background/55"
+                className="h-11 w-full rounded-xl border-border/60 bg-card/75"
               >
                 <SelectValue />
               </SelectTrigger>
@@ -225,7 +245,7 @@ export function ApiUsersTable() {
           </div>
           <Button
             variant="outline"
-            className="h-11 rounded-xl bg-background/55"
+            className="h-11 rounded-xl border-border/60 bg-card/75 px-5"
             onClick={() => {
               setSearch("");
               setCity("all");
@@ -281,29 +301,40 @@ export function ApiUsersTable() {
             aria-label="Loading users"
           />
         ) : query.isError ? (
-          <div
-            role="alert"
-            className="rounded-xl border border-border/70 bg-background/50 p-7"
-          >
-            <h3 className="font-serif text-xl">Users are unavailable.</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              The public API could not be reached.
-            </p>
-            <Button className="mt-4 rounded-xl" onClick={() => query.refetch()}>
-              <RefreshCw className="size-4" /> Try again
-            </Button>
-          </div>
+          <StatusPanel
+            headingLevel={3}
+            title="Users are unavailable"
+            description="The public API could not be reached."
+            onRetry={() => {
+              void query.refetch();
+            }}
+            retrying={query.isFetching}
+          />
         ) : visible.length === 0 ? (
-          <p className="rounded-xl border border-border/70 bg-background/50 p-8 text-center text-muted-foreground">
-            No users match these filters.
-          </p>
+          <StatusPanel
+            kind="empty"
+            headingLevel={3}
+            title="No matching users"
+            description="Change your search or city filter to see more public sample users."
+            actionLabel="Clear filters"
+            onAction={() => {
+              setSearch("");
+              setCity("all");
+              setSort("id-asc");
+              setPage(1);
+            }}
+          />
         ) : (
-          <div className="overflow-hidden rounded-[1.25rem] border border-border/70 bg-background/45">
-            <Table className="min-w-[1200px]">
-              <TableHeader className="bg-primary/5">
+          <div className="overflow-hidden rounded-[1.25rem] border border-border/70 bg-background/55 shadow-sm">
+            <Table className="min-w-[1600px] border-separate border-spacing-0">
+              <TableHeader className="bg-primary/8">
                 <TableRow className="hover:bg-transparent">
                   {columns.map((column) => (
-                    <TableHead scope="col" key={column.title}>
+                    <TableHead
+                      scope="col"
+                      key={column.title}
+                      className="h-14 border-b border-border/70 px-5 text-xs font-semibold tracking-wide text-muted-foreground first:pl-6"
+                    >
                       {column.title}
                     </TableHead>
                   ))}
@@ -311,14 +342,19 @@ export function ApiUsersTable() {
               </TableHeader>
               <TableBody>
                 {visible.map((entry) => (
-                  <TableRow key={entry.id} className="hover:bg-primary/5">
+                  <TableRow
+                    key={entry.id}
+                    className="h-16 even:bg-muted/25 hover:bg-primary/8"
+                  >
                     {columns.map((column) => (
                       <TableCell
                         key={column.title}
                         className={
                           column.title === "ID"
-                            ? "font-semibold tabular-nums text-primary"
-                            : undefined
+                            ? "px-5 pl-6 font-semibold tabular-nums text-primary"
+                            : column.title === "Email"
+                              ? "px-5 text-foreground"
+                              : "px-5 text-muted-foreground"
                         }
                       >
                         {column.value(entry) ?? "—"}

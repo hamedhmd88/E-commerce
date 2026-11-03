@@ -1,10 +1,35 @@
-import { FlatCompat } from "@eslint/eslintrc";
+import nextPlugin from "@next/eslint-plugin-next";
+import reactHooks from "eslint-plugin-react-hooks";
+import typescriptParser from "@typescript-eslint/parser";
 
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
-
-const config = [
-  ...compat.config({ extends: ["next/core-web-vitals", "next/typescript"] }),
-  { ignores: [".next/**", "out/**", "build/**", "output/**", "next-env.d.ts"] },
+export default [
+  {
+    ignores: [
+      ".next/**",
+      ".next-build/**",
+      ".next-visual-preview/**",
+      "out/**",
+      "build/**",
+      "output/**",
+      "next-env.d.ts",
+    ],
+  },
+  {
+    files: ["**/*.{js,mjs,ts,tsx}"],
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: { ecmaFeatures: { jsx: true }, sourceType: "module" },
+    },
+    ...nextPlugin.flatConfig.recommended,
+    rules: {
+      ...nextPlugin.flatConfig.recommended.rules,
+      ...nextPlugin.flatConfig.coreWebVitals.rules,
+      ...reactHooks.configs.recommended.rules,
+    },
+    plugins: {
+      ...nextPlugin.flatConfig.recommended.plugins,
+      "react-hooks": reactHooks,
+    },
+    settings: { next: { rootDir: "." } },
+  },
 ];
-
-export default config;

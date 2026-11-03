@@ -8,6 +8,7 @@ import { ArrowRight } from "lucide-react";
 import { productService } from "@/services/productService";
 import { CatalogRequestError } from "@/services/catalog-error";
 import { FeaturedProductsSkeleton } from "@/components/product/featured-products-skeleton";
+import { StatusPanel } from "@/components/feedback/status-panel";
 
 export function FeaturedProducts() {
   const query = useQuery({
@@ -23,21 +24,20 @@ export function FeaturedProducts() {
         ? query.error
         : new CatalogRequestError(undefined, false);
     return (
-      <section className="py-16" aria-labelledby="featured-unavailable">
-        <div className="container mx-auto px-4 text-center">
-          <h2 id="featured-unavailable" className="text-3xl font-bold mb-4">
-            Featured products are temporarily unavailable
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            {error.challenged
+      <div className="container mx-auto px-4 py-16">
+        <StatusPanel
+          title="Featured products are temporarily unavailable"
+          description={
+            error.challenged
               ? "Fake Store API requires a browser security check for this request."
-              : "The external product catalog could not be reached. Please try again later."}
-          </p>
-          <Button asChild variant="outline">
-            <Link href="/products">Open the catalog</Link>
-          </Button>
-        </div>
-      </section>
+              : "The external product catalog could not be reached. Please try again later."
+          }
+          onRetry={() => {
+            void query.refetch();
+          }}
+          retrying={query.isFetching}
+        />
+      </div>
     );
   }
 

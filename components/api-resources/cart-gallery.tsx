@@ -8,13 +8,13 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
-  RefreshCw,
   Search,
   ShoppingBag,
   SlidersHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { demoApiService } from "@/services/demoApiService";
 import { productService } from "@/services/productService";
+import { StatusPanel } from "@/components/feedback/status-panel";
 
 const sizes = [6, 9, 12] as const;
 
@@ -187,22 +188,18 @@ export function CartGallery() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               <div className="space-y-1.5">
                 <Label htmlFor="cart-date-from">From</Label>
-                <Input
+                <DatePicker
                   id="cart-date-from"
-                  type="date"
-                  className="h-11 rounded-xl bg-background/55"
                   value={from}
-                  onChange={(e) => update(() => setFrom(e.target.value))}
+                  onChange={(value) => update(() => setFrom(value))}
                 />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="cart-date-to">To</Label>
-                <Input
+                <DatePicker
                   id="cart-date-to"
-                  type="date"
-                  className="h-11 rounded-xl bg-background/55"
                   value={to}
-                  onChange={(e) => update(() => setTo(e.target.value))}
+                  onChange={(value) => update(() => setTo(value))}
                 />
               </div>
             </div>
@@ -328,25 +325,30 @@ export function CartGallery() {
               ))}
             </div>
           ) : carts.isError ? (
-            <div role="alert" className="glass-panel rounded-[1.75rem] p-8">
-              <h2 className="font-serif text-2xl">Carts are unavailable.</h2>
-              <p className="mt-2 text-muted-foreground">
-                The public API could not be reached. Try again in a moment.
-              </p>
-              <Button
-                className="mt-5 rounded-xl"
-                onClick={() => carts.refetch()}
-              >
-                <RefreshCw className="size-4" /> Try again
-              </Button>
-            </div>
+            <StatusPanel
+              title="Carts are unavailable"
+              description="The public API could not be reached. Try again in a moment."
+              onRetry={() => {
+                void carts.refetch();
+              }}
+              retrying={carts.isFetching}
+            />
           ) : visible.length === 0 ? (
-            <div className="glass-panel rounded-[1.75rem] p-10 text-center">
-              <h2 className="font-serif text-2xl">No matching carts</h2>
-              <p className="mt-2 text-muted-foreground">
-                Change a filter or clear them to see all public samples.
-              </p>
-            </div>
+            <StatusPanel
+              kind="empty"
+              title="No matching carts"
+              description="Change a filter or clear them to see all public samples."
+              actionLabel="Clear filters"
+              onAction={() => {
+                setSearch("");
+                setUserId("");
+                setFrom("");
+                setTo("");
+                setCategory("all");
+                setSort("newest");
+                setPage(1);
+              }}
+            />
           ) : (
             <div className="grid auto-rows-fr gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {visible.map((cart) => {

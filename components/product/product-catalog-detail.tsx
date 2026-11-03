@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ProductDetail } from "@/components/product/product-detail";
 import { CatalogUnavailable } from "@/components/product/catalog-unavailable";
+import { StatusPanel } from "@/components/feedback/status-panel";
 import { productService } from "@/services/productService";
 import { CatalogRequestError } from "@/services/catalog-error";
 
@@ -35,12 +36,14 @@ export function ProductCatalogDetail({ id }: { id: number }) {
 
   if (!query.data) {
     return (
-      <div className="py-16 text-center">
-        <h1 className="font-serif text-3xl">Product not found</h1>
-        <p className="mt-3 text-muted-foreground">
-          This product is not in the current demo catalog.
-        </p>
-      </div>
+      <StatusPanel
+        kind="empty"
+        headingLevel={1}
+        title="Product not found"
+        description="This product is not in the current demo catalog."
+        homeLink
+        className="my-12"
+      />
     );
   }
 

@@ -10,16 +10,22 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useCart } from "@/components/cart/cart-provider";
 import { useAuth } from "@/components/auth/auth-provider";
+import { BackToTop } from "@/components/layout/back-to-top";
 
 const menuItems = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
   { name: "Carts", href: "/carts/explore" },
   { name: "Blog", href: "/blog" },
-  { name: "API Studio", href: "/api-studio" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
+
+function isMenuActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  if (href === "/carts/explore") return pathname.startsWith("/carts");
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 const CartSidebar = dynamic(
   () =>
@@ -33,6 +39,7 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [cartLoaded, setCartLoaded] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { totalItems, isOpen, setIsOpen } = useCart();
   const { user } = useAuth();
   const pathname = usePathname();
@@ -45,6 +52,13 @@ export function Navigation() {
   useEffect(() => {
     if (isOpen) setCartLoaded(true);
   }, [isOpen]);
+
+  useEffect(() => {
+    const updateScroll = () => setIsScrolled(window.scrollY > 32);
+    updateScroll();
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
 
   const beginNavigation = (href: string) => {
     if (href !== pathname) setPendingHref(href);
@@ -60,11 +74,11 @@ export function Navigation() {
       </a>
       <nav
         aria-label="Main navigation"
-        className="glass-surface sticky top-0 z-50 border-b border-border"
+        className="site-header sticky top-0 z-50"
+        data-scrolled={isScrolled}
       >
-        <div className="mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-14">
-          <div className="flex h-[4.5rem] items-center justify-between">
-            {/* Logo */}
+        <div className="site-header-shell mx-auto max-w-[1440px] px-4 sm:px-8 lg:px-10">
+          <div className="site-header-row flex h-[4.5rem] items-center justify-between gap-3">
             <Link
               href="/"
               scroll={true}
@@ -84,19 +98,17 @@ export function Navigation() {
               </span>
             </Link>
 
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden items-center gap-1 rounded-full border border-border/60 bg-background/35 p-1 shadow-sm lg:flex">
               {menuItems.map((item) => (
                 <Button key={item.name} variant="ghost" asChild>
                   <Link
                     href={item.href}
                     scroll={true}
                     onClick={() => beginNavigation(item.href)}
-                    className={`hover:!bg-primary/10 hover:!text-foreground dark:hover:!text-foreground ${
-                      pathname === item.href
-                        ? "text-primary"
-                        : "text-foreground"
-                    }`}
-                    aria-current={pathname === item.href ? "page" : undefined}
+                    className={`site-nav-link rounded-full px-4 transition-transform hover:!bg-primary/10 hover:!text-foreground dark:hover:!text-foreground ${isMenuActive(pathname, item.href) ? "site-nav-active text-primary" : "text-foreground"}`}
+                    aria-current={
+                      isMenuActive(pathname, item.href) ? "page" : undefined
+                    }
                   >
                     {item.name}
                   </Link>
@@ -104,11 +116,9 @@ export function Navigation() {
               ))}
             </div>
 
-            {/* Right Side Actions */}
             <div className="flex items-center gap-1 sm:gap-2">
               <ThemeToggle />
 
-              {/* Cart Button */}
               <Button
                 variant={pathname === "/cart" ? "default" : "ghost"}
                 size="icon"
@@ -127,27 +137,26 @@ export function Navigation() {
                 )}
               </Button>
 
-              {/* User Account */}
-              <Link
-                href={user ? "/account" : "/login"}
-                scroll={true}
-                onClick={() => beginNavigation(user ? "/account" : "/login")}
-                aria-label={user ? "Account" : "Sign in"}
+              <Button
+                variant={
+                  pathname.startsWith("/account") || pathname === "/login"
+                    ? "default"
+                    : "ghost"
+                }
+                size="icon"
+                className="hover:scale-110 transition-transform"
+                asChild
               >
-                <Button
-                  variant={
-                    pathname === "/account" || pathname === "/login"
-                      ? "default"
-                      : "ghost"
-                  }
-                  size="icon"
-                  className="hover:scale-110 transition-transform"
+                <Link
+                  href={user ? "/account" : "/login"}
+                  scroll={true}
+                  onClick={() => beginNavigation(user ? "/account" : "/login")}
+                  aria-label={user ? "Account" : "Sign in"}
                 >
                   <User className="h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
 
-              {/* Mobile Menu Button */}
               <Button
                 variant="ghost"
                 size="icon"
@@ -175,7 +184,9 @@ export function Navigation() {
                 {menuItems.map((item) => (
                   <Button
                     key={item.name}
-                    variant={pathname === item.href ? "default" : "ghost"}
+                    variant={
+                      isMenuActive(pathname, item.href) ? "default" : "ghost"
+                    }
                     asChild
                     className="w-full justify-center"
                   >
@@ -186,7 +197,10 @@ export function Navigation() {
                         setIsMenuOpen(false);
                         beginNavigation(item.href);
                       }}
-                      className="text-foreground transition-colors py-2 hover:!text-foreground"
+                      className="py-2 transition-colors"
+                      aria-current={
+                        isMenuActive(pathname, item.href) ? "page" : undefined
+                      }
                     >
                       {item.name}
                     </Link>
@@ -205,6 +219,7 @@ export function Navigation() {
         )}
       </nav>
       {cartLoaded && <CartSidebar />}
+      <BackToTop />
     </>
   );
 }

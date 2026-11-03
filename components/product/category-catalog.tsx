@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { StatusPanel } from "@/components/feedback/status-panel";
 import { ProductCard } from "@/components/product/product-card";
 import { CatalogUnavailable } from "@/components/product/catalog-unavailable";
 import { productService } from "@/services/productService";
@@ -45,14 +45,13 @@ export function CategoryCatalog({ category }: { category: string }) {
 
   if (query.data.length === 0) {
     return (
-      <div className="rounded-xl border p-12 text-center">
-        <p className="text-muted-foreground">
-          No products are available in this collection right now.
-        </p>
-        <Link className="mt-4 inline-block underline" href="/products">
-          Browse all products
-        </Link>
-      </div>
+      <StatusPanel
+        kind="empty"
+        title="No products in this collection"
+        description="No products are available in this collection right now."
+        actionHref="/products"
+        actionLabel="Browse all products"
+      />
     );
   }
 

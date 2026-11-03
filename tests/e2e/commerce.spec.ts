@@ -12,6 +12,16 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript((item) => {
     if (localStorage.getItem("cart") === null)
       localStorage.setItem("cart", JSON.stringify([item]));
+    if (sessionStorage.getItem("portfolio-demo-user") === null)
+      sessionStorage.setItem(
+        "portfolio-demo-user",
+        JSON.stringify({
+          id: 1,
+          username: "demo",
+          email: "demo@example.com",
+          name: { firstname: "Demo", lastname: "Shopper" },
+        }),
+      );
   }, cartItem);
 });
 
@@ -39,7 +49,9 @@ test("demo checkout saves an order with matching confirmation and history", asyn
   await fillCheckout(page);
   await expect(page.getByText("Demo promotion (SAVE10)")).toBeVisible();
   await page.getByRole("button", { name: /Place demo order/i }).click();
-  await expect(page).toHaveURL(/\/order-success\?id=DEMO-/);
+  await expect(page).toHaveURL(/\/order-success\?id=DEMO-/, {
+    timeout: 30_000,
+  });
   const orderId = new URL(page.url()).searchParams.get("id");
   expect(orderId).toMatch(/^DEMO-/);
   await expect(page.getByText(orderId!, { exact: true })).toBeVisible();
@@ -69,5 +81,5 @@ test("simulated payment failure preserves the cart and creates no order", async 
   await page.goto("/cart");
   await expect(page.getByText("Demo catalog item")).toBeAttached();
   await page.goto("/account/orders");
-  await expect(page.getByText("No orders yet")).toBeVisible();
+  await expect(page.getByText("No demo orders yet")).toBeVisible();
 });

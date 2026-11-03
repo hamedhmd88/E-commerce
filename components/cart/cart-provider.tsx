@@ -23,6 +23,7 @@ interface CartContextType {
   pricing: ReturnType<typeof calculateCartPricing>;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  isHydrated: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -33,11 +34,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [promoCode, setPromoCode] = useState<DemoPromoCode>(null);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      try {
+    try {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
         const parsed: unknown = JSON.parse(savedCart);
         if (Array.isArray(parsed))
           setItems(
@@ -55,19 +55,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
               ),
             ),
           );
-      } catch {
-        localStorage.removeItem("cart");
       }
+      const savedPromo = sessionStorage.getItem("demo-promo");
+      if (savedPromo === "SAVE10" || savedPromo === "FREESHIP")
+        setPromoCode(savedPromo);
+    } catch {
+      // Keep the in-memory cart usable if browser storage is unavailable.
     }
     setHydrated(true);
-    const savedPromo = sessionStorage.getItem("demo-promo");
-    if (savedPromo === "SAVE10" || savedPromo === "FREESHIP")
-      setPromoCode(savedPromo);
   }, []);
 
-  // Save cart to localStorage whenever items change
   useEffect(() => {
-    if (hydrated) localStorage.setItem("cart", JSON.stringify(items));
+    if (hydrated) {
+      try {
+        localStorage.setItem("cart", JSON.stringify(items));
+      } catch {
+        // Keep cart interactions working without persistence.
+      }
+    }
   }, [items, hydrated]);
 
   const addItem = (product: Omit<CartItem, "quantity">) => {
@@ -85,7 +90,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const clearCart = () => {
     setItems([]);
     setPromoCode(null);
-    sessionStorage.removeItem("demo-promo");
+    try {
+      sessionStorage.removeItem("demo-promo");
+    } catch {
+      /* Session storage is optional. */
+    }
   };
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -95,7 +104,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const normalized = code.trim().toUpperCase();
     if (normalized !== "SAVE10" && normalized !== "FREESHIP") return false;
     setPromoCode(normalized);
-    sessionStorage.setItem("demo-promo", normalized);
+    try {
+      sessionStorage.setItem("demo-promo", normalized);
+    } catch {
+      /* Session storage is optional. */
+    }
     return true;
   };
 
@@ -114,6 +127,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         pricing,
         isOpen,
         setIsOpen,
+        isHydrated: hydrated,
       }}
     >
       {children}

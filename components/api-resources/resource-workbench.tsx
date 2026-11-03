@@ -20,8 +20,10 @@ import {
   Users,
 } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
+import { StatusPanel } from "@/components/feedback/status-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -486,20 +488,18 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="resource-from">From date</Label>
-                      <Input
+                      <DatePicker
                         id="resource-from"
-                        type="date"
                         value={from}
-                        onChange={(event) => setFrom(event.target.value)}
+                        onChange={setFrom}
                       />
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="resource-to">To date</Label>
-                      <Input
+                      <DatePicker
                         id="resource-to"
-                        type="date"
                         value={to}
-                        onChange={(event) => setTo(event.target.value)}
+                        onChange={setTo}
                       />
                     </div>
                   </>
@@ -521,23 +521,30 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
                   />
                 ))
               ) : query.isError ? (
-                <div
-                  role="alert"
-                  className="glass-panel col-span-full rounded-2xl p-6 text-sm text-destructive"
-                >
-                  {errorMessage(query.error)}
-                  <Button
-                    variant="outline"
-                    onClick={() => query.refetch()}
-                    className="mt-4 block rounded-xl"
-                  >
-                    Try again
-                  </Button>
-                </div>
+                <StatusPanel
+                  className="col-span-full"
+                  title="Sample records are unavailable"
+                  description={errorMessage(query.error)}
+                  onRetry={() => {
+                    void query.refetch();
+                  }}
+                  retrying={query.isFetching}
+                />
               ) : records.length === 0 ? (
-                <div className="glass-panel col-span-full rounded-2xl p-8 text-center text-sm text-muted-foreground">
-                  No sample records match these filters.
-                </div>
+                <StatusPanel
+                  className="col-span-full"
+                  kind="empty"
+                  title="No matching records"
+                  description="Change or clear the filters to see more public sample records."
+                  actionLabel="Clear filters"
+                  onAction={() => {
+                    setLimit("8");
+                    setSort("asc");
+                    setFilterUser("");
+                    setFrom("");
+                    setTo("");
+                  }}
+                />
               ) : (
                 records.map((item) => (
                   <button
@@ -706,11 +713,10 @@ export function ResourceWorkbench({ resource }: { resource: Resource }) {
                     </div>
                     <div className="space-y-1.5">
                       <Label htmlFor="wb-date">Cart date</Label>
-                      <Input
+                      <DatePicker
                         id="wb-date"
-                        type="date"
                         value={cartDate}
-                        onChange={(event) => setCartDate(event.target.value)}
+                        onChange={setCartDate}
                       />
                     </div>
                     <div className="space-y-3 sm:col-span-2">

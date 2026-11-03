@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,6 @@ import { useAuth } from "@/components/auth/auth-provider";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 
-// Form validation types
 interface FormErrors {
   email?: string;
   username?: string;
@@ -34,6 +34,7 @@ interface FormErrors {
 }
 
 export function RegisterForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -51,7 +52,6 @@ export function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Validation functions
   const validateEmail = (email: string): string | undefined => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) return "Email is required";
@@ -105,7 +105,6 @@ export function RegisterForm() {
       [name]: value,
     }));
 
-    // Clear field error when user starts typing
     if (fieldErrors[name as keyof FormErrors]) {
       setFieldErrors((prev) => ({
         ...prev,
@@ -113,7 +112,6 @@ export function RegisterForm() {
       }));
     }
 
-    // Real-time validation for specific fields
     if (name === "confirmPassword" && formData.password) {
       if (value !== formData.password) {
         setFieldErrors((prev) => ({
@@ -129,7 +127,6 @@ export function RegisterForm() {
     setError("");
     setFieldErrors({});
 
-    // Comprehensive validation
     const errors: FormErrors = {};
 
     errors.email = validateEmail(formData.email);
@@ -146,20 +143,22 @@ export function RegisterForm() {
       errors.confirmPassword = "Passwords do not match";
     }
 
-    // Check if there are any errors
     const hasErrors = Object.values(errors).some(
       (error) => error !== undefined,
     );
     if (hasErrors) {
       setFieldErrors(errors);
       setError("Please fix the errors above");
+      const firstInvalid = Object.keys(errors).find(
+        (field) => errors[field as keyof FormErrors],
+      );
+      if (firstInvalid) document.getElementById(firstInvalid)?.focus();
       return;
     }
 
     try {
       const success = await register(formData);
       if (success) {
-        // Reset form on success
         setFormData({
           email: "",
           username: "",
@@ -172,14 +171,8 @@ export function RegisterForm() {
           city: "",
         });
 
-        // Show success message
-        toast.success("Registration successful! Redirecting...");
-
-        // Small delay to ensure cookie is set before redirect
-        setTimeout(() => {
-          // Force a full page reload to ensure middleware picks up the new cookie
-          window.location.href = "/account";
-        }, 100);
+        toast.success("Demo account ready");
+        router.replace("/account");
       } else {
         setError("Registration failed. Please try again.");
       }

@@ -159,40 +159,59 @@ const baseBlogPosts = [
   },
 ] as const;
 
-// Each journal story has its own cover, including stories on later pages.
 const coverPools = {
   Jewelry: [
-    "/luxury-jewelry-care.jpg", "/luxury-jewelry-elegant-accessories.jpg",
-    "/photo-slider/jewelry1.jpg", "/photo-slider/jewelry2.jpg",
-    "/product-views/product-05-concept-cutout.webp", "/product-views/product-06-concept-cutout.webp",
-    "/product-views/product-07-concept-cutout.webp", "/product-views/product-08-concept-cutout.webp",
+    "/luxury-jewelry-care.jpg",
+    "/luxury-jewelry-elegant-accessories.jpg",
+    "/photo-slider/jewelry1.jpg",
+    "/photo-slider/jewelry2.jpg",
+    "/product-views/product-05-concept-cutout.webp",
+    "/product-views/product-06-concept-cutout.webp",
+    "/product-views/product-07-concept-cutout.webp",
+    "/product-views/product-08-concept-cutout.webp",
     "/product-views/product-09-concept-cutout.webp",
   ],
   Technology: [
-    "/modern-electronics-technology-gadgets.jpg", "/modern-home-office.png",
-    "/modern-technology-trends.jpg", "/photo-slider/electronic1.jpg",
-    "/photo-slider/electronic2.jpg", "/product-views/product-10-concept-cutout.webp",
-    "/product-views/product-11-concept-cutout.webp", "/product-views/product-12-concept-cutout.webp",
-    "/product-views/product-13-concept-cutout.webp", "/product-views/product-17-concept-cutout.webp",
+    "/modern-electronics-technology-gadgets.jpg",
+    "/modern-home-office.png",
+    "/modern-technology-trends.jpg",
+    "/photo-slider/electronic1.jpg",
+    "/photo-slider/electronic2.jpg",
+    "/product-views/product-10-concept-cutout.webp",
+    "/product-views/product-11-concept-cutout.webp",
+    "/product-views/product-12-concept-cutout.webp",
+    "/product-views/product-13-concept-cutout.webp",
+    "/product-views/product-17-concept-cutout.webp",
   ],
   Fashion: [
-    "/sustainable-fashion.png", "/spring-fashion-trends.jpg",
-    "/summer-fashion-collection-modern-lifestyle.jpg", "/photo-slider/womanclth1.jpg",
-    "/photo-slider/womanclth2.jpg", "/photo-slider/manclth1.jpg",
-    "/photo-slider/manclth2.jpg", "/product-views/product-01-concept-cutout.webp",
-    "/product-views/product-02-concept-cutout.webp", "/product-views/product-03-concept-cutout.webp",
+    "/sustainable-fashion.png",
+    "/spring-fashion-trends.jpg",
+    "/summer-fashion-collection-modern-lifestyle.jpg",
+    "/photo-slider/womanclth1.jpg",
+    "/photo-slider/womanclth2.jpg",
+    "/photo-slider/manclth1.jpg",
+    "/photo-slider/manclth2.jpg",
+    "/product-views/product-01-concept-cutout.webp",
+    "/product-views/product-02-concept-cutout.webp",
+    "/product-views/product-03-concept-cutout.webp",
     "/product-views/product-04-concept-cutout.webp",
   ],
   Shopping: [
-    "/smart-shopping-deals.jpg", "/project/project1.jpg", "/project/project2.jpg",
-    "/product-views/product-14-concept-cutout.webp", "/product-views/product-15-concept-cutout.webp",
+    "/smart-shopping-deals.jpg",
+    "/project/project1.jpg",
+    "/project/project2.jpg",
+    "/product-views/product-14-concept-cutout.webp",
+    "/product-views/product-15-concept-cutout.webp",
     "/product-views/product-16-concept-cutout.webp",
   ],
 } as const;
 
 const coverPosition = { Jewelry: 0, Technology: 0, Fashion: 0, Shopping: 0 };
 
-export const blogPosts = [...baseBlogPosts, ...additionalBlogPosts].map((post) => ({
-  ...post,
-  image: coverPools[post.category][coverPosition[post.category]++] ?? post.image,
-}));
+export const blogPosts = [...baseBlogPosts, ...additionalBlogPosts].map(
+  (post) => ({
+    ...post,
+    image:
+      coverPools[post.category][coverPosition[post.category]++] ?? post.image,
+  }),
+);

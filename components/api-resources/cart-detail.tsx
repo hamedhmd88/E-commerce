@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useCart } from "@/components/cart/cart-provider";
+import { StatusPanel } from "@/components/feedback/status-panel";
 import { Button } from "@/components/ui/button";
 import { storeToast } from "@/components/ui/store-toast";
 import { demoApiService } from "@/services/demoApiService";
@@ -82,15 +83,26 @@ export function CartDetail({ id }: { id: number }) {
         <ArrowLeft className="size-4" /> All sample carts
       </Link>
       {!valid || cart.isError || (!cart.isPending && !cart.data?.id) ? (
-        <div role="alert" className="glass-panel rounded-[2rem] p-8">
-          <h1 className="font-serif text-3xl">Cart not found</h1>
-          <p className="mt-2 text-muted-foreground">
-            This public sample cart could not be loaded.
-          </p>
-          <Button asChild className="mt-5 rounded-xl">
-            <Link href="/carts/explore">Browse carts</Link>
-          </Button>
-        </div>
+        <StatusPanel
+          kind={cart.isError ? "error" : "empty"}
+          headingLevel={1}
+          title={cart.isError ? "Sample cart is unavailable" : "Cart not found"}
+          description={
+            cart.isError
+              ? "The public sample cart could not be loaded. Try again in a moment."
+              : "This cart is not in the public sample collection."
+          }
+          onRetry={
+            cart.isError
+              ? () => {
+                  void cart.refetch();
+                }
+              : undefined
+          }
+          retrying={cart.isFetching}
+          actionHref="/carts/explore"
+          actionLabel="Browse carts"
+        />
       ) : cart.isPending ? (
         <div
           aria-label="Loading cart"

@@ -2,7 +2,7 @@
 
 - Product API tools at `/products/manage` offer live product list/detail requests and sample POST, PUT, PATCH, DELETE forms. The `/carts` API workbench remains available with list/detail, date/user filters, multiple product lines and all write methods. `/carts/explore` presents public sample carts as product-style cards with search, filters, page size and pagination. Each `/carts/[id]` detail page shows current catalog data and can copy available items into the signed-in shopper's local demo bag. This changes only the browser cart, not the public API cart. Signed-in demo users can browse `/account/users` as a searchable, filterable, paginated table with all public non-password fields; the user-method workbench is at `/account/users/manage`. The login form also offers a Fake Store API sample login: the returned token and entered password are discarded, and only a sanitized sample profile is kept in the browser session. All API writes are non-persistent and do not modify the storefront's catalog, shopping cart, demo orders or local profile.
 
-- API Studio at `/api-studio` provides live, explicitly labeled access to Fake Store API products, carts, users and sample login. It covers list, single record, sorting, limits, product categories, cart date and user filters, and simulated POST/PUT/PATCH/DELETE requests. Public user responses are reduced to non-password fields; login tokens and entered sample passwords are not retained. Writes do not change the storefront or persist on Fake Store API.
+- The standalone API Studio has been removed. Resource-specific demo workbenches remain available on their respective product, cart, and user routes. Cart date filters use the shared calendar picker. The public user directory starts at five rows per page.
 
 - Login, account dashboard, profile, demo orders, and wishlist share the animated catalog canvas and glass surfaces. The demo login keeps its existing credential behavior; orders are available to signed-in demo users only.
 
@@ -13,6 +13,7 @@
 - Product cards share a consistent height and open the product detail page. The detail gallery prefers multiple genuine image URLs when supplied. Fake Store API currently supplies one image per item, so each of its 20 products shows the original catalog photo plus six clearly labeled AI-generated concept views, including a rear view. These concept views have transparent backgrounds so they share the same gallery surface in light and dark themes. They illustrate possible angles and may differ from the item sold. The gallery can step through the concept views automatically after the user starts it, or one view at a time when reduced motion is preferred.
 - Storefront feedback uses a reusable, theme-aware toast with a sign-in action for account-required bag and wishlist interactions.
 - Cart and wishlist use browser state.
+- Cart and checkout wait for browser cart hydration before showing an empty state. Clearing the cart asks for confirmation. Cart, wishlist, and demo session interactions remain usable in memory if browser storage is unavailable.
 - Demo login and registration create browser sessions.
 - Checkout creates browser-local demo orders, which appear on confirmation and history pages.
 - Theme, contact form, and newsletter provide local interaction feedback.
@@ -21,5 +22,7 @@
 - Home includes a five-slide, user-controllable collection carousel, a journal preview, a five-step illustrated shopping journey linked to scrolling, featured products, an editorial overview, a demo newsletter, and an FAQ. The journey illustration advances when the next step's text reaches the reading area after the previous step's text ends.
 - The home page is statically rendered for faster navigation. Product content still comes from Fake Store API through the shared service layer.
 - The Morrow visual identity, glass surfaces, and animated gradient support light and dark themes. Motion honors reduced-motion preferences.
+- The glass navigation keeps its three-part layout at the top of each page, then smoothly narrows and compacts on scroll. Reduced-motion preferences remove the transition.
+- Every page uses the shared route loader, and a keyboard-accessible back-to-top control appears after scrolling. Smooth scrolling and loader motion respect reduced-motion preferences.
 
 These are portfolio features, not production commerce services.

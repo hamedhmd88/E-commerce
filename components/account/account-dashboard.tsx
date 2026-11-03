@@ -47,21 +47,9 @@ export function AccountDashboard() {
     return null;
   }
 
-  const handleLogout = async () => {
-    try {
-      // Call logout to clear all data
-      logout();
-
-      // Use replace instead of push to prevent going back to account page
-      await router.replace("/login");
-
-      // Force a complete page refresh to ensure clean state
-      window.location.href = "/login";
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Fallback: force navigation to login
-      window.location.href = "/login";
-    }
+  const handleLogout = () => {
+    logout();
+    window.location.assign("/login");
   };
 
   return (
@@ -151,7 +139,6 @@ export function AccountDashboard() {
         </Link>
       </div>
 
-      {/* Account Information */}
       <Card className="glass-panel rounded-[1.75rem] bg-transparent">
         <CardHeader>
           <CardTitle>Account Information</CardTitle>
@@ -202,11 +189,9 @@ export function AccountDashboard() {
               </p>
             </div>
           </div>
-          {/* حذف بخش pt-4 و دکمه Edit Profile */}
         </CardContent>
       </Card>
 
-      {/* Recent Activity */}
       <Card className="glass-panel rounded-[1.75rem] bg-transparent">
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { OrderSuccess } from "@/components/cart/order-success";
 import { PageLayout } from "@/components/layout/page-layout";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Demo Order",
+  description: "Review a browser-local demonstration order.",
+  robots: { index: false, follow: false },
+};
 
 export default function OrderSuccessPage() {
   return (

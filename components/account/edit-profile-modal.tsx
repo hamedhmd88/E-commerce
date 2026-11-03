@@ -52,10 +52,8 @@ export function EditProfileModal({ isOpen, onClose }: EditProfileModalProps) {
     setLoading(true);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Update user data
       if (user) {
         // Split address into street and city if it contains a comma
         let street = formData.address;

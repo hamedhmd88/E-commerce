@@ -6,38 +6,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PageLayout } from "@/components/layout/page-layout";
+import { faqItems } from "@/data/faq";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description: "How the catalog, demo account, and simulated checkout work.",
 };
-
-const questions = [
-  {
-    q: "Are these real products?",
-    a: "The product catalog is fetched from Fake Store API. Product details and prices are provided by that demonstration service and may change or become unavailable.",
-  },
-  {
-    q: "Will I be charged at checkout?",
-    a: "No. Checkout is a simulation for this portfolio project. Never enter real card information; no payment is processed.",
-  },
-  {
-    q: "Will an order be shipped?",
-    a: "No. Order confirmation and history demonstrate a shopping flow only. There is no fulfillment, shipping, email, or SMS service.",
-  },
-  {
-    q: "Is my account a real customer account?",
-    a: "No. Account features demonstrate the user experience of a storefront. Do not use personal credentials that you use elsewhere.",
-  },
-  {
-    q: "Can I return or cancel an order?",
-    a: "Because every order is simulated, there is nothing to return or cancel with a merchant. You can clear local demo data in your browser to reset the experience.",
-  },
-  {
-    q: "Does the contact form reach a support team?",
-    a: "No. The contact form shows a local demo response and does not send a message to anyone.",
-  },
-];
 
 export default function FaqPage() {
   return (
@@ -58,13 +32,13 @@ export default function FaqPage() {
           collapsible
           className="mt-12 rounded-3xl border border-border bg-card px-6 sm:px-9"
         >
-          {questions.map(({ q, a }, index) => (
-            <AccordionItem key={q} value={`question-${index}`}>
+          {faqItems.map(({ question, answer }, index) => (
+            <AccordionItem key={question} value={`question-${index}`}>
               <AccordionTrigger className="py-6 text-left text-base font-medium sm:text-lg">
-                {q}
+                {question}
               </AccordionTrigger>
               <AccordionContent className="max-w-2xl pb-6 leading-relaxed text-muted-foreground">
-                {a}
+                {answer}
               </AccordionContent>
             </AccordionItem>
           ))}

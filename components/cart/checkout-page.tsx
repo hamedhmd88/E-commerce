@@ -3,7 +3,6 @@
 import type React from "react";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,15 +11,21 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, CreditCard, Truck, Shield } from "lucide-react";
+import { ArrowLeft, Mail, Truck, Shield } from "lucide-react";
 import { useCart } from "@/components/cart/cart-provider";
 import Link from "next/link";
 import { createDemoOrder, saveDemoOrder } from "@/lib/demo-orders";
 
 export function CheckoutPage() {
-  const { items, totalPrice, totalItems, clearCart, pricing, promoCode } =
-    useCart();
-  const router = useRouter();
+  const {
+    items,
+    totalPrice,
+    totalItems,
+    clearCart,
+    pricing,
+    promoCode,
+    isHydrated,
+  } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("demo-standard");
   const [agreed, setAgreed] = useState(false);
@@ -75,12 +80,26 @@ export function CheckoutPage() {
       });
       saveDemoOrder(order);
       clearCart();
-      router.push(`/order-success?id=${encodeURIComponent(order.id)}`);
+      window.location.assign(
+        `/order-success?id=${encodeURIComponent(order.id)}`,
+      );
     } catch {
       setSubmitError("Could not save this demo order. Please try again.");
       setIsProcessing(false);
     }
   };
+
+  if (!isHydrated) {
+    return (
+      <div
+        className="mx-auto max-w-6xl space-y-4 py-8"
+        aria-label="Loading checkout"
+      >
+        <div className="h-10 w-48 animate-pulse rounded-xl bg-muted motion-reduce:animate-none" />
+        <div className="h-72 animate-pulse rounded-2xl bg-muted/60 motion-reduce:animate-none" />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -110,13 +129,11 @@ export function CheckoutPage() {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Checkout Form */}
           <div className="space-y-6">
-            {/* Contact Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <CreditCard className="mr-2 h-5 w-5" />
+                  <Mail className="mr-2 h-5 w-5" />
                   Contact Information
                 </CardTitle>
               </CardHeader>
@@ -134,7 +151,6 @@ export function CheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* Shipping Address */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -234,7 +250,6 @@ export function CheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* Payment Method */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -285,14 +300,12 @@ export function CheckoutPage() {
             </Card>
           </div>
 
-          {/* Order Summary */}
           <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Order Items */}
                 <div className="space-y-3">
                   {items.map((item) => (
                     <div key={item.id} className="flex items-center space-x-3">
@@ -321,7 +334,6 @@ export function CheckoutPage() {
 
                 <Separator />
 
-                {/* Pricing Breakdown */}
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal ({totalItems} items)</span>
@@ -368,7 +380,6 @@ export function CheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* Security Notice */}
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2 text-sm text-muted-foreground">

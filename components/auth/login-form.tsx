@@ -31,7 +31,6 @@ export function LoginForm() {
   const [emailError, setEmailError] = useState("");
   const { login, loginPublicSample, isLoading } = useAuth();
 
-  // Email validation function
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -42,7 +41,6 @@ export function LoginForm() {
     setError("");
     setEmailError("");
 
-    // Validate required fields
     if (!username.trim()) {
       setError("Username is required");
       return;
@@ -58,7 +56,6 @@ export function LoginForm() {
       return;
     }
 
-    // Validate email format
     if (mode === "demo" && !validateEmail(email)) {
       setEmailError("Please enter a valid email address");
       return;
@@ -197,7 +194,6 @@ export function LoginForm() {
             </button>
           </div>
 
-          {/* Demo credentials section - secure display */}
           <div className="space-y-3 text-sm text-muted-foreground">
             <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
               <p className="mb-1 font-semibold text-foreground">
